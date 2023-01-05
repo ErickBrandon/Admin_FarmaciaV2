@@ -45,7 +45,7 @@
                     <span class="text-uppercase d-block m-b-10">Estatus de caducidad</span>
                     <ul class="Estatus_Caducidad">
                         <li class="Caduco">Caducado</li>
-                        <li class="ProximoAcudardfdfsfsfsdf">Por caducar (1 a 20 días)</li>
+                        <li class="ProximoAcudar">Por caducar (1 a 20 días)</li>
                         <li class="productoOK">Producto OK</li>
                     </ul>
                 </div>
