@@ -1,0 +1,126 @@
+
+*{margin:0; padding: 0;}
+body{
+   height: auto;
+}
+main{
+   /*  background-color: #c7cbcb; */
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(6,1fr);
+    grid-template-rows: repeat(2,auto);
+    grid-template-areas:"cont-p cont-p cont-p cont-p sidebar sidebar"
+                        "cont-p cont-p cont-p cont-p sidebar sidebar";
+    
+}
+.header{
+    margin-bottom: 10px;  
+}
+.header nav div{
+    -webkit-transition: all 0.3s ease-in-out !important;
+    transition: all 0.3s ease-in-out !important;
+}
+.menu_taps, .tab-content,  .sidebar_carrito{
+    -webkit-box-shadow: 0px 0px 21px -7px rgba(0,0,0,0.6);
+    -moz-box-shadow: 0px 0px 21px -7px rgba(0,0,0,0.6);
+    box-shadow: 0px 0px 21px -7px rgba(0,0,0,0.6);
+    border-radius: 7px;
+}
+
+.contenido_productos{
+    grid-area: cont-p;
+    min-height: 85vh;
+
+    
+}
+.sidebar_carrito{
+    padding:0 15px 0 15px;
+    grid-area: sidebar;
+    min-width: 410px;
+    background: #fff;
+min-height: 85vh;
+    
+}
+.sidebar_carrito header{
+    font-size: 22px;
+    text-align: center;
+    color: black;
+    border-bottom: 1px solid #02224d;
+}
+.sidebar_carrito header p{
+    font-size: 22px;
+    margin-bottom: 0 !important;
+}
+.busquedaC{
+    margin-top: 10px;
+}
+.busquedaC span{
+    font-size: 25px;
+}
+.input-group div, .input-group input{
+    background: #fff;
+}
+.lista{
+    width:100%;
+    height:300px;
+    background: rgba(0,0,0,0.05);
+    border-radius: 10px;
+    overflow-y: scroll;
+}
+
+.lista::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+.lista::-webkit-scrollbar:vertical {
+    width:10px;
+}
+.lista::-webkit-scrollbar-thumb {
+    background-color: #02224d;
+    border-radius: 20px;
+    border: 2px solid #f1f2f3;
+}
+.lista::-webkit-scrollbar-track {
+    border-radius: 10px;  
+}
+
+.CantidadP{
+    width: 70px;
+}
+.productos td{
+    padding: 0 !important;
+    color: #000;
+    text-align: center;
+}
+.contTotal{
+    width: 100%;
+    overflow:hidden;
+    margin: 8px 0 0 0;
+}
+.contTotal div{
+    width: 50%;
+    text-align: center;
+    font-size: 30px;
+    float: left;
+    color: #000;
+    font-weight: bold;
+}
+.ventanaImg{
+    width: 40%;
+    margin: auto;
+}
+.ventanaImg img{
+    width: 100%;
+}
+.alert_pdv{
+    background: rgba(17, 27, 33,0.85) !important;
+    border-radius: 5px !important;
+}
+
+@media screen and (max-width:690px) {
+    main{
+        width: 97%;
+        margin: auto;
+        grid-template-areas:"sidebar sidebar sidebar sidebar sidebar sidebar"
+                            "cont-p cont-p cont-p cont-p cont-p cont-p" ;
+    }
+}

@@ -1,0 +1,60 @@
+.cont_almacen{
+    width: 100%;
+    height: auto;
+    padding: 0px 10px 0px 10px;
+}
+/*---------------------*/
+.form-control, .input-group-text{
+    background-color:#fff !important;
+    text-align: center;
+}
+.info_principal  .input-group-text{
+    color: #014b62;
+}
+.info_principal span{
+    font-size: 25px !important;
+}
+.icon_r{
+    margin-right: 5px !important;
+}
+/*---------------------*/
+
+.titulo{
+    width:100%;
+    padding: 10px 0px 5px 20px;
+}
+.partes{
+    width: 90%;
+    padding:6px 6px 0 6px;
+    border: 1px rgba(0, 0, 0,.1) solid;
+    margin: auto;
+}
+.bgFP{
+    background:#02224d;
+    color: #fff;
+}
+.title_form_almacen{
+    width: 100%;
+    border-left: 2px solid #04a9f5;
+    padding: 0 0 0 10px;
+    color: #000;
+    font-size: 120%;
+}
+.Caduco{
+    background: #db0e0e;
+    color: #fff;
+}
+.ProximoAcudar{
+    background: #ffe607;
+}
+.productoOK{
+    border: 1px solid rgb(240, 240, 240);
+}
+.Estatus_Caducidad{
+    list-style: none;
+    text-align: left;
+   
+}
+.Estatus_Caducidad > li{
+    padding: 0 4px 0 4px;
+}
