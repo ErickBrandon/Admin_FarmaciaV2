@@ -14,8 +14,7 @@
                     <i class="feather icon-monitor f-30"></i>
                 </div>
                 <div class="col text-center">
-                    <span class="text-uppercase d-block m-b-10">Mi almacen:</span>
-                    <h3 class="f-w-300">Tepanco</h3>
+                    <span class="text-uppercase d-block m-b-10">Mi almacen:<br>{{$Farmacia->Farmacia}}</span>
                 </div>
             </div>
         </div>
@@ -56,9 +55,6 @@
     
 <div class="cont_almacen">
     <div class="card">
-        <div class="card-header">
-            <span class="fas fa-info-circle"></span><h5>Estatus de caducidad</h5>
-        </div>
         <div class="card-body">
             <table id="tbl_almacen" class="display responsive nowrap" style="width:100%">
                 <thead>
@@ -91,7 +87,7 @@
             <div class="modal-body">
                 <span id="similar"></span>
                 <span id="error"></span>
-                <form id="from_body">
+                <form id="from_body" farmID={{$Farmacia->id}}>
 
                 </form>
             </div>
@@ -100,16 +96,36 @@
             </div>
         </div>
     </div>
+</div>
+<div id="modal_Scanner" class="modal fade" tabindex="-1" role="dialog"  aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tituloModal">Scanner</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="CloseScanner()" ><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="alert alert-dark" role="alert">
+                ¡Atención!<br>la captura del código de barras por cámara depende principalmente 
+                de la <b>calidad</b> y <b >resolución</b> de la cámara así como 
+                la <b>iluminación</b> y la <b>estabilidad</b> del objeto para capturar.<br>
+                Favor de verificar que el código sea el correcto.
+            </div>
+            <div id="Camara">
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 @section('foot_extras')
 <script src="{{asset('PDV/Datatable/constructorDatatable_almacen.js')}}"></script>
-
 <script src="{{asset('assets/plugins/jquery-validation/js/jquery.validate.min.js')}}"></script>
 <script src="{{asset('validationJS/form-validation-almacen.js')}}"></script>
-
 <script src="{{asset('assets/plugins/notification/js/bootstrap-growl.min.js')}}"></script>
-
-
 <script src="{{asset('js-farmacia/almacen.js')}}"></script>
+<script src="{{asset('Scanner/quagga.min.js')}}"></script>
+<script>
+    const G_scan = new Audio('{{asset('Scanner/sound/scan.mp3')}}');
+</script>
 
 @endsection

@@ -7,7 +7,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link disabled ">Tepanco</a>
+              <a class="nav-link disabled ">{{$Farmacia->Farmacia}}</a>
             </li>
             <li class="nav-item active">
               <a class="nav-link" href="{{route('PuntoVenta',$Farmacia->id)}}"><b>Punto de venta</b><span class="sr-only">(current)</span></a>

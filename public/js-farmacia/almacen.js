@@ -4,14 +4,18 @@ $(document).ready(function() {
     });
 });
 function cuerpo_form(){
-return "<div class='form-group'>"+
+return"<div class='form-group'>"+
 "<div class='title_form_almacen'>Información principal</div> <hr>"+
+"<div class='container'>"+
+    "<button Id='ScannerCB' type='button' class='btn btn-icon btn-primary' onclick='OpenScanner(1)'><i class='feather icon-camera'></i></button>"+
+    "<span class='col-6'>Escanear código nuevo</span>"+
+"</div><br>"+
 "<div class='container info_principal'>"+
     "<div class='input-group input-group-md mb-3'>"+
         "<div class='input-group-prepend'>"+
             "<span class='input-group-text feather icon-slack' id='inputGroup-sizing-sm'></span>"+
         "</div>"+
-        "<input id='Codigo' type='text' class='form-control' placeholder='Código de barras | Escanéalo' name='Codigo' requried>"+
+        "<input id='Codigo' type='text' class='form-control' placeholder='Código de barras | Ingresalo o Escanéalo ' name='Codigo' requried>"+
     "</div>"+
     "<div class='input-group input-group-md mb-3'>"+
         "<div class='input-group-prepend'>"+
@@ -23,7 +27,7 @@ return "<div class='form-group'>"+
         "<div class='input-group-prepend'>"+
             "<span class='input-group-text fas fa-dollar-sign text-success' id='inputGroup-sizing-sm'></span>"+
         "</div>"+
-        "<input type='number' class='form-control' placeholder='Precio venta | 00.00' name='Precio' requried>"+
+        "<input id='PrecioVenta' type='number' class='form-control' placeholder='Precio venta | 00.00' name='Precio' requried>"+
     "</div>"+
 "</div>"+
 "<br><div class='title_form_almacen'>Información para almacén</div> <hr>"+
@@ -62,7 +66,7 @@ return "<div class='form-group'>"+
         "<div class='input-group-prepend'>"+
             "<span class='input-group-text' id='inputGroup-sizing-sm'><span class='fas fa-donate icon_r text-warning'></span>Costo</span>"+
         "</div>"+
-        "<input type='number' class='form-control' placeholder='00.00' name='Costo' requried>"+
+        "<input id='CostoProducto' type='number' class='form-control' placeholder='00.00' name='Costo' requried onchange=VSventa(this.value) >"+
     "</div>"+
     "<div class='input-group input-group-md mb-3'>"+
         "<div class='input-group-prepend'>"+
@@ -82,7 +86,7 @@ return "<div class='form-group'>"+
 "</div>"
 }
 function pregunta(){
-    return"<div class='form-group'>"+
+    return "<div class='form-group'>"+
     "<div class='checkbox checkbox-primary d-inline'>"+
     "<input type='checkbox' name='checkbox-p-1' id='checkbox-p-1' onclick='info_automatico()'>"+
 
@@ -97,7 +101,7 @@ return"<div class='form-group'>"+
     "<div class='checkbox checkbox-primary d-inline'>"+
     "<input type='checkbox' name='checkbox-p-1' id='checkbox-p-1' onclick='editarCodigo("+id+")'>"+
 
-    "<label for='checkbox-p-1' class='cr text-info'>¿Deseas editar el código de barras?<br>¡Recuerdad que es su identificador!</label>"+
+    "<label for='checkbox-p-1' class='cr text-info'>¿Deseas editar el código de barras?<br>¡Recuerdad que es el identificador del producto!</label>"+
     "</div>"+
     "<span id='form_autoCompletado'></span>"+
     "</div>"+
@@ -108,6 +112,10 @@ return "<div class='alert alert-secondary' role='alert'>"+
     "<form id='form_similar'>"+
         "<div class='form-group'>"+
             "<div class='title_form_almacen'>Busqueda para auto-acompletar</div> <hr>"+
+            "<div class='container'>"+
+                "<button type='button' class='btn btn-icon btn-dark' onclick='OpenScanner(2)'><i class='feather icon-camera'></i></button>"+
+                "<span class='col-6'>Escanear código similar</span>"+
+            "</div><br>"+
             "<p>Ingresa el código para auto-completar el producto</p>"+
             "<div class='input-group input-group-md mb-3'>"+
                 "<div class='input-group-prepend'>"+
@@ -131,6 +139,7 @@ function form_agregar(){
     document.getElementById('tituloModal').innerText="Nuevo Producto";
     document.getElementById('similar').innerHTML=pregunta();
     document.getElementById('from_body').innerHTML=cuerpo_form();
+    document.getElementById('ScannerCB').disabled = false;
     document.getElementById('btn_formAlmacen').innerText="Agregar al almacen";
     document.getElementById('from_body').setAttribute("onsubmit","return guardar()");
     document.getElementById('btn_formAlmacen').classList.add('btn-primary');
@@ -139,8 +148,8 @@ function form_agregar(){
 function form_editar(id){
     row = document.getElementById(id);
     document.getElementById('tituloModal').innerText="Editar Producto";
-    document.getElementById('similar').innerHTML=checkEditar(id);
     document.getElementById('from_body').innerHTML=cuerpo_form();
+    document.getElementById('similar').innerHTML=checkEditar(id);
     document.getElementById('btn_formAlmacen').innerText="Guardar cambios";
     document.getElementById('from_body').setAttribute("onsubmit","actualizar("+id+")");
     document.getElementById('btn_formAlmacen').classList.add('btn-primary');
@@ -160,15 +169,17 @@ function form_editar(id){
 }
 function editarCodigo(id){
     if (document.getElementById('checkbox-p-1').checked) {
-        document.getElementById('Codigo').disabled = false;
+        document.getElementById('Codigo').disabled = true;
         document.getElementById("Codigo").focus();
         document.getElementById('form_autoCompletado').innerHTML="<div class='alert alert-warning' role='alert'>"+
-        "Precaución <span class='feather icon-alert-triangle text-center text-danger f-20'></span> está habilitada la función para editar el código de barras"+
+        "<span class='feather icon-alert-triangle text-center text-danger f-20'></span> ¡Precaución!<br>Está habilitada la función para editar el código de barras"+
     "</div>";
+        document.getElementById('ScannerCB').disabled = false;
     } else {
         document.getElementById('Codigo').disabled = true;
         document.getElementById('form_autoCompletado').innerHTML=null;
         document.getElementById('Codigo').value=id;
+        document.getElementById('ScannerCB').disabled = true;
     }
 }
 function form_eliminar(id){
@@ -176,10 +187,10 @@ function form_eliminar(id){
     document.getElementById('similar').innerHTML=null;
     row = document.getElementById(id);
 
-    document.getElementById('from_body').setAttribute("onsubmit","eliminar("+row.cells[0].innerText+")");
+    document.getElementById('from_body').setAttribute("onsubmit","eliminar("+id+")");
 
     document.getElementById('from_body').innerHTML= "<div class='alert alert-danger f-20' role='alert'>"+
-    "Precaución usted esta por eliminar el producto con el código: <div class='f-30 text-center'>"+row.cells[0].innerText+"</div>"+
+    "Precaución. Usted esta por eliminar el producto con el código: <div class='f-30 text-center'>"+row.cells[0].innerText+"</div>"+
     "<h1 class='feather icon-alert-triangle display-1 text-center text-danger'></h1></div>";
     document.getElementById('btn_formAlmacen').innerText="Eliminar Producto";
     document.getElementById('btn_formAlmacen').classList.remove('btn-primary');
@@ -233,9 +244,11 @@ function guardar(){
     document.getElementById('btn_formAlmacen').disabled = true;
     flag = validarlleno();
     if (flag == true) {
+        formData = $("#from_body").serialize();
+        formData = formData+"&Farmacia="+document.getElementById('from_body').getAttribute('farmID');
          CRUD(
             "/AlmacenarProducto",
-            $("#from_body").serialize(),
+            formData,
             "info",
             "Producto guardado con exito",
             "fas fa-save"
@@ -251,30 +264,16 @@ function actualizar(id){
     if (flag == true) {
         flag = validarlleno();
         if (flag == true) {
-            /* $.ajax({
-                url:"ActualizarProducto/"+Codigo,
-                type: "POST",
-                headers:GlobalToken,
-                data:formData,
-                success:  function(data){
-                    $('#tbl_almacen').DataTable().ajax.reload();
-                    document.getElementById('Codigo').disabled = true;
-                    setTimeout(notify,1000,"success",' Producto actualizado exitosamente','fas fa-clipboard-check');
-                    $('#modal_almacen').modal('hide');
-                    document.getElementById('btn_formAlmacen').disabled = false;
-                },
-                error: function(jqXHR, textStatus, errorThrown){
-                    alert("¡Error al Actualizar!\n"+GlobalErrorCRUD);
-                    document.getElementById('btn_formAlmacen').disabled = false;
-            }
-        }); */
                 document.getElementById('Codigo').disabled = false;
-                ruta = "ActualizarProducto/"+id;
-                formData = $("#from_body").serialize();
-                colorA = "info";
-                mnsjA = "Producto se actualizó con exito";
-                inconoA = "fas fa-save";
-                CRUD(ruta,formData,colorA,inconoA);
+                ruta = "/ActualizarProducto/"+id;
+                console.log($("#from_body").serialize());
+                CRUD(
+                    ruta,
+                    $("#from_body").serialize(),
+                    "info",
+                    "Se actualizó el producto",
+                    "fas fa-save"
+                );
         } else {
             document.getElementById('Codigo').disabled = true;
             document.getElementById('btn_formAlmacen').disabled = false;
@@ -288,8 +287,8 @@ function actualizar(id){
 }
 function eliminar(id){
         document.getElementById('btn_formAlmacen').disabled = true;
- 
-         ruta = "EliminarProducto/"+id;
+        console.log(id);
+         ruta = "/EliminarProducto/"+id;
          formData = $("#from_body").serialize();
          colorA = 'danger';
          mnsjA = 'Producto eliminado con exito';
@@ -323,7 +322,6 @@ function buscarSimilar(){
         headers:GlobalToken,
         success:  function(data){
             if (data == 0) {
-                console.log("n");
                 document.getElementById('error').innerHTML="<div class='alert alert-danger text-center' role='alert'>"
                 +"No se encontro un producto similar"
             "</div>"
@@ -368,4 +366,95 @@ function validarlleno(){
         flag = true;
     }
     return flag
+}
+function VSventa(Costo) {
+    let PrecioVenta=document.getElementById('PrecioVenta').value
+    if (!PrecioVenta) {
+        alert("Por favor primero ingrese el precio venta");
+        document.getElementById('CostoProducto').value = null;
+        document.getElementById('PrecioVenta').focus();
+    }else{
+        if (Costo >= PrecioVenta) {
+            alert("¡Ojo!\n El Costo del producto no puede ser mayor o iguals que el Precio Venta");
+            document.getElementById('CostoProducto').value = null;
+        }
+    }
+}
+function OpenScanner(origen) {
+    $('#modal_Scanner').modal('show');
+    $('#modal_almacen').modal('hide');      
+      Quagga.onProcessed(function (result) {
+        var drawingCtx = Quagga.canvas.ctx.overlay,
+          drawingCanvas = Quagga.canvas.dom.overlay;
+      
+        if (result) {
+          if (result.boxes) {
+            drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
+            result.boxes.filter(function (box) {
+              return box !== result.box;
+            }).forEach(function (box) {
+              Quagga.ImageDebug.drawPath(box, { x: 0, y: 0 }, drawingCtx, { color: "green", lineWidth: 2 });
+            });
+          }
+      
+          if (result.box) {
+            Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, { color: "#00F", lineWidth: 2 });
+          }
+      
+          if (result.codeResult && result.codeResult.code) {
+            Quagga.ImageDebug.drawPath(result.line, { x: 'x', y: 'y' }, drawingCtx, { color: 'red', lineWidth: 3 });
+          }
+         
+        }
+        
+      });
+      Quagga.init({
+        inputStream : {
+          name : "Live",
+          type : "LiveStream",
+          target: document.querySelector('#Camara')    // Or '#yourElement' (optional)
+        },
+        decoder : {
+          readers : [
+          /* "code_128_reader",
+          "code_128_reader",
+          "code_39_reader",
+           "code_39_vin_reader", */
+          "ean_reader"
+         /*  "ean_8_reader",
+          "upc_reader",
+          "upc_e_reader",
+          "codabar_reader",
+          "i2of5_reader",
+          "2of5_reader",
+          "code_93_reader" */
+        ]
+        }
+      }, function(err) {
+          if (err) {
+              console.log(err);
+              return
+          }
+          console.log("Initialization finished. Ready to start");
+          Quagga.start();
+      });
+
+      Quagga.onDetected(function(data){
+        G_scan.play();
+        if (origen == 1) {
+            document.getElementById('Codigo').value = data.codeResult.code;
+        } else {
+            document.getElementById('ProductoSimilar').value = data.codeResult.code;
+        }
+        
+        Quagga.stop(data);
+        $('#modal_Scanner').modal('hide');
+        $('#modal_almacen').modal('show');
+      });
+}
+function CloseScanner() {
+    Quagga.stop();
+    $('#modal_Scanner').modal('hide');
+    $('#modal_almacen').modal('show');
+
 }

@@ -16,7 +16,7 @@
                         </div>
                         <div class="col text-center">
                             <span class="text-uppercase d-block m-b-10">Caja:</span>
-                            <h3 class="f-w-300">Tepanco</h3>
+                            <h4 class="f-w-300">{{$Farmacia->Farmacia}}</h4>
                         </div>
                     </div>
                 </div>

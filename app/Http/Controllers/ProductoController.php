@@ -29,7 +29,7 @@ class ProductoController extends Controller
         try {
         $producto = new Producto();
 
-            $producto->id = $request->Codigo;
+            $producto->Codigo = $request->Codigo;
             $producto->Producto = $request->Producto;
             $producto->Precio = $request->Precio;
             $producto->Existencias = $request->Existencias;
@@ -39,6 +39,7 @@ class ProductoController extends Controller
             $producto->Costo = $request->Costo;
             $producto->CostoAnterior = $request->CostoAnterior;
             $producto->id_proveedor = 1;
+            $producto->id_farmacia = $request->Farmacia;
             $producto->save();
             DB::commit( );
             
@@ -78,9 +79,21 @@ class ProductoController extends Controller
      * @param  \App\Models\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Producto $producto)
+    public function update(Request $request, Producto $Producto)
     {
-        //
+
+        $Producto->codigo = $request->Codigo;
+        $Producto->Producto = $request->Producto;
+        $Producto->Precio = $request->Precio;
+        $Producto->Existencias = $request->Existencias;
+        $Producto->TipoVenta = $request->TipoVenta;
+        $Producto->Caducidad = $request->Caducidad;
+        $Producto->Finalidad = $request->Finalidad;
+        $Producto->Costo = $request->Costo;
+        $Producto->CostoAnterior = $request->CostoAnterior;
+        $Producto->id_proveedor = $request->Proveedor;
+        $Producto->save();
+        return 1;
     }
 
     /**
@@ -89,12 +102,13 @@ class ProductoController extends Controller
      * @param  \App\Models\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Producto $producto)
-    {
-        //
+    public function destroy(Producto $Producto)
+    {   
+        $Producto->delete();
+        return 1;
     }
-    public function ProductoEnAlmacen(){
-        $productos = Producto::all();
+    public function ProductoEnAlmacen($Farmacia){
+        $productos = Producto::where('id_farmacia',$Farmacia)->get();
         return dataTables()->of($productos)->toJson();
     }
 }

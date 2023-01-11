@@ -30,14 +30,15 @@ $(document).ready(function() {
         lengthMenu: [30],
         bLengthChange : false,
         'ajax':{
-            'url':'/PuntoDeVenta/ProductoEnAlmacen',
+            'url':'/ProductoEnAlmacen/'+document.getElementById("from_body").getAttribute('farmID'),
             'type': 'POST',
         },
         "createdRow": function( row, data) {
             $(row).attr('id', data['id'] );
+            $(row).attr('class', data['Codigo'] );
           },
         'columns':[
-            {data:'id'},
+            {data:'Codigo'},
             {data:'Producto'},
             {data:'Precio'},
             {data:'Existencias'},
@@ -59,6 +60,13 @@ $(document).ready(function() {
             },
 
         ],
+        'columnDefs':[
+            {"orderable":false, "targets":0},
+            {"orderable":false, "targets":3},
+            {"orderable":false, "targets":5},
+            {"orderable":false, "targets":8},
+            {"orderable":false, "targets":10},
+        ]
     },
    );
 } );
@@ -78,12 +86,9 @@ function validacionCaducidad(cells,data) {
  var dias = Math.floor(dif / (1000 * 60 * 60 * 24));
 
  if (dias<0) {
-  $(cells).attr('class',"Caduco");
- }else{
-  if (dias >=0 && dias<=20) {
-    $(cells).attr('class',"ProximoAcudar")
-  }
+    $(cells).attr('class',"Caduco");
  }
- console.log(dias);
- 
+ if (dias >=0 && dias<=20) {
+    $(cells).attr('class',"ProximoAcudar");
+ }
 }

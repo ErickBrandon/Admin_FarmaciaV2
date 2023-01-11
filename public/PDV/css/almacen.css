@@ -58,3 +58,10 @@
 .Estatus_Caducidad > li{
     padding: 0 4px 0 4px;
 }
+video{
+    width: 100%;
+}
+
+#modal_almacen {/*Corrige el error de abrir dos modales simultaneos*/
+    overflow-y: scroll !important;
+}

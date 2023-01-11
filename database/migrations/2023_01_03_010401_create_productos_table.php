@@ -14,7 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('productos', function (Blueprint $table) {
-            $table->bigInteger('id')->unique()->nullable();
+            $table->bigIncrements('id')->unique()->nullable();
+            $table->bigInteger('Codigo');
             $table->string('Producto',250);
             $table->integer('Precio');
             $table->integer('Existencias');
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->integer('Costo');
             $table->integer('CostoAnterior');
             $table->integer('id_proveedor')->nullable();
+            $table->integer('id_farmacia')->nullable();
         });
     }
 

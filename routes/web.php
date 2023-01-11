@@ -55,5 +55,7 @@ Route::POST('RegistrarVenta',[CajaController::class,'store']);
 Route::GET('PuntoDeVenta/{Farmacia}/Ventas',[VentaController::class,'ventas'])->name('Ventas');
 
 Route::GET('PuntoDeVenta/{Farmacia}/Almacen',[ProductoController::class,'almacen'])->name('Almacen');
-Route::POST('PuntoDeVenta/ProductoEnAlmacen',[ProductoController::class,'ProductoEnAlmacen'])->name('Productos');
+Route::POST('ProductoEnAlmacen/{Farmacia}',[ProductoController::class,'ProductoEnAlmacen'])->name('Productos');
 Route::POST('AlmacenarProducto',[ProductoController::class,'store'])->name('GuardarProducto');
+Route::POST('ActualizarProducto/{Producto}',[ProductoController::class,'update'])->name('EditarProducto');
+Route::POST('EliminarProducto/{Producto}',[ProductoController::class,'destroy'])->name('EliminarProducto');
