@@ -35,7 +35,7 @@ $(document).ready(function() {
         },
         "createdRow": function( row, data) {
             $(row).attr('id', data['id'] );
-            $(row).attr('class', data['Codigo'] );
+            $(row).attr('class', "c-"+data['Codigo'] );
           },
         'columns':[
             {data:'Codigo'},

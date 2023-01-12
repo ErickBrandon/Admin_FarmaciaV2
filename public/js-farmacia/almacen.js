@@ -147,16 +147,17 @@ function form_agregar(){
 }
 function form_editar(id){
     row = document.getElementById(id);
+
     document.getElementById('tituloModal').innerText="Editar Producto";
     document.getElementById('from_body').innerHTML=cuerpo_form();
-    document.getElementById('similar').innerHTML=checkEditar(id);
+    document.getElementById('similar').innerHTML=checkEditar(row.cells[0].innerText);
     document.getElementById('btn_formAlmacen').innerText="Guardar cambios";
     document.getElementById('from_body').setAttribute("onsubmit","actualizar("+id+")");
     document.getElementById('btn_formAlmacen').classList.add('btn-primary');
     document.getElementById('btn_formAlmacen').classList.remove('btn-danger');
     document.getElementById('Codigo').disabled = true;
+    document.getElementById('ScannerCB').disabled = true;
     //-------- Aqui empieza la inserción de información de la fila al formulario
-    row = document.getElementById(id);
     $('input[name=Codigo]').val(row.cells[0].innerText);
     $('input[name=Producto]').val(row.cells[1].innerText);
     $('input[name=Precio]').val(row.cells[2].innerText);
@@ -167,9 +168,9 @@ function form_editar(id){
     $('input[name=Costo]').val(row.cells[7].innerText);
     $('input[name=CostoAnterior]').val(row.cells[8].innerText);
 }
-function editarCodigo(id){
+function editarCodigo(Codigo){
     if (document.getElementById('checkbox-p-1').checked) {
-        document.getElementById('Codigo').disabled = true;
+        document.getElementById('Codigo').disabled = false;
         document.getElementById("Codigo").focus();
         document.getElementById('form_autoCompletado').innerHTML="<div class='alert alert-warning' role='alert'>"+
         "<span class='feather icon-alert-triangle text-center text-danger f-20'></span> ¡Precaución!<br>Está habilitada la función para editar el código de barras"+
@@ -178,7 +179,7 @@ function editarCodigo(id){
     } else {
         document.getElementById('Codigo').disabled = true;
         document.getElementById('form_autoCompletado').innerHTML=null;
-        document.getElementById('Codigo').value=id;
+        document.getElementById('Codigo').value=Codigo;
         document.getElementById('ScannerCB').disabled = true;
     }
 }
@@ -316,28 +317,19 @@ function CRUD(ruta,formData,colorA,mnsjA,inconoA){
 }
 function buscarSimilar(){
     Codigo = document.getElementById('ProductoSimilar').value;
-    $.ajax({
-        url:"BuscarProducto/"+Codigo,
-        type: "POST",
-        headers:GlobalToken,
-        success:  function(data){
-            if (data == 0) {
-                document.getElementById('error').innerHTML="<div class='alert alert-danger text-center' role='alert'>"
-                +"No se encontro un producto similar"
-            "</div>"
-            } else {
-                $('input[name=Producto]').val(data[0]['Producto']);
-                $('input[name=Precio]').val(data[0]['Precio']);
-                $('input[name=Caducidad]').val(data[0]['Caducidad']);
-                $('input[name=Finalidad]').val(data[0]['Finalidad']);
-                $('input[name=Costo]').val(data[0]['Costo']);
-                $('input[name=CostoAnterior]').val(data[0]['CostoAnterior']);   
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown){
-            alert("¡Error al Actualizar!\n"+GlobalErrorCRUD)
-        }
-    });
+    var similar = document.querySelector(".c-"+Codigo);
+
+    if (similar) {
+        $('input[name=Producto]').val(similar.cells[1].innerText);
+        $('input[name=Precio]').val(similar.cells[2].innerText);
+        $('input[name=Caducidad]').val(similar.cells[5].innerText);
+        $('input[name=Finalidad]').val(similar.cells[6].innerText);
+        $('input[name=Costo]').val(similar.cells[7].innerText);
+        $('input[name=CostoAnterior]').val(similar.cells[8].innerText);
+        setTimeout(notify,500,"success","Se encontró un producto similar<br>Ingrese los datos faltantes","fas fa-check-circle");
+    }else{
+        setTimeout(notify,400,"danger","No existen coincidencias","fas fa-times-circle");
+    }
 }
 function validarEdicion(id){
     fila = document.getElementById(id);
