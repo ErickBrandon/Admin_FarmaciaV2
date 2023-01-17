@@ -317,7 +317,7 @@ function CRUD(ruta,formData,colorA,mnsjA,inconoA){
 }
 function buscarSimilar(){
     Codigo = document.getElementById('ProductoSimilar').value;
-    var similar = document.querySelector(".c-"+Codigo);
+    let similar = document.querySelector(".c-"+Codigo);
 
     if (similar) {
         $('input[name=Producto]').val(similar.cells[1].innerText);
@@ -439,7 +439,8 @@ function OpenScanner(origen) {
             document.getElementById('ProductoSimilar').value = data.codeResult.code;
         }
         
-        Quagga.stop(data);
+        Quagga.stop();
+        Quagga.offDetected();
         $('#modal_Scanner').modal('hide');
         $('#modal_almacen').modal('show');
       });

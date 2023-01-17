@@ -14,6 +14,7 @@
             </li>    
         </ul>
         <div class="tab-content" id="pills-tabContent" >
+            <div id="PntVenta" farmID={{$Farmacia->id}}></div>
             <div class="tab-pane fade show active" id="pills-pdv" role="tabpanel" aria-labelledby="pills-pdv-tab">
                 <table id="tbl_Productos" class="display responsive nowrap" style="width:100%">
                     <thead>
@@ -22,8 +23,9 @@
                             <th>Comprar</th>
                             <th>Código</th>
                             <th>Producto</th>
-                            <th>Precio</th>
+                            <th>$</th>
                             <th>Finalidad</th>
+                            <th>Exist</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,17 +50,15 @@
                 <p>Carrito de Compra <span class="fas fa-cart-plus text-c-blue"></span></p>
             </header>
             <div class="busquedaC">
-                <form action="">
                     <div class='form-group'>
                         <div class='input-group input-group-md mb-3'>
                             <div class='input-group-prepend'>
-                                <span class='input-group-text feather icon-slack' id='inputGroup-sizing-sm'></span>
+                                <button class="btn btn-dark fas fa-camera" title="Escannear código por cámara" data-toggle="tooltip"  onclick="OpenScanner()"></button>
                             </div>
-                            <input id='Codigo' type='text' class='form-control' placeholder='Código de barras | Escanéalo' name='Codigo' requried>
+                            <input id='Codigo' type='text' class='form-control' placeholder='Código de barras | Ingresalo o Escannealo' name='Codigo' onchange="IngresarAlCarrito(this.value)">
                         </div>
                     </div>
-                </form>
-            </div>
+            </div> 
             <div class="lista">
                 <form id="form">
                 <table id="tbl_carrito" class="table table-hover productos">
@@ -69,6 +69,7 @@
                             <th class="TCantidad">Cantidad</th>
                             <th class="TSubTotal">SubTotal</th>
                             <th class="TQuitar">Quitar</th>
+                            <th class="TProducto">Buscar</th>
                         </tr>
                     </thead>
                     <tbody id="tbodyCarrito">            
@@ -114,11 +115,15 @@
         </div>
     </div>
 </div>
+@include('PuntoVenta.partials.modal_scanner')
 @endsection
 @section('foot_extras')
 <script src="{{asset('PDV/Datatable/constructorDatatable.js')}}"></script>
 <script src="{{asset('assets/plugins/notification/js/bootstrap-growl.min.js')}}"></script>
+<script src="{{asset('Scanner/quagga.min.js')}}"></script>
 <script src="{{asset('PDV/js/pdv.js')}}"></script>
 <script src="{{asset('assets/plugins/sweetalert/js/sweetalert.min.js')}}"></script>
-
+<script>
+    const G_scan = new Audio('{{asset('Scanner/sound/scan.mp3')}}');
+</script>
 @endsection

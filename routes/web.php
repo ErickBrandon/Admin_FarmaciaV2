@@ -49,7 +49,7 @@ Route::GET('Administradores',[UserController::class,'index'])->name('Administrad
 Route::POST('GuardarAdministrador',[UserController::class,'store'])->name('GuardarProveedor');
 
 /* Punto de venta */
-Route::POST('PuntoDeVenta/Productos',[CajaController::class,'tbl']);
+Route::POST('/ProductosVenta/{Farmacia}',[CajaController::class,'tbl']);
 Route::GET('PuntoDeVenta/{Farmacia}',[CajaController::class,'show'])->name('PuntoVenta');
 Route::POST('RegistrarVenta',[CajaController::class,'store']);
 Route::GET('PuntoDeVenta/{Farmacia}/Ventas',[VentaController::class,'ventas'])->name('Ventas');

@@ -1,5 +1,4 @@
 $(document).ready(function() {
-    console.log("entró");
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -29,11 +28,12 @@ $(document).ready(function() {
         lengthMenu: [6],
         bLengthChange : false,
         'ajax':{
-            'url':'/PuntoDeVenta/Productos',
+            'url':'/ProductosVenta/'+document.getElementById("PntVenta").getAttribute('farmID'),
             'type': 'POST',
         },
         "createdRow": function( row, data) {
             $(row).attr('id', data['id'] );
+            $(row).attr('class', "c-"+data['Codigo'] );
         },
         'columns':[
             {data:"id",
@@ -45,14 +45,18 @@ $(document).ready(function() {
                 return "<button class='btn btn-primary fas fa-cart-arrow-down' onclick=carrito("+data+")></button>"
               }
             },
-            {data:'id'},
+            {data:'Codigo'},
             {data:'Producto'},
             {data:'Precio'},
             {data:'Finalidad'},
+            {data:'Existencias'}
         ],
         columnDefs:[
             { "width": "1px", "targets": 0 },
             { "padding": "0 !important", "targets": 1 },
+            {"orderable":false, "targets":0},
+            {"orderable":false, "targets":1},
+            {"orderable":false, "targets":6},
         ]
     });
 } );

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Caja;
 use App\Models\Venta;
+use App\Models\Detalle;
 use App\Models\Farmacia;
+use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -38,40 +40,51 @@ class CajaController extends Controller
      */
     public function store(Request $request)
     {
-        $TotalVenta = $request->TotalVenta;
-        $Farmacia = $request->Farmacia;
-        $flag=0;
+        
         DB::beginTransaction();
         try {
             $Venta = new Venta();
             $Venta->Farmacia = $request->Farmacia;
             $Venta->Total = $request->TotalVenta;
             $Venta->save();
-            DB::commit( );
-            $flag = 1;
-        } catch (Exception $e) {
-            DB::rollback();
-            return 0;
-        }
 
-        if ($flag == 1) {
             $Productos = $request->carrito;
-            DB::beginTransaction();
             try {
+                $agotados = [];
                 foreach ($Productos as $key => $Producto) {
-                    $VentasR = new Venta();
-                    $VentasR->Unidades = (int)$Producto['Unidades'];
-                    $VentasR->SubTotal = (float)$Producto['SubTotal'];
-                    $VentasR->Codigo = 1;
-                    $VentasR->IdVenta = $Venta->id;
-                    $VentasR->save();
+                    $Detalle = new Detalle();
+                    $Detalle ->Producto = $Producto['Nombre'];
+                    $Detalle->Unidades = (int)$Producto['Unidades'];
+                    $Detalle->SubTotal = (float)$Producto['SubTotal'];
+                    $Detalle->Codigo = $Producto['Codigo'];
+                    $Detalle->Id_Venta = $Venta->id;
+                    
+
+                    $ProductoAlmacen = Producto::findOrFail($Producto['Identificador']);
+                    if ($ProductoAlmacen ->Existencias >= $Detalle->Unidades) {
+                        $ProductoAlmacen ->Existencias = $ProductoAlmacen ->Existencias - $Detalle->Unidades;
+                        
+                        $Detalle->save();
+                        $ProductoAlmacen->save();
+                    } else {
+                        array_push($agotados,$Detalle->Codigo);
+                    }
                 }
-                DB::commit( );
+            if (sizeof($agotados)>0) {
+                DB::rollback();
+                return $agotados;
+            }else {
+                DB::commit();
                 return 1;
+            }
+            
             } catch (Exception $e) {
                 DB::rollback();
                 return 0;
             }
+        } catch (Exception $e) {
+            DB::rollback();
+            return 0;
         }
     }
 
@@ -81,11 +94,11 @@ class CajaController extends Controller
         return view('PuntoVenta.PuntoDeVenta')->with('Farmacia',$farmacia);
     }
 
-    public function tbl()
+    public function tbl($Farmacia)
     {
-        
-        $Productos = DB::table('productos')->select('id','Producto','Precio','Finalidad')
-        ->where('Existencias','>',0)->get();
+        $Productos = DB::table('productos')->select('id','Codigo','Producto','Precio','Finalidad','Existencias')
+        ->where('Existencias','>',0)
+        ->where('id_farmacia',$Farmacia)->get();
         return dataTables()->of($Productos)->toJson();
     }
     /**
@@ -106,9 +119,9 @@ class CajaController extends Controller
      * @param  \App\Models\Caja  $caja
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Caja $caja)
+    public function update(Request $request)
     {
-        //
+        dd($request);
     }
 
     /**

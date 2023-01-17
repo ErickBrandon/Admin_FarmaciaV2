@@ -85,6 +85,7 @@ min-height: 85vh;
 
 .CantidadP{
     width: 70px;
+    text-align: center;
 }
 .productos td{
     padding: 0 !important;
@@ -115,7 +116,21 @@ min-height: 85vh;
     background: rgba(17, 27, 33,0.85) !important;
     border-radius: 5px !important;
 }
-
+video{
+    width: 100%;
+}
+#tbl_Productos th:nth-child(5),
+#tbl_Productos td:nth-child(5) {
+    background: #e5e5e5;
+    color: #000 !important;
+}
+#tbl_carrito th:nth-child(5),#tbl_carrito td:nth-child(5),
+#tbl_carrito th:nth-child(6),#tbl_carrito td:nth-child(6){
+    background: #d3d3d3;
+}
+#tbl_carrito th:nth-child(5),#tbl_carrito th:nth-child(6){
+    color: #000 !important;
+}
 @media screen and (max-width:690px) {
     main{
         width: 97%;

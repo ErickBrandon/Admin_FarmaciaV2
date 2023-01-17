@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('detalles', function (Blueprint $table) {
+        Schema::create('detalles_ventas', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('Producto',100);
             $table->integer('Unidades');
             $table->float('SubTotal');
             $table->string('Codigo',60);
-            $table->bigInteger('IdVenta');;
+            $table->bigInteger('Id_Venta');
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detalles');
+        Schema::dropIfExists('detalles_ventas');
     }
 };
