@@ -2,6 +2,7 @@
 $(document).ready(function() {
     $(function() {
         // se cambio form-group por input-grupo
+        console.log("dentro de la validación");
         $('#from_body').validate({
            
             focusInvalid: false,
@@ -35,6 +36,9 @@ $(document).ready(function() {
                 'CostoAnterior': {
                     required: true,
                 },
+                'Proveedor': {
+                    required: true
+                }
             },
 
             // Errors //
@@ -56,7 +60,6 @@ $(document).ready(function() {
                 var $parent = $el.parents('.input-group');
 
                 $el.addClass('is-invalid');
-
                 // Select2 and Tagsinput
                 if ($el.hasClass('select2-hidden-accessible') || $el.attr('data-role') === 'tagsinput') {
                     $el.parent().addClass('is-invalid');

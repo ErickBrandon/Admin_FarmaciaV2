@@ -1,5 +1,6 @@
 @extends('Dashboard.layout.master')
 @section('extras_header')
+<link rel="stylesheet" href="assets/plugins/data-tables/css/datatables.min.css">
 @endsection
 @section('page')Configuración de administradores @endsection
 @section('body-content')

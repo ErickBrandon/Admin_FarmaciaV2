@@ -34,9 +34,10 @@ $(document).ready(function() {
             'type': 'POST',
         },
         "createdRow": function( row, data) {
-            $(row).attr('id', data['id'] );
+            $(row).attr('id', data['ID'] );
             $(row).attr('class', "c-"+data['Codigo'] );
-          },
+            $(row).attr('ID_Proveedor',data['proveedor_id'] );
+        },
         'columns':[
             {data:'Codigo'},
             {data:'Producto'},
@@ -44,15 +45,15 @@ $(document).ready(function() {
             {data:'Existencias'},
             {data:'TipoVenta'},
             {data:'Caducidad',
-            "createdCell":
+            "Cell":
             function (cells,data){
              validacionCaducidad(cells,data);
             }},
             {data:'Finalidad'},
             {data:'Costo'},
             {data:'CostoAnterior'},
-            {data:'id_proveedor'},
-            {data:"id",
+            {data:'Proveedor'},
+            {data:"ID",
             "render": function (data) {
                 return "<button class='btn btn-primary btn-icon fas fa-edit' data-toggle='modal' data-target='#modal_almacen' onclick='form_editar("+data+")'></button>"
                 +"<button class='btn btn-danger btn-icon fas fa-trash-alt' data-toggle='modal' data-target='#modal_almacen' onclick='form_eliminar("+data+")'></button>";
@@ -65,7 +66,9 @@ $(document).ready(function() {
             {"orderable":false, "targets":3},
             {"orderable":false, "targets":5},
             {"orderable":false, "targets":8},
+           // {"orderable":false, "targets":10, "visible":false,"searchable":false},
             {"orderable":false, "targets":10},
+
         ]
     },
    );

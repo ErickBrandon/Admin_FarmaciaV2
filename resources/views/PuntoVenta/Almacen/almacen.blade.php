@@ -97,6 +97,7 @@
         </div>
     </div>
 </div>
+
 @include('PuntoVenta.partials.modal_scanner')
 @endsection
 @section('foot_extras')

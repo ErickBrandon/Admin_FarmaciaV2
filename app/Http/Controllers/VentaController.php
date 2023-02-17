@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Corte;
 use App\Models\Venta;
 use App\Models\Farmacia;
 use Illuminate\Http\Request;
@@ -9,18 +10,107 @@ use Illuminate\Support\Facades\DB;
 
 class VentaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
     public function ventas(Farmacia $Farmacia)
     {   
-        $Ventas = DB::table('venta')->get();
-        //dd($Ventas);
-        return view('PuntoVenta.Ventas.ventas')->with(['Ventas' => $Ventas,'Farmacia'=>$Farmacia]);
+        $Hoy=date('Y/m/d');
+        $Ventas = DB::table('venta')->where('farmacia_id',$Farmacia->id)
+        ->where('Fecha',$Hoy)->get();
+        
+        $NoVentas = sizeof($Ventas);
+        if ($NoVentas >= 0 && $NoVentas <= 9) {
+            $NoVentas = "0".$NoVentas;
+        }
+        $Corte = Corte::where('farmacia_id',$Farmacia->id)
+        ->where('Fecha',$Hoy)->first();
+
+
+        return view('PuntoVenta.Ventas.ventas')->with([
+            'Ventas' => $Ventas,
+            'Farmacia'=>$Farmacia,
+            'NoVentas'=>$NoVentas,
+            'Corte'=>$Corte
+        ]);
     }
 
+    public function corte(Request $request, $Farmacia)
+    {   
+        $Hoy=date('Y/m/d');
+
+        
+        $Corte = Corte::where('farmacia_id',$Farmacia)
+        ->where('Fecha',$Hoy)->first();
+     
+        if ($Corte == null) { // se genera un nuevo corte
+         
+            $Corte = null;
+            try {
+                $corteNuevo = $this->CorteNuevo($Hoy,$Farmacia);
+                DB::beginTransaction();
+                try {
+                    $Corte = new Corte();
+                    $Corte->TotalCorte = $corteNuevo['Corte'];
+                    $Corte->Fecha = $Hoy;
+                    $Corte->Farmacia()->associate($Farmacia);
+                   
+                    $Corte->save();
+                    DB::commit();
+
+                    return $corteNuevo;
+
+                } catch (\Throwable $th) {
+                    DB::rollback();
+                    return 0;
+                }
+            } catch (\Throwable $th) {
+                DB::rollback();
+                return 0;
+            }
+        }else{
+            try {
+                $corteNuevo = $this->CorteNuevo($Hoy,$Farmacia);
+                DB::beginTransaction();
+                
+                try {
+                    
+                    $Corte->TotalCorte = $corteNuevo['Corte'];
+                    $Corte->Fecha = $Hoy;
+                    
+                    $Corte->update();
+                    DB::commit();
+                    return $corteNuevo;
+
+                } catch (\Throwable $th) {
+                    return 0;
+                }
+            } catch (\Throwable $th) {
+                return 0;
+            }
+        }
+    }
+    
+    Public function CorteNuevo($Hoy, $Farmacia)
+    {
+        $Ventas = DB::table('venta')
+        ->where('farmacia_id',$Farmacia)
+        ->where('Fecha',$Hoy)->select('Total')->get();
+        
+        $TotalDeVentas = 0;
+        foreach ($Ventas as $key => $venta) {
+            $TotalDeVentas = $TotalDeVentas + $venta->Total;
+        }
+        $corteNuevo =['Corte'=>$TotalDeVentas,'Fecha'=>$Hoy];
+
+        return $corteNuevo;
+    }
+    public function detalles($Venta)
+    {
+       $Detalles = DB::table('detalles_ventas')
+       ->where('venta_id',$Venta)
+       ->where('Fecha',date('Y/m/d'))->select('Codigo','Producto','Unidades','SubTotal')->get();
+
+       return $Detalles;
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -50,7 +140,7 @@ class VentaController extends Controller
      */
     public function show($id)
     {
-        $Vendidos = DB::table('detalles')->Where('IdVenta',$id)->get();
+        $Vendidos = DB::table('detalles')->Where('venta_id',$id)->get();
         return $Vendidos;
     }
 

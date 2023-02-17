@@ -20,7 +20,7 @@
                     <thead>
                         <tr> 
                             <th></th>
-                            <th>Comprar</th>
+                            <th>Agregar</th>
                             <th>Código</th>
                             <th>Producto</th>
                             <th>$</th>

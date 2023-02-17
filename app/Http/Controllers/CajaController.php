@@ -40,14 +40,15 @@ class CajaController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $Hoy = date('Y/m/d');
         DB::beginTransaction();
         try {
             $Venta = new Venta();
-            $Venta->Farmacia = $request->Farmacia;
+            $Venta->farmacia()->associate($request->Farmacia);
             $Venta->Total = $request->TotalVenta;
+            $Venta->Fecha = $Hoy;
             $Venta->save();
-
+           
             $Productos = $request->carrito;
             try {
                 $agotados = [];
@@ -57,14 +58,16 @@ class CajaController extends Controller
                     $Detalle->Unidades = (int)$Producto['Unidades'];
                     $Detalle->SubTotal = (float)$Producto['SubTotal'];
                     $Detalle->Codigo = $Producto['Codigo'];
-                    $Detalle->Id_Venta = $Venta->id;
-                    
+                    $Detalle->Fecha = $Hoy;
 
                     $ProductoAlmacen = Producto::findOrFail($Producto['Identificador']);
                     if ($ProductoAlmacen ->Existencias >= $Detalle->Unidades) {
                         $ProductoAlmacen ->Existencias = $ProductoAlmacen ->Existencias - $Detalle->Unidades;
                         
+                        $Detalle->producto()->associate($ProductoAlmacen->id);
+                        $Detalle->venta()->associate($Venta->id);
                         $Detalle->save();
+                        
                         $ProductoAlmacen->save();
                     } else {
                         array_push($agotados,$Detalle->Codigo);
@@ -98,7 +101,8 @@ class CajaController extends Controller
     {
         $Productos = DB::table('productos')->select('id','Codigo','Producto','Precio','Finalidad','Existencias')
         ->where('Existencias','>',0)
-        ->where('id_farmacia',$Farmacia)->get();
+        ->where('farmacia_id',$Farmacia)->get();
+        
         return dataTables()->of($Productos)->toJson();
     }
     /**

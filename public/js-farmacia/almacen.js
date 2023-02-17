@@ -3,6 +3,11 @@ $(document).ready(function() {
         event.preventDefault();
     });
 });
+document.querySelector ('form').addEventListener ('submit', ( ) => {
+
+    console.log ('Se hizo submit');
+    
+});
 function cuerpo_form(){
 return"<div class='form-group'>"+
 "<div class='title_form_almacen'>Información principal</div> <hr>"+
@@ -42,7 +47,7 @@ return"<div class='form-group'>"+
         "<div class='input-group-prepend'>"+
             "<label class='input-group-text' for='inputGroupSelect01'><span class='fas fa-tags icon_r'></span>Tipo de venta</label>"+
         "</div>"+
-        "<select class='custom-select' id='inputGroupSelect01' name='TipoVenta'>"+
+        "<select class='custom-select' id='inputGroupSelect01' name='TipoVenta' requried>"+
             "<option value='Caja'>Caja</option>"+
             "<option value='Pieza'>Pieza</option>"+
         "</select>"+
@@ -74,12 +79,12 @@ return"<div class='form-group'>"+
         "</div>"+
         "<input type='number' class='form-control' placeholder='00.00' name='CostoAnterior' requried>"+
     "</div>"+
+    "<button type='button' class='btn btn-link' onclick=searchProvedores()>Mostrar Proveedores</button>"+
     "<div class='input-group input-group-md mb-3'>"+
         "<div class='input-group-prepend'>"+
-            "<label class='input-group-text' for='inputGroupSelect01'><span class='fas fa-user-lock icon_r text-primary'></span>Proveedor</label>"+
+            "<label class='input-group-text' for='Proveedor'><span class='fas fa-user-lock icon_r text-primary'></span>Proveedor</label>"+
         "</div>"+
-        "<select class='custom-select' id='inputGroupSelect01' name='Proveedor'>"+
-            "<option value='1'>Erick Brandon</option>"+
+        "<select class='custom-select' id='Proveedor' name='Proveedor' requried>"+
         "</select>"+
     "</div>"+
 "</div>"+
@@ -167,6 +172,12 @@ function form_editar(id){
     $('input[name=Finalidad]').val(row.cells[6].innerText);
     $('input[name=Costo]').val(row.cells[7].innerText);
     $('input[name=CostoAnterior]').val(row.cells[8].innerText);
+    let select = document.getElementById('Proveedor');
+    let option = document.createElement('option');
+    option.value = row.getAttribute("ID_Proveedor");
+    option.text = row.cells[9].innerText
+    option.selected = true;
+    select.appendChild(option)
 }
 function editarCodigo(Codigo){
     if (document.getElementById('checkbox-p-1').checked) {
@@ -243,9 +254,10 @@ GlobalErrorCRUD ="Soluciones:\n"
 
 function guardar(){
     document.getElementById('btn_formAlmacen').disabled = true;
-    flag = validarlleno();
-    if (flag == true) {
-        formData = $("#from_body").serialize();
+    let isvalidate=$("#from_body").valid();
+    console.log(isvalidate);
+    if (isvalidate == true) {
+        let formData = $("#from_body").serialize();
         formData = formData+"&Farmacia="+document.getElementById('from_body').getAttribute('farmID');
          CRUD(
             "/AlmacenarProducto",
@@ -261,10 +273,10 @@ function guardar(){
 function actualizar(id){
     document.getElementById('btn_formAlmacen').disabled = true;
     
-    flag = validarEdicion(id);
+    let flag = validarEdicion(id);
     if (flag == true) {
-        flag = validarlleno();
-        if (flag == true) {
+        let isvalidate=$("#from_body").valid();
+        if (isvalidate == true) {
                 document.getElementById('Codigo').disabled = false;
                 ruta = "/ActualizarProducto/"+id;
                 console.log($("#from_body").serialize());
@@ -278,12 +290,12 @@ function actualizar(id){
         } else {
             document.getElementById('Codigo').disabled = true;
             document.getElementById('btn_formAlmacen').disabled = false;
-
         }
         
     } else {
         setTimeout(notify,0000,"inverse",' Ningún campo ha sido modificado','fas fa-leaf');
         document.getElementById('Codigo').disabled = false;
+        document.getElementById('btn_formAlmacen').disabled = false;
     }
 }
 function eliminar(id){
@@ -297,6 +309,7 @@ function eliminar(id){
          CRUD(ruta,formData,colorA,inconoA);
 }
 function CRUD(ruta,formData,colorA,mnsjA,inconoA){
+   
     $.ajax({
         url:ruta,
         type: "POST",
@@ -348,7 +361,7 @@ function validarEdicion(id){
     }
     return flag
 }
-function validarlleno(){
+/* function validarlleno(){
     if ($('input[name=Codigo]').val() == '' || $('input[name=Producto]').val() == '' || $('input[name=Precio]').val() == '' ||
         $('input[name=Existencias]').val() == '' || $('input[name=Caducidad]').val() == '' || $('input[name=Finalidad]').val() == '' ||
         $('input[name=Costo]').val() == '' || $('input[name=CostoAnterior]').val() == '')
@@ -358,7 +371,7 @@ function validarlleno(){
         flag = true;
     }
     return flag
-}
+} */
 function VSventa(Costo) {
     let PrecioVenta=document.getElementById('PrecioVenta').value
     if (!PrecioVenta) {
@@ -450,4 +463,41 @@ function CloseScanner() {
     $('#modal_Scanner').modal('hide');
     $('#modal_almacen').modal('show');
 
+}
+function searchProvedores() {
+    console.log("entró");
+    $.ajax({
+        url:'/ProveedoresProducto',
+        type: "POST",
+        headers:GlobalToken,
+        data: true,
+        success:  function(data){       
+            
+            if (data.length > 0) { 
+                let select = document.getElementById('Proveedor');
+                let valorAux;
+                if (select.length > 0) { //Verifica si previamente existe una op selecionada
+                   /* Si existe, retoma el valor previo */
+                    valorAux =select.value; 
+                }
+
+                document.getElementById("Proveedor").innerHTML= ""
+                data.forEach(e => {
+                    let option = document.createElement('option');
+                    option.value = e.id;
+                    option.text = e.Nombre
+                    select.appendChild(option)
+                });
+                if (valorAux) {// valida si hay un valor previo
+                    /*De las nuevas op selecciona el valor previo */
+                    select.value = valorAux;
+                }
+            }else{
+
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
+        }
+     });
 }

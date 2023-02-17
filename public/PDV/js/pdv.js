@@ -2,6 +2,7 @@ $(document).ready(function() {
     document.getElementById('btnVentanilla').disabled = true;
     document.getElementById('btnCobrar').disabled = true;
 });
+//document.oncontextmenu = function(){return false}
 $(document).bind('keydown',function(e){
     if ( e.which == 27 ) {
      CloseScanner();

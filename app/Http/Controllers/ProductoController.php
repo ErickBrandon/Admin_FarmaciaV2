@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Farmacia;
 use App\Models\Producto;
+use App\Models\Proveedor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -38,9 +39,9 @@ class ProductoController extends Controller
             $producto->Finalidad = $request->Finalidad;
             $producto->Costo = $request->Costo;
             $producto->CostoAnterior = $request->CostoAnterior;
-            $producto->id_proveedor = 1;
-            $producto->id_farmacia = $request->Farmacia;
+            $producto->farmacia()->associate( $request->Farmacia);
             $producto->save();
+            $producto->proveedores()->attach($request->Proveedor);
             DB::commit( );
             
             return 1;
@@ -81,7 +82,6 @@ class ProductoController extends Controller
      */
     public function update(Request $request, Producto $Producto)
     {
-
         $Producto->codigo = $request->Codigo;
         $Producto->Producto = $request->Producto;
         $Producto->Precio = $request->Precio;
@@ -91,7 +91,9 @@ class ProductoController extends Controller
         $Producto->Finalidad = $request->Finalidad;
         $Producto->Costo = $request->Costo;
         $Producto->CostoAnterior = $request->CostoAnterior;
-        $Producto->id_proveedor = $request->Proveedor;
+        //$Producto->proveedores[0]->updateExistingPivot('proveedor_id',$request->Proveedor);
+        $Producto->proveedores[0]->pivot->proveedor_id =$request->Proveedor;
+        $Producto->proveedores[0]->pivot->save();
         $Producto->save();
         return 1;
     }
@@ -108,7 +110,19 @@ class ProductoController extends Controller
         return 1;
     }
     public function ProductoEnAlmacen($Farmacia){
-        $productos = Producto::where('id_farmacia',$Farmacia)->get();
+        $productos =DB::table('producto_proveedor')
+        ->join('productos','producto_proveedor.producto_id','=','productos.id')
+        ->join('proveedores','producto_proveedor.proveedor_id','=','proveedores.id')
+        ->where('producto_proveedor.producto_id',$Farmacia)
+        ->select('productos.id AS ID','Codigo','Producto','Precio','Existencias',
+                 'TipoVenta','Caducidad','Finalidad','Costo',
+                 'CostoAnterior','proveedores.Nombre as Proveedor','proveedor_id')->get();
         return dataTables()->of($productos)->toJson();
+        
+    }
+
+    public function Productos_Proveedores(){
+        $Proveedores = Proveedor::select('id','Nombre')->get();
+        return $Proveedores;
     }
 }

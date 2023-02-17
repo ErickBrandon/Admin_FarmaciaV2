@@ -5,6 +5,7 @@ use App\Http\Controllers\CajaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\VentaController;
+use App\Http\Controllers\ContableController;
 use App\Http\Controllers\FarmaciaController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\DashboardController;
@@ -52,10 +53,18 @@ Route::POST('GuardarAdministrador',[UserController::class,'store'])->name('Guard
 Route::POST('/ProductosVenta/{Farmacia}',[CajaController::class,'tbl']);
 Route::GET('PuntoDeVenta/{Farmacia}',[CajaController::class,'show'])->name('PuntoVenta');
 Route::POST('RegistrarVenta',[CajaController::class,'store']);
+
 Route::GET('PuntoDeVenta/{Farmacia}/Ventas',[VentaController::class,'ventas'])->name('Ventas');
+Route::POST('CorteDeCaja/{Farmacia}',[VentaController::class,'corte'])->name('Corte');
+Route::POST('Detalle/{Venta}',[VentaController::class,'detalles'])->name('DetalleVenta');
 
 Route::GET('PuntoDeVenta/{Farmacia}/Almacen',[ProductoController::class,'almacen'])->name('Almacen');
 Route::POST('ProductoEnAlmacen/{Farmacia}',[ProductoController::class,'ProductoEnAlmacen'])->name('Productos');
 Route::POST('AlmacenarProducto',[ProductoController::class,'store'])->name('GuardarProducto');
 Route::POST('ActualizarProducto/{Producto}',[ProductoController::class,'update'])->name('EditarProducto');
 Route::POST('EliminarProducto/{Producto}',[ProductoController::class,'destroy'])->name('EliminarProducto');
+Route::POST('ProveedoresProducto',[ProductoController::class,'Productos_Proveedores'])->name('ProveedoresProducto');
+
+
+Route::GET('Contable',[ContableController::class,'index'])->name('Contable');
+Route::POST('tblCortes',[ContableController::class,'DataTableCortesHoy'])->name('tblCortes');

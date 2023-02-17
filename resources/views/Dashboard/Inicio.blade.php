@@ -22,9 +22,27 @@
                 </div>
             </div>
         </div>
-    </div>
-  </a>
-</div>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-6 col-xl-4">
+    <a href="{{Route('Contable')}}">
+      <div class="card rides-bar">
+        <div class="card-block m-t-10">
+            <div class="row d-flex align-items-center">
+                <div class="col-auto">
+                    <i class="fas fa-balance-scale f-30 text-white rides-icon"></i>
+                </div>
+                <div class="col">
+                  <span class="d-block">Módulo gestión</span>
+                  <h3 class="f-w-300">Contable</h3>
+                </div>
+            </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
   <div class="col-md-6 col-xl-4">
     <a href="{{route('Proveedores')}}">
       <div class="card rides-bar">
@@ -39,61 +57,80 @@
                 </div>
             </div>
         </div>
-    </div>
-  </a>
-</div>
-
-<div class="col-md-6 col-xl-4">
-  <a href="{{route('Farmacias')}}">
-    <div class="card rides-bar">
-      <div class="card-block m-t-10">
-          <div class="row d-flex align-items-center">
-              <div class="col-auto">
-                  <i class="fas fa-hospital f-30 text-white rides-icon"></i>
-              </div>
-              <div class="col">
-                <span class="d-block">Módulo configuración</span>
-                <h3 class="f-w-300">Farmacias</h3>
-              </div>
-          </div>
       </div>
-    </div>
-  </a>
-</div>
-</div>
-<div class="card">
-  <div class="card-header">
-      <h5>Control de entrada / Punto de venta</h5>
-  </div><br>
-  <div class="card-block table-border-style">
-      <div class="table-responsive">
-          <table class="table table-striped text-center">
-              <thead class="table-primary ">
-                  <tr>
-                      <th>Farmacia</th>
-                      <th>Punto de venta</th>
-                  </tr>
-              </thead>
-              <tbody>
-                @if (sizeof($Farmacias) == 0)
-                    <tr>
-                      <td>No hay farmacias registradas</td>  
-                    </tr> 
-                @else
-                  @foreach ($Farmacias as $Farmacia)
-                    <tr>
-                      <td>{{$Farmacia ->Farmacia}}</td>
-                      <td><a href="{{route('PuntoVenta',$Farmacia->id)}}" class="btn btn-dark"><span class="fas fa-share-square"></span> ir</a></td>
-                    </tr>
-                  @endforeach
-                @endif
-             
-              </tbody>
-          </table>
-      </div>
+    </a>
   </div>
-</div>
 
+  <div class="col-md-6 col-xl-4">
+    <a href="{{route('Farmacias')}}">
+      <div class="card rides-bar">
+        <div class="card-block m-t-10">
+            <div class="row d-flex align-items-center">
+                <div class="col-auto">
+                    <i class="fas fa-hospital f-30 text-white rides-icon"></i>
+                </div>
+                <div class="col">
+                  <span class="d-block">Módulo gestión</span>
+                  <h3 class="f-w-300">Usuarios</h3>
+                </div>
+            </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-md-6 col-xl-4">
+    <a href="{{route('Farmacias')}}">
+      <div class="card rides-bar">
+        <div class="card-block m-t-10">
+            <div class="row d-flex align-items-center">
+                <div class="col-auto">
+                    <i class="fas fa-hospital f-30 text-white rides-icon"></i>
+                </div>
+                <div class="col">
+                  <span class="d-block">Módulo configuración</span>
+                  <h3 class="f-w-300">Farmacias</h3>
+                </div>
+            </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="card col-12">
+    <div class="card-header">
+        <h5>Control de entrada / Punto de venta</h5>
+    </div><br>
+    <div class="card-block table-border-style">
+        <div class="table-responsive">
+            <table class="table table-striped text-center">
+                <thead class="table-primary ">
+                    <tr>
+                        <th>Farmacia</th>
+                        <th>Punto de venta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  @if (sizeof($Farmacias) == 0)
+                      <tr>
+                        <td>No hay farmacias registradas</td>  
+                      </tr> 
+                  @else
+                    @foreach ($Farmacias as $Farmacia)
+                      <tr>
+                        <td>{{$Farmacia ->Farmacia}}</td>
+                        <td><a href="{{route('PuntoVenta',$Farmacia->id)}}" class="btn btn-dark"><span class="fas fa-share-square"></span> ir</a></td>
+                      </tr>
+                    @endforeach
+                  @endif
+               
+                </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+
+</div>
 @endsection
  
 @section('foot_external')

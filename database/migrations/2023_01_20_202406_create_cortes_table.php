@@ -13,15 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('venta', function (Blueprint $table) {
+        Schema::create('cortes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->float('Total',6,2);
-            $table->unsignedBigInteger('farmacia_id');
-            $table->date('Fecha');
-
+            $table->float('TotalCorte');
+            $table->dateTime('Fecha');
+            $table->unsignedBigInteger('farmacia_id')->nullable();
+            
             $table->foreign('farmacia_id')
-            ->references('id')->on('farmacias')
-            ->onDelete('cascade');
+                  ->references("id")
+                  ->on("farmacias")
+                  ->onDelete("cascade")
+                  ->onUpdate("cascade");
         });
     }
 
@@ -32,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('venta');
+        Schema::dropIfExists('cortes');
     }
 };

@@ -3,6 +3,8 @@
 <link rel="stylesheet" href="{{asset('PDV/css/principal.css')}}">
 <link rel="stylesheet" href="{{asset('PDV/css/venta.css')}}">
 <link rel="stylesheet" href="{{asset('assets/fonts/fontawesome/css/fontawesome-all.min.css')}}">
+
+<meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('cont_PDV')
     <div class="container">
@@ -16,7 +18,7 @@
                         </div>
                         <div class="col text-center">
                             <span class="text-uppercase d-block m-b-10">Caja:</span>
-                            <h4 class="f-w-300">{{$Farmacia->Farmacia}}</h4>
+                            <h4 id="PntVenta" class="f-w-300" farmID={{$Farmacia->id}}>{{$Farmacia->Farmacia}}</h4>
                         </div>
                     </div>
                 </div>
@@ -30,7 +32,7 @@
                             </div>
                             <div class="col">
                                 <h5 class="text-muted mb-0">Ventas de hoy</h5>
-                                <h2 class="mb-2 f-w-300">432</h2>
+                                <h2 class="mb-2 f-w-300">{{$NoVentas}}</h2>
                             </div>
                             
                         </div>
@@ -45,9 +47,16 @@
                                 <i class="fas fa-piggy-bank f-30 text-white theme-bg"></i>
                             </div>
                             <div class="col">
-                                <span class="text-muted">July 01 - June 01 (2016)</span>
-                                <h4 class="mb-2 f-w-400"><span>$</span>2,013</h4>
-                                <button class="btn btn-primary btn-sm col-10">Generar corte</button>
+                               
+                                @if ($Corte === null)
+                                    <span id='FechaCorte' class="text-muted">AAA/mm/ddd</span>
+                                    <h4 class="mb-2 f-w-400"><span>$</span><span id="Corte">00.0</span></h4>
+                                    <button type="button" class="btn btn-primary btn-sm col-10" onclick="GenerarCorte()">Generar corte</button>
+                                @else
+                                    <span id='FechaCorte' class="text-muted">{{$Corte['Fecha']}}</span>
+                                    <h4 class="mb-2 f-w-400"><span>$</span><span id="Corte">{{$Corte['TotalCorte']}}</span></h4>
+                                    <button type="button" class="btn btn-primary btn-sm col-10" onclick="GenerarCorte()">Generar corte</button>
+                                @endif
                             </div>
                             
                         </div>
@@ -58,7 +67,7 @@
         <div class="card">
             <div class="card-header">
                 <h5>Lista de ventas</h5>
-                <span class="d-block m-t-5">Ventas realizadas el día de <code>hoy</code> 05/04/2022</span>
+                <span class="d-block m-t-5">Ventas realizadas el día de hoy <span id="FechaHoy"></span></span>
             </div>
             <div class="card-block table-border-style">
                 <div class="table-responsive">
@@ -98,30 +107,33 @@
                 </div>
                 <div id="modal-body" class="modal-body">
                     <div class="col-12">
-                        <div class="card rides-bar">
-                            <div class="card-block">
-                                <div class="row d-flex align-items-center">
-                                    <div class="col-auto">
-                                        <i class="feather icon-shopping-cart f-30 text-white rides-icon"></i>
-                                    </div>
-                                    <div class="col">
-                                        <span class="d-block"><strong class="text-c-blue f-w-300">Número de venta</strong></span>
-                                        <h3 id="NoVenta" class="f-w-300"></h3>
+                        <div class="col-12">
+                            <div class="card card-social">
+                                <div class="card-block border-bottom">
+                                    <div class="row align-items-center justify-content-center">
+                                        <div class="col-auto">
+                                            <i class="fas fa-shopping-cart text-c-blue f-36"></i>
+                                        </div>
+                                        <div class="col text-right">
+                                            <h3>Código de venta</h3>
+                                            <h5 class="text-c-blue mb-0" id='CodigoVenta'>87878787</h5>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table id='tbl_detalle' class="table table-striped">
+                        <table  class="table table-striped">
                             <thead>
                                 <tr class="">
                                     <th>Código</th>
-                                    <th>Unidades</th>
+                                    <th>Producto</th>
+                                    <th>Pz</th>
                                     <th>SubTotal</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id='tbl_detalle'>
                             </tbody>
                         </table>
                     </div>
@@ -133,5 +145,6 @@
     </div>
 @endsection
 @section('foot_extras')
+<script src="{{asset('assets/plugins/sweetalert/js/sweetalert.min.js')}}"></script>
 <script src="{{asset('js-farmacia/ventas.js')}}"></script>
 @endsection

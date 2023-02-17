@@ -19,8 +19,18 @@ return new class extends Migration
             $table->integer('Unidades');
             $table->float('SubTotal');
             $table->string('Codigo',60);
-            $table->bigInteger('Id_Venta');
-            $table->timestamps();
+            $table->date('Fecha');
+            $table->unsignedBigInteger('venta_id');
+            $table->unsignedBigInteger('producto_id');
+
+
+            $table->foreign('venta_id')
+            ->references("id")
+            ->on("venta");
+
+            $table->foreign('producto_id')
+            ->references("id")
+            ->on("productos");
         });
     }
 
