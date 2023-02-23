@@ -39,10 +39,18 @@ $(document).ready(function() {
         },
         'columns':[
             {data:'Farmacia'},
-            {
-             data:'TotalCorte',
+            {data:'TotalCorte',
              render: function(data){
-                return "$"+parseFloat(data).toFixed(2);
+                if (data == null) {
+                    return "$ ----";    
+                }else{
+                    return "$ "+parseFloat(data).toFixed(2);
+                }
+             }
+            },
+            {data:'ID',
+             render:function(data){
+                return "<button class='btn btn-icon btn-primary btn-icon fas fa-piggy-bank' onclick='GenerarCorte("+data+")'></button>"
              }
             }
         ],

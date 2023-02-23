@@ -20,10 +20,11 @@ class ContableController extends Controller
     public function DataTableCortesHoy()
     {   
         $Hoy = date('Y/m/d');
-        $Data = DB::table('farmacias')->join('cortes','cortes.id_farmacia','=','farmacias.id')
-        ->select('farmacias.id','Farmacia','TotalCorte','cortes.id as IdCorte',)
-        ->where('cortes.Fecha',$Hoy)
+        $Data = DB::table('farmacias')->leftJoin('cortes','cortes.farmacia_id','=','farmacias.id')
+        //->where('cortes.Fecha',$Hoy)
+        ->select('farmacias.id AS ID','Farmacia','TotalCorte','cortes.id AS corte_id')
         ->get();
+        //dd($Data);
         return datatables()->of($Data)->toJson();
     }
     /**
