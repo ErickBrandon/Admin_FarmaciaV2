@@ -16,7 +16,8 @@ class DashboardController extends Controller
     public function index()
     {
         $Farmacias = Farmacia::all();
-        //dd($Farmacias[0]->id);
+        
+     
         return view('Dashboard.Inicio')->with('Farmacias',$Farmacias);
     }
 }

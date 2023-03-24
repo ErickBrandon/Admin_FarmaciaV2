@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('venta', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->float('Total',6,2);
+            $table->float('Inversion_Venta')->nullable();
             $table->unsignedBigInteger('farmacia_id');
             $table->date('Fecha');
 

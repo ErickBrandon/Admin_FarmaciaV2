@@ -46,7 +46,7 @@ Route::GET('HomeAdmin',[DashboardController::class,'index'])->name('HomeAdmin');
     Route::POST('TblFarmacia',[FarmaciaController::class,'DataTableFarmacia'])->name('TblFarmacias');
 /* -------------------------------------------------------------------------- */
 /*  ------------------- Rutas de modulo Administradores------------------------------- */
-Route::GET('Administradores',[UserController::class,'index'])->name('Administradores');
+Route::GET('Usuarios',[UserController::class,'index'])->name('Usuarios');
 Route::POST('GuardarAdministrador',[UserController::class,'store'])->name('GuardarProveedor');
 
 /* Punto de venta */
@@ -68,3 +68,12 @@ Route::POST('ProveedoresProducto',[ProductoController::class,'Productos_Proveedo
 
 Route::GET('Contable',[ContableController::class,'index'])->name('Contable');
 Route::POST('tblCortes',[ContableController::class,'DataTableCortesHoy'])->name('tblCortes');
+Route::POST('CorteGeneral',[ContableController::class,'CorteGeneral'])->name('CorteGeneral');
+Route::POST('CortesIndividuales',[ContableController::class,'Cortes_Individuales'])->name('CortesIndividuales');
+Route::POST('HistorialCG',[ContableController::class,'HistorialCG'])->name('HistorialCG');
+Route::POST('EliminarCG/{CorteGeneral}',[ContableController::class,'EliminarCG'])->name('EliminarCG');
+Route::POST('EliminarTodosCG',[ContableController::class,'EliminarTodosCG'])->name('EliminarTodosCG');
+Route::POST('HistorialCF',[ContableController::class,'HistorialCF'])->name('HistorialCF');
+Route::POST('EliminarCF',[ContableController::class,'EliminarCF'])->name('EliminarCF');
+Route::POST('HistorialV',[ContableController::class,'HistorialV'])->name('HistorialV');
+Route::POST('HistorialVD',[ContableController::class,'HistorialVD'])->name('HistorialVD');

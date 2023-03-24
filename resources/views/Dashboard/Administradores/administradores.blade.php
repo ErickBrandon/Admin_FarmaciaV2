@@ -1,6 +1,7 @@
 @extends('Dashboard.layout.master')
 @section('extras_header')
 <link rel="stylesheet" href="assets/plugins/data-tables/css/datatables.min.css">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('page')Configuración de administradores @endsection
 @section('body-content')
@@ -14,7 +15,7 @@
         </div>
         <div class="card-block table-border-style">
             <div class="table-responsive">
-                <table class="table">
+                <table id='tbl_Usuarios' class="table">
                     <thead>
                         <tr>
                             <th >Usuario</th>

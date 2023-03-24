@@ -37,11 +37,11 @@
                     </a>
                 </li>
                 <li  class="nav-item">
-                    <a href="{{route('Administradores')}}" class="nav-link">
+                    <a href="{{route('Usuarios')}}" class="nav-link">
                         <span class="pcoded-micon">
-                            <i class="feather icon-users"></i>
+                            <i class="fas fa-users-cog"></i>
                         </span>
-                        <span class="pcoded-mtext">Config. Administradores</span>
+                        <span class="pcoded-mtext">Config. Usuarios</span>
                     </a>
                 </li>
                 <li class="nav-item">

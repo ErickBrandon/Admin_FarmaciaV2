@@ -62,12 +62,12 @@
   </div>
 
   <div class="col-md-6 col-xl-4">
-    <a href="{{route('Farmacias')}}">
+    <a href="{{route('Usuarios')}}">
       <div class="card rides-bar">
         <div class="card-block m-t-10">
             <div class="row d-flex align-items-center">
                 <div class="col-auto">
-                    <i class="fas fa-hospital f-30 text-white rides-icon"></i>
+                    <i class="fas fa-users-cog f-30 text-white rides-icon"></i>
                 </div>
                 <div class="col">
                   <span class="d-block">Módulo gestión</span>
@@ -108,6 +108,7 @@
                     <tr>
                         <th>Farmacia</th>
                         <th>Punto de venta</th>
+                        <th>Almacen</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -119,7 +120,8 @@
                     @foreach ($Farmacias as $Farmacia)
                       <tr>
                         <td>{{$Farmacia ->Farmacia}}</td>
-                        <td><a href="{{route('PuntoVenta',$Farmacia->id)}}" class="btn btn-dark"><span class="fas fa-share-square"></span> ir</a></td>
+                        <td><a href="{{route('PuntoVenta',$Farmacia->id)}}" class="btn btn-dark"><span class="fas fa-door-open"></span></a></td>
+                        <td><a href="{{route('PuntoVenta',$Farmacia->id)}}" class="btn btn-primary"><span class="fas fa-boxes"></span></a></td>
                       </tr>
                     @endforeach
                   @endif

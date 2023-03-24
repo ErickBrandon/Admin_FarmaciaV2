@@ -1,4 +1,9 @@
 $(document).ready(function() {
+    
+    $.getJSON('https://api.ipify.org?format=json', function(data){
+    console.log(data.ip);
+});
+
     hoy = new Date();
     hoy = (hoy.getDate())+"/"+(hoy.getMonth()+1) +"/"+hoy.getFullYear()
     document.getElementById("FechaHoy").innerText = hoy
@@ -74,3 +79,4 @@ function GenerarCorte() {
         }
      });
 }
+

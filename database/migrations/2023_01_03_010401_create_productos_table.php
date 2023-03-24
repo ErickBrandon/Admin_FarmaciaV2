@@ -24,12 +24,13 @@ return new class extends Migration
             $table->string('Finalidad',300);
             $table->float('Costo');
             $table->float('CostoAnterior');
-            $table->unsignedBigInteger('farmacia_id');
+            $table->unsignedBigInteger('farmacia_id')->nullable();
 
             
             $table->foreign('farmacia_id')
             ->references("id")
-            ->on("farmacias");
+            ->on("farmacias")
+            ->onDelete('set null');
         });
     }
 

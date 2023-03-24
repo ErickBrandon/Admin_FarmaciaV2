@@ -35,45 +35,41 @@ class VentaController extends Controller
 
     public function corte(Request $request, $Farmacia)
     {   
+        dd($request['HTTP_CLIENT_IP'] );
         $Hoy=date('Y/m/d');
 
         
         $Corte = Corte::where('farmacia_id',$Farmacia)
         ->where('Fecha',$Hoy)->first();
+        $corteNuevo = $this->CorteNuevo($Hoy,$Farmacia);
      
         if ($Corte == null) { // se genera un nuevo corte
          
             $Corte = null;
-            try {
-                $corteNuevo = $this->CorteNuevo($Hoy,$Farmacia);
                 DB::beginTransaction();
                 try {
                     $Corte = new Corte();
                     $Corte->TotalCorte = $corteNuevo['Corte'];
+                    $Corte->InversionXcorte = $corteNuevo['Inversion'];
                     $Corte->Fecha = $Hoy;
                     $Corte->Farmacia()->associate($Farmacia);
                    
                     $Corte->save();
                     DB::commit();
-
                     return $corteNuevo;
 
                 } catch (\Throwable $th) {
                     DB::rollback();
                     return 0;
                 }
-            } catch (\Throwable $th) {
-                DB::rollback();
-                return 0;
-            }
+            
         }else{
-            try {
-                $corteNuevo = $this->CorteNuevo($Hoy,$Farmacia);
                 DB::beginTransaction();
                 
                 try {
-                    
+                    dd($Corte);
                     $Corte->TotalCorte = $corteNuevo['Corte'];
+                    $Corte->InversionXcorte = $corteNuevo['Inversion'];
                     $Corte->Fecha = $Hoy;
                     
                     $Corte->update();
@@ -83,26 +79,10 @@ class VentaController extends Controller
                 } catch (\Throwable $th) {
                     return 0;
                 }
-            } catch (\Throwable $th) {
-                return 0;
-            }
+            
         }
     }
     
-    Public function CorteNuevo($Hoy, $Farmacia)
-    {
-        $Ventas = DB::table('venta')
-        ->where('farmacia_id',$Farmacia)
-        ->where('Fecha',$Hoy)->select('Total')->get();
-        
-        $TotalDeVentas = 0;
-        foreach ($Ventas as $key => $venta) {
-            $TotalDeVentas = $TotalDeVentas + $venta->Total;
-        }
-        $corteNuevo =['Corte'=>$TotalDeVentas,'Fecha'=>$Hoy];
-
-        return $corteNuevo;
-    }
     public function detalles($Venta)
     {
        $Detalles = DB::table('detalles_ventas')

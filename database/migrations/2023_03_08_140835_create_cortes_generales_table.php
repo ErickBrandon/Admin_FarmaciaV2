@@ -13,18 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('cortes', function (Blueprint $table) {
+        Schema::create('cortes_generales', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->float('TotalCorte');
-            $table->float('InversionXcorte');
+            $table->float('Total');
+            $table->float('Inversion');
+            $table->integer('Farmacias');
             $table->date('Fecha');
-            $table->unsignedBigInteger('farmacia_id')->nullable();
             
-            $table->foreign('farmacia_id')
-                  ->references("id")
-                  ->on("farmacias")
-                  ->onDelete("cascade")
-                  ->onUpdate("cascade");
         });
     }
 
@@ -35,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cortes');
+        Schema::dropIfExists('cortes_generales');
     }
 };

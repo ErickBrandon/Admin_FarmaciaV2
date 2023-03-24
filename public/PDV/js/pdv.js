@@ -89,6 +89,7 @@ function agregarACarrito(id){
     });
    
     TotalCarrito = TotalCarrito + precio;
+    TotalCarrito = parseFloat(TotalCarrito).toFixed(2)
     document.getElementById('TotalCarrito').innerText = TotalCarrito;
 }
 function template_producto(codigo,nombre,precio,pz) {
@@ -111,8 +112,12 @@ function buscarEnLista(codigo) {
     table.search(codigo).draw();
 }
 function InputPz(id,pz){
+    console.log("pasó");
     let row = document.querySelector(".c-"+id);
-    if (pz <= row.cells[6].innerText)  {
+    let Cantidad =parseInt(row.cells[6].innerText);
+    console.log(pz);
+    console.log(row.cells[6].innerText);
+    if (pz <= Cantidad)  {
         if (document.getElementById("CInput_"+id).value != '' && document.getElementById("CInput_"+id).value >0) {
             unidades = parseInt(document.getElementById("CInput_"+id).value);
             if (unidades >= 1) {
@@ -121,13 +126,13 @@ function InputPz(id,pz){
                         TotalCarrito = TotalCarrito - ContCarrito[i]['SubTotal'];
     
                         ContCarrito[i]['Unidades'] = unidades;
-                        ContCarrito[i]['SubTotal'] =  ContCarrito[i]['Unidades'] * ContCarrito[i]['Precio'];
+                        ContCarrito[i]['SubTotal'] =  ContCarrito[i]['Unidades'] * parseFloat(ContCarrito[i]['Precio']).toFixed(2);
                         TotalCarrito = TotalCarrito + ContCarrito[i]['SubTotal'];
     
                         filaCar = document.getElementById("car_"+id);
     
-                        filaCar.cells[3].innerText =  ContCarrito[i]['SubTotal'];
-                        document.getElementById("TotalCarrito").innerText = TotalCarrito;
+                        filaCar.cells[3].innerText =  parseFloat(ContCarrito[i]['SubTotal']).toFixed(2);
+                        document.getElementById("TotalCarrito").innerText = parseFloat(TotalCarrito).toFixed(2);
                         break;
                     }
                 }
@@ -137,6 +142,7 @@ function InputPz(id,pz){
         }
     } else {
         document.getElementById("CInput_"+id).value = row.cells[6].innerText;
+        InputPz(id,row.cells[6].innerText);
     }
 }
 function vacio(id) {

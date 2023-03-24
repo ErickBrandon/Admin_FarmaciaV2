@@ -43,47 +43,50 @@ class CajaController extends Controller
         $Hoy = date('Y/m/d');
         DB::beginTransaction();
         try {
+            $Productos = $request->carrito;
+            
             $Venta = new Venta();
             $Venta->farmacia()->associate($request->Farmacia);
             $Venta->Total = $request->TotalVenta;
             $Venta->Fecha = $Hoy;
             $Venta->save();
-           
-            $Productos = $request->carrito;
-            try {
-                $agotados = [];
-                foreach ($Productos as $key => $Producto) {
-                    $Detalle = new Detalle();
-                    $Detalle ->Producto = $Producto['Nombre'];
-                    $Detalle->Unidades = (int)$Producto['Unidades'];
-                    $Detalle->SubTotal = (float)$Producto['SubTotal'];
-                    $Detalle->Codigo = $Producto['Codigo'];
-                    $Detalle->Fecha = $Hoy;
 
-                    $ProductoAlmacen = Producto::findOrFail($Producto['Identificador']);
-                    if ($ProductoAlmacen ->Existencias >= $Detalle->Unidades) {
-                        $ProductoAlmacen ->Existencias = $ProductoAlmacen ->Existencias - $Detalle->Unidades;
-                        
-                        $Detalle->producto()->associate($ProductoAlmacen->id);
-                        $Detalle->venta()->associate($Venta->id);
-                        $Detalle->save();
-                        
-                        $ProductoAlmacen->save();
-                    } else {
-                        array_push($agotados,$Detalle->Codigo);
-                    }
+            $agotados = [];
+            $InversionVenta = 0;
+            foreach ($Productos as $key => $Producto) {
+                $Detalle = new Detalle();
+                $Detalle ->Producto = $Producto['Nombre'];
+                $Detalle->Unidades = (int)$Producto['Unidades'];
+                $Detalle->SubTotal = (float)$Producto['SubTotal'];
+                $Detalle->Codigo = $Producto['Codigo'];
+                $Detalle->Fecha = $Hoy;
+
+                $ProductoAlmacen = Producto::findOrFail($Producto['Identificador']);
+                if ($ProductoAlmacen ->Existencias >= $Detalle->Unidades) {
+                    $ProductoAlmacen ->Existencias = $ProductoAlmacen ->Existencias - $Detalle->Unidades;
+                    
+                    $Detalle->Inversion = $ProductoAlmacen->Costo * $Detalle->Unidades;
+                                            
+                    $Detalle->producto()->associate($ProductoAlmacen->id);
+                    $Detalle->venta()->associate($Venta->id);
+                    $Detalle->save();
+    
+                    $ProductoAlmacen->save();
+
+                    $InversionVenta = $InversionVenta + $Detalle->Inversion;
+                } else {
+                    array_push($agotados,$Detalle->Codigo);
                 }
+            }
+          
             if (sizeof($agotados)>0) {
                 DB::rollback();
                 return $agotados;
             }else {
+                $Venta->Inversion_Venta = $InversionVenta;
+                $Venta->save();
                 DB::commit();
                 return 1;
-            }
-            
-            } catch (Exception $e) {
-                DB::rollback();
-                return 0;
             }
         } catch (Exception $e) {
             DB::rollback();
@@ -99,7 +102,7 @@ class CajaController extends Controller
 
     public function tbl($Farmacia)
     {
-        $Productos = DB::table('productos')->select('id','Codigo','Producto','Precio','Finalidad','Existencias')
+        $Productos = DB::table('productos')->select('id','Codigo','Producto','Precio','Finalidad','Existencias','Costo')
         ->where('Existencias','>',0)
         ->where('farmacia_id',$Farmacia)->get();
         
