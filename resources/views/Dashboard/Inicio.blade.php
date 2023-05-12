@@ -9,6 +9,60 @@
 @section('body-content')
 <div class="row">
   <div class="col-md-6 col-xl-4">
+    <a href="{{route('Farmacias')}}">
+      <div class="card rides-bar">
+        <div class="card-block m-t-10">
+            <div class="row d-flex align-items-center">
+                <div class="col-auto">
+                    <i class="fas fa-hospital f-30 text-white rides-icon"></i>
+                </div>
+                <div class="col">
+                  <span class="d-block">Módulo configuración</span>
+                  <h3 class="f-w-300">Farmacias</h3>
+                </div>
+            </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-md-6 col-xl-4">
+    <a href="{{route('Proveedores')}}">
+      <div class="card rides-bar">
+        <div class="card-block m-t-10">
+            <div class="row d-flex align-items-center">
+                <div class="col-auto">
+                    <i class="fas fa-user-lock f-30 text-white rides-icon"></i>
+                </div>
+                <div class="col">
+                  <span class="d-block">Módulo configuración</span>
+                  <h3 class="f-w-300">Proveedores</h3>
+                </div>
+            </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-md-6 col-xl-4">
+    <a href="{{route('Compras')}}">
+      <div class="card rides-bar">
+        <div class="card-block m-t-10">
+            <div class="row d-flex align-items-center">
+                <div class="col-auto">
+                    <i class="fas fa-dolly f-30 text-white rides-icon"></i>
+                </div>
+                <div class="col">
+                  <span class="d-block">Módulo gestión</span>
+                  <h3 class="f-w-300">Compras</h3>
+                </div>
+            </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-md-6 col-xl-4">
     <a href="">
       <div class="card rides-bar">
         <div class="card-block m-t-10">
@@ -43,23 +97,7 @@
     </a>
   </div>
 
-  <div class="col-md-6 col-xl-4">
-    <a href="{{route('Proveedores')}}">
-      <div class="card rides-bar">
-        <div class="card-block m-t-10">
-            <div class="row d-flex align-items-center">
-                <div class="col-auto">
-                    <i class="fas fa-user-lock f-30 text-white rides-icon"></i>
-                </div>
-                <div class="col">
-                  <span class="d-block">Módulo configuración</span>
-                  <h3 class="f-w-300">Proveedores</h3>
-                </div>
-            </div>
-        </div>
-      </div>
-    </a>
-  </div>
+  
 
   <div class="col-md-6 col-xl-4">
     <a href="{{route('Usuarios')}}">
@@ -79,27 +117,11 @@
     </a>
   </div>
 
-  <div class="col-md-6 col-xl-4">
-    <a href="{{route('Farmacias')}}">
-      <div class="card rides-bar">
-        <div class="card-block m-t-10">
-            <div class="row d-flex align-items-center">
-                <div class="col-auto">
-                    <i class="fas fa-hospital f-30 text-white rides-icon"></i>
-                </div>
-                <div class="col">
-                  <span class="d-block">Módulo configuración</span>
-                  <h3 class="f-w-300">Farmacias</h3>
-                </div>
-            </div>
-        </div>
-      </div>
-    </a>
-  </div>
+  
 
   <div class="card col-12">
     <div class="card-header">
-        <h5>Control de entrada / Punto de venta</h5>
+        <h5><span class="fas fa-hospital"></span> Puntos de venta</h5>
     </div><br>
     <div class="card-block table-border-style">
         <div class="table-responsive">

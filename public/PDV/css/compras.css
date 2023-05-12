@@ -1,0 +1,21 @@
+#tbl_compras{
+    text-align: center;
+    color: #000;
+}
+#tbl_compras :nth-child(5),#tbodyCompras :nth-child(5){
+background: #dae6fb;
+}
+
+#tbl_compras :nth-child(3),#tbodyCompras :nth-child(3),
+#tbl_compras :nth-child(4),#tbodyCompras :nth-child(4),
+#tbl_compras :nth-child(6),#tbodyCompras :nth-child(6){
+   width: 100px !important;
+}
+#tbodyCompras >tr> td> div>input{
+    width: 95%;
+    height: 40px;
+    border-radius: 7px;
+    border: 1px solid #b4b0b0;
+    padding-left: 5px;
+    text-align: center;
+}

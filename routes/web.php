@@ -5,6 +5,7 @@ use App\Http\Controllers\CajaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\VentaController;
+use App\Http\Controllers\CompraController;
 use App\Http\Controllers\ContableController;
 use App\Http\Controllers\FarmaciaController;
 use App\Http\Controllers\ProductoController;
@@ -77,3 +78,7 @@ Route::POST('HistorialCF',[ContableController::class,'HistorialCF'])->name('Hist
 Route::POST('EliminarCF',[ContableController::class,'EliminarCF'])->name('EliminarCF');
 Route::POST('HistorialV',[ContableController::class,'HistorialV'])->name('HistorialV');
 Route::POST('HistorialVD',[ContableController::class,'HistorialVD'])->name('HistorialVD');
+
+Route::GET('Compras',[CompraController::class,'index'])->name('Compras');
+
+

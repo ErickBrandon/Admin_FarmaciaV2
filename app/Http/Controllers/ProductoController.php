@@ -110,6 +110,7 @@ class ProductoController extends Controller
         return 1;
     }
     public function ProductoEnAlmacen($Farmacia){
+        
         $productos =DB::table('producto_proveedor')
         ->join('productos','producto_proveedor.producto_id','=','productos.id')
         ->join('proveedores','producto_proveedor.proveedor_id','=','proveedores.id')
