@@ -5,7 +5,7 @@ use App\Http\Controllers\CajaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\VentaController;
-use App\Http\Controllers\CompraController;
+use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\ContableController;
 use App\Http\Controllers\FarmaciaController;
 use App\Http\Controllers\ProductoController;
@@ -79,6 +79,9 @@ Route::POST('EliminarCF',[ContableController::class,'EliminarCF'])->name('Elimin
 Route::POST('HistorialV',[ContableController::class,'HistorialV'])->name('HistorialV');
 Route::POST('HistorialVD',[ContableController::class,'HistorialVD'])->name('HistorialVD');
 
-Route::GET('Compras',[CompraController::class,'index'])->name('Compras');
+Route::GET('Compras',[FacturaController::class,'index'])->name('Compras');
+Route::POST('GuardarFactura',[FacturaController::class,'store'])->name('GuardarFactura');
+Route::POST('Facturas',[FacturaController::class,'tbl_facturas'])->name('Facturas');
+Route::POST('DetalleFactura',[FacturaController::class,'DetalleFactura'])->name('DetalleFactura');
 
 

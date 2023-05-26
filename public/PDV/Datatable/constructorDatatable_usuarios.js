@@ -47,7 +47,6 @@ $(document).ready(function() {
             {data:'Caducidad',
             "createdCell":
             function (cells,data){
-                console.log("www");
              validacionCaducidad(cells,data);
             }},
             {data:'Finalidad'},

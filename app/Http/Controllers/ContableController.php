@@ -12,14 +12,6 @@ use Illuminate\Support\Facades\DB;
 
 class ContableController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    
-
     public function index()
     {
         $Hoy=date('Y/m/d');

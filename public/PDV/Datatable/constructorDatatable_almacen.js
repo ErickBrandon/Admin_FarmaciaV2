@@ -45,11 +45,11 @@ $(document).ready(function() {
             {data:'Existencias'},
             {data:'TipoVenta'},
             {data:'Caducidad',
-            "createdCell":
-            function (cells,data){
-                console.log("www");
-             validacionCaducidad(cells,data);
-            }},
+                "createdCell":
+                function (cells,data){
+                    validacionCaducidad(cells,data);
+                }
+            },
             {data:'Finalidad'},
             {data:'Costo'},
             {data:'CostoAnterior'},
@@ -76,19 +76,18 @@ $(document).ready(function() {
 } );
 
 function validacionCaducidad(cells,data) {
-    console.log("entró a lavalidación");
   let caducidad = new Date(data)
   caducidad = (caducidad.getDate()+1)+"/"+(caducidad.getMonth()+1) +"/"+caducidad.getFullYear();
   let hoy = new Date()
   hoy = hoy.getDate()+"/"+(hoy.getMonth()+1) +"/"+hoy.getFullYear();
 
 
- var aFecha1 = hoy.split('/');
- var aFecha2 = caducidad.split('/');
- var fFecha1 = Date.UTC(aFecha1[2],aFecha1[1]-1,aFecha1[0]);
- var fFecha2 = Date.UTC(aFecha2[2],aFecha2[1]-1,aFecha2[0]);
- var dif = fFecha2 - fFecha1;
- var dias = Math.floor(dif / (1000 * 60 * 60 * 24));
+ let aFecha1 = hoy.split('/');
+ let aFecha2 = caducidad.split('/');
+ let fFecha1 = Date.UTC(aFecha1[2],aFecha1[1]-1,aFecha1[0]);
+ let fFecha2 = Date.UTC(aFecha2[2],aFecha2[1]-1,aFecha2[0]);
+ let dif = fFecha2 - fFecha1;
+ let dias = Math.floor(dif / (1000 * 60 * 60 * 24));
 
  if (dias<0) {
     $(cells).attr('class',"Caduco");

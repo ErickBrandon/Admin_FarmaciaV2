@@ -13,11 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('compras', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->float('TotalCompra');
-            $table->date('Fecha');
-            $table->unsignedBigInteger('proveedor_id')->nullable();
+        Schema::create('asignaciones', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
         });
     }
 
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('compras');
+        Schema::dropIfExists('asignaciones');
     }
 };

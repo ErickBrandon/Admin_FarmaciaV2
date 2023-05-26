@@ -1,8 +1,3 @@
-$(document).ready(function() {
-    $( "#from_body" ).submit(function( event ) {
-        event.preventDefault();
-    });
-});
 document.querySelector ('form').addEventListener ('submit', ( ) => {
 
     console.log ('Se hizo submit');

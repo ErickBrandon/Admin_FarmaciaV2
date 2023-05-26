@@ -1,87 +1,64 @@
 @extends('Dashboard.layout.master')
 @section('extras_header')
 <link rel="stylesheet" href="{{asset('PDV/css/compras.css')}}">
-{{-- <link rel="stylesheet" href="assets/plugins/data-tables/css/datatables.min.css"> --}}
+<link rel="stylesheet" href="{{asset('assets/plugins/data-tables/css/datatables.min.css')}}">
 <meta name="csrf-token" content="{{ csrf_token() }}">
+<script>
+    const _Proveedores=@json($Proveedores);
+</script>
 @endsection
 @section('page')Configuración de administradores @endsection
 @section('body-content')
+<div class="row">
+    <div class="col-sm-12 col-md-4">
+            <div class="card rides-bar">
+                <div class="card-block">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-sm-2 col-3">
+                            <i class="fas fa-clipboard-list f-30 text-white rides-icon"></i>
+                        </div>
+                        <div class="col-9 text-center">
+                            <h3 class="f-w-300">Registrar factura</h3>
+                            <button id="Nueva_factura" class="btn btn-sm  btn-primary feather icon-plus shadow col-12" data-toggle="modal" data-target=".modal-form-factura"></button>
+                        </div>
+                     </div>
+                </div>
+            </div>
+    </div>
+</div>
+    
+   
     <div class="card">
         <div class="card-header">
-            <h5><span class="fas fa-dolly"></span> Factura de compra</h5>
-        </div><br>
+            <h5><span class="fas fa-clipboard-list"></span> Facturas</h5>
+        </div>
         <div class="card-block">
-            <div class="col-12">
-                <div class='input-group input-group-md mb-3'>
-                    <div class='input-group-prepend'>
-                        <label class='input-group-text' for='Proveedor'><span class='fas fa-clipboard-list text-primary'></span>&nbsp;Proveedor</label>
-                    </div>
-                    <select class='custom-select' id='Proveedor' name='Proveedor'>
-                       @foreach ($Proveedores as $Proveedor)
-                           <option value="{{$Proveedor->id}}">{{$Proveedor->Nombre}}</option>
-                       @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="row">
-                    <form id="form_ProductoNuevo" class="col-5">
-                        <div class="input-group input-group-md mb- ">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text feather icon-slack" id="inputGroup-sizing-sm"></span>
-                            </div>
-                            <input id="Codigo_nuevo" type="text" class="form-control" placeholder="Código de barras" name="Codigo_nuevo" requried="">
-                        </div>
-                    </form>
-                    <div>
-                        <button class="btn btn-primary" onclick="AgregarProducto()"><span class="fas fa-plus-circle"></span> Agregar produto</button>
-                    </div>
-                </div>
-            </div><br>
-            <form id="form_factura">
-                <div class="container">
-                    <table id="tbl_compras" class="table table-hover productos">
+            <div class="row">
+                <div class="col-12"><br>
+                    <table id="tbl_Facturas" class="display table dt-responsive table-striped nowrap" style="width:100%; text-align: center; color: #000">
                         <thead>
                             <tr>
-                                <th>Código</th>
-                                <th>Producto</th>
-                                <th>Costo</th>
-                                <th>Piezas</th>
-                                <th>Subtotal</th>
-                                <th>Quitar</th>
+                                <th>Id Factura</th>
+                                <th>Fecha de registro</th>
+                                <th>Proveedor</th>
+                                <th>Total de compra</th>
+                                <th>Detalles</th>
                             </tr>
                         </thead>
-                        <tbody id="tbodyCompras">            
-                        </tbody>
                     </table>
                 </div>
-            </form>
-            <hr>
-            <div class=" card-customer">
-                <div class="card-block">
-                    <div class="row align-items-center justify-content-center">
-                        
-                        <div class="col">
-                            <i class="fas fa-dolly f-30 text-white bg-info"></i>
-                        </div>
-                        <div class="col-auto">
-                            <h5 class="text-muted mb-0">Total de factura</h5>
-                            <h2 class="mb-2 f-w-300">$&nbsp;<span id="total_factura">0.00</span></h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12">
-                <button id="btn_RFactura" class="btn btn-primary col-12">Registrar factura</button>
             </div>
         </div>
     </div>
+
+@include('Dashboard.Compras.Modals.form_Factura')
 @endsection
 @section('extras_footer')
-{{-- <script src="{{asset('assets/plugins/data-tables/js/datatables.min.js')}}"></script>
-<script src="{{asset('assets/js/pages/tbl-datatable-custom.js')}}"></script> --}}
+<script src="{{asset('assets/plugins/data-tables/js/datatables.min.js')}}"></script>
+<script src="{{asset('PDV/Datatable/constructorDatatable_compras.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-validation/js/jquery.validate.min.js')}}"></script>
 <script src="{{asset('validationJS/form-validation-compras.js')}}"></script>
 <script src="{{asset('js-farmacia/compras.js')}}"></script>
 <script src="{{asset('assets/plugins/notification/js/bootstrap-growl.min.js')}}"></script>
+<script src="{{asset('assets/plugins/sweetalert/js/sweetalert.min.js')}}"></script>
 @endsection

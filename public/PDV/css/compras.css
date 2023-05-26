@@ -19,3 +19,7 @@ background: #dae6fb;
     padding-left: 5px;
     text-align: center;
 }
+.modal-lg{
+    max-width: none !important;
+    width: 92%;
+}

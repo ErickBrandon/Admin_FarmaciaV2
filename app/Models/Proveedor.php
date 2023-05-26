@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Compra;
 use App\Models\Producto;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,4 +18,7 @@ class Proveedor extends Model
         return $this->belongsToMany(Producto::class)->withPivot();
     }
 
+    public function Factura(){
+        return $this->hasMany(Factura::class);
+    }
 }
