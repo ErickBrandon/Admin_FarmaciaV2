@@ -8,8 +8,8 @@ $(document).ready(function() {
         language: {
             "decimal": "",
             "emptyTable": "No hay información",
-            "info": "_END_ de _TOTAL_ Farmacias",
-            "infoEmpty": "No existe información",
+            "info": "_END_ de _TOTAL_ Facturas",
+            "infoEmpty": "No hay información",
             "infoFiltered": "",
             "infoPostFix": "",
             "thousands": ",",
@@ -41,16 +41,55 @@ $(document).ready(function() {
             {data:'Fecha_registro'},
             {data:'Nombre'},
             {data:'TotalCompra'},
+            {render:function (a,b,row) {
+                        return btn_detalles(row);
+                    }
+            },
+            {data:'Total_productos'},
+            {data:'Total_asignados'},
             {data:'ID',
                 "render": function (data) {
-                    return "<button class='btn btn-info btn-icon' onclick=detalleFactura("+data+")>"+
-                                "<i class='fas fa-list'></i>"+
+                    return "<button class='btn btn-dark btn-icon' onclick=asignaciones("+data+")>"+
+                                "<i class='fas fa-dolly'></i>"+
                            "</button>"
             }},
+            {render:function (a,b,row) {
+                        return btn_eliminar(row);
+                    }
+            }
         ],
     },
    );
-} );
+});
+
+function btn_detalles(data) {
+    let btn = "";
+    if (data.Total_asignados == 0) {
+        btn = "<button class='btn btn-info btn-icon' onclick=detalleFactura("+data.ID+")>"+
+                "<i class='fas fa-boxes'></i>"+
+              "</button>"
+    }else{
+      btn = "<button class='btn btn-info btn-icon' disabled>"+
+                "<i class='fas fa-boxes'></i>"+
+            "</button>"
+    }
+    
+    return btn;
+}
+
+function btn_eliminar(data){
+    let btn = "";
+    if (data.Total_productos == data.Total_asignados) {
+        btn = "<button class='btn btn-danger btn-icon' onclick=detalleFactura("+data+")>"+
+                    "<i class='fas fa-trash-alt'></i>"+
+              "</button>";
+    } else {
+        btn = "<button class='btn btn-danger btn-icon' disabled>"+
+                    "<i class='fas fa-trash-alt'></i>"+
+              "</button>";
+    }
+    return btn;
+}
 
 /* function Format(data) {
     if (data == null) {

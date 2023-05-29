@@ -34,6 +34,11 @@
         </div>
         <div class="card-block">
             <div class="row">
+                <div class="alert alert-warning col-12" role="alert">
+                    <b><span class="fas fa-exclamation-triangle"></span> Nota:</b> Al asignar al menos <b>un producto</b> a una farmacia, <b>no</b> se podrá volver a editar la factura.
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-12"><br>
                     <table id="tbl_Facturas" class="display table dt-responsive table-striped nowrap" style="width:100%; text-align: center; color: #000">
                         <thead>
@@ -43,6 +48,10 @@
                                 <th>Proveedor</th>
                                 <th>Total de compra</th>
                                 <th>Detalles</th>
+                                <th>No. Productos</th>
+                                <th>No. Asignados</th>
+                                <th>Asignaciones</th>
+                                <th>Elimnar</th>
                             </tr>
                         </thead>
                     </table>
@@ -52,6 +61,7 @@
     </div>
 
 @include('Dashboard.Compras.Modals.form_Factura')
+@include('Dashboard.Compras.Modals.form_Asignaciones')
 @endsection
 @section('extras_footer')
 <script src="{{asset('assets/plugins/data-tables/js/datatables.min.js')}}"></script>

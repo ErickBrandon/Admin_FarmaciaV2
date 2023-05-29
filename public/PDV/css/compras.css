@@ -23,3 +23,17 @@ background: #dae6fb;
     max-width: none !important;
     width: 92%;
 }
+#tbl_showAsignaciones{
+    background:#fff;
+    border-radius: 10px;
+}
+#tbl_showAsignaciones tr td{
+    padding: 5px !important;
+}
+#tbl_showAsignaciones tr td:nth-child(2){
+    text-align: center;
+}
+#tbl_showAsignaciones tr td:nth-child(1) i{
+    font-size: 25px;
+    margin-right: 10px;
+}

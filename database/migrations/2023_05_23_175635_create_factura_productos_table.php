@@ -20,7 +20,7 @@ return new class extends Migration
             $table->float('Costo');
             $table->bigInteger('Piezas');
             $table->float('SubTotal');
-            $table->bigInteger('Asignadas');
+            $table->bigInteger('Asignadas')->default(0);
             $table->unsignedBigInteger('factura_id')->nullable();
 
             $table->foreign('factura_id')

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->float('TotalCompra');
             $table->date('Fecha_registro');
+            $table->integer('Total_productos');
+            $table->integer('Total_asignados')->default(0);
             $table->unsignedBigInteger('proveedor_id')->nullable();
 
             $table->foreign('proveedor_id')

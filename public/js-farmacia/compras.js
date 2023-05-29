@@ -1,3 +1,5 @@
+
+
 const GlobalToken = {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')};
 const GlobalErrorCRUD ="Soluciones:\n"
     +"1) Intente de nuevo Guardar el registro\n"
@@ -47,7 +49,10 @@ $("#From_Factura").on("hidden.bs.modal", function () {
 });
 var _factura = [];
 var _totalFactura = 0.00;
-var _ContadorClickDetalle = 0;
+var _totalProdutos = 0;
+var _ClickDetalle = 0;
+var _ProductosEliminados = [];
+var _productosAsignacion = [];
 
 $("#Nueva_factura").on("click", function () {
     document.getElementById('Title_From_Factura').innerText ="Nueva factura";
@@ -55,14 +60,16 @@ $("#Nueva_factura").on("click", function () {
  });
 
 function Reinicio_Factura(){
-    _ContadorClickDetalle = 0;
+    _ClickDetalle = 0;
     if (_factura.length !=0) {
         _factura.map(producto =>{
             $("#producto"+producto.Codigo).rules('remove');
        })
     }
     _factura = [];
+    _ProductosEliminados = []
     _totalFactura = 0.00;
+    _totalProdutos = 0
     document.getElementById('total_factura').innerText=parseFloat(0).toFixed(2)
     document.getElementById('tbodyCompras').innerHTML=null
 }
@@ -70,7 +77,7 @@ function Reinicio_Factura(){
 function CreateRowFactura(tbl,codigo,producto,costo,pz, sub) {
     if (!producto && !costo && !pz && !sub) {
        producto = "";
-       costo = null;
+       costo = "";
        pz = 1;
        sub = parseFloat(0).toFixed(2);
     }
@@ -82,15 +89,14 @@ function CreateRowFactura(tbl,codigo,producto,costo,pz, sub) {
     "</div>";
 
     tbl.insertCell(2).innerHTML = "<div class='form-group'>"+
-        "<input type='number' class='form-control' id='costo"+codigo+"' name='costo"+codigo+"' placeholder='0.00' value='"+costo+"' oninput=calculo(1,"+codigo+",this.value) min='0'>"+
+        "<input type='number' class='form-control' id='costo"+codigo+"' name='costo"+codigo+"' placeholder='0.00' value='"+costo+"' oninput=calculo(1,"+codigo+",this.value) min='0.5' step='0.5'>"+
     "</div>";
 
     tbl.insertCell(3).innerHTML = "<div class='form-group'>"+
-        "<input type='number' class='form-control' id='pz"+codigo+"' name='pz"+codigo+"' value='1' value='"+pz+"' oninput=calculo(2,"+codigo+",this.value) min='0'>"+
+        "<input type='number' class='form-control' id='pz"+codigo+"' name='pz"+codigo+"' value='"+pz+"' oninput=calculo(2,"+codigo+",this.value) min='1'>"+
     "</div>";
-
     tbl.insertCell(4).innerText = sub;
-    
+
     tbl.insertCell(5).innerHTML = "<button type='button' class='btn btn-danger btn-icon' onclick=eliminarRow("+codigo+")><i class='fas fa-trash'><i></button>";
 
   
@@ -107,6 +113,7 @@ function AgregarProducto() {
            
             let tbl = document.getElementById('tbodyCompras').insertRow(_factura.length);
             CreateRowFactura(tbl,codigo)
+            _totalProdutos = _totalProdutos+1;
             _factura.push({Codigo:codigo,Producto:'',Costo:0.00, Piezas:1,SubTotal:0});
             document.getElementById('Codigo_nuevo').value =null
         }else{
@@ -116,15 +123,18 @@ function AgregarProducto() {
    
 }
 function calculo (op,codigo,valor){
+    if (valor == "") {
+        valor = 0;
+    }
     let old_sub = 0;
     let nuevo_sub = 0;
+    let old_pz = 0;
     let rowFactura = document.getElementById('row_'+codigo);
-    let piezas = document.getElementById('pz'+codigo).value;
+    let piezas = parseInt(document.getElementById('pz'+codigo).value);
     let costo = document.getElementById('costo'+codigo).value;
-    console.log(costo);
-    console.log(piezas);
+
     // condicion    true     :           false
-   (op == 1) ? costo = valor : piezas = valor;
+   (op == 1) ? costo = valor : piezas = parseInt(valor);
 
    nuevo_sub = costo * piezas;
    rowFactura.cells[4].innerText = nuevo_sub;
@@ -132,17 +142,23 @@ function calculo (op,codigo,valor){
    _factura.map(producto =>{
         if (producto.Codigo == codigo) {
             old_sub =producto.SubTotal
+            old_pz = parseInt(producto.Piezas);
 
             producto.Piezas = piezas;
-            producto.SubTotal = parseInt(nuevo_sub);
+            producto.SubTotal = parseFloat(nuevo_sub).toFixed(2);
             producto.Costo = parseFloat(costo).toFixed(2)
         }
    })
-
+   
    _totalFactura = _totalFactura - old_sub;
    _totalFactura = _totalFactura + nuevo_sub;
-   document.getElementById('total_factura').innerText = parseFloat(_totalFactura).toFixed(2)
+   document.getElementById('total_factura').innerText = parseFloat(_totalFactura).toFixed(2);
+
+   _totalProdutos = _totalProdutos - old_pz;
+   _totalProdutos = _totalProdutos + piezas;
+   
 }
+
 function Nombre_Producto(codigo,value){
     for (let i = 0; i < _factura.length; i++) {
         if (_factura[i].Codigo == codigo) {
@@ -155,6 +171,7 @@ function eliminarRow(codigo) {
     let sub = 0;
     for (let i = 0; i < _factura.length; i++) {
         if (_factura[i].Codigo == codigo) {
+            _ProductosEliminados.push(_factura[i].Codigo);
             sub = _factura[i].SubTotal;
             _factura.splice(i,1);
             document.getElementById('row_'+codigo).remove();
@@ -167,37 +184,57 @@ function eliminarRow(codigo) {
     _totalFactura = _totalFactura - sub;
    document.getElementById('total_factura').innerText = parseFloat(_totalFactura).toFixed(2)
 }
-$('#btn_RFactura').on('click', function() {
+
+$('#btn_RFactura').on('click', function(){
+    let title;
+    let text;
+    let mensaje;
+    let url;
+    let tq;
     if (_factura.length !=0) {
-        let validate = $("#form_factura").valid()
+        let validate = $("#form_factura").valid();
         if (validate) {
+
+            if (_ClickDetalle == 0) {
+                title = "Total de la factura:\n $ "+parseFloat(_totalFactura).toFixed(2);
+                text = "¿Desea continuar con el registro de la factura en el sistema?\n\nAsegúrese que el total de la factura registrada coincida con el total de la factura entregada por el proveedor."
+                mensaje = "La factura fue registrada exitosamente y se le asignó el Id: ";
+                url = 'GuardarFactura';
+                tq = 1;
+            }else{
+                title = "Nuevo Total de la factura:\n $ "+parseFloat(_totalFactura).toFixed(2);
+                text = "¿Desea continuar con la actualización de la factura?\n\nAsegurece que el total de la factura registrada coincide con el de la factura física."
+                mensaje = "Se actualizó correctamente la FACTURA de Id: ";
+                url = "ActualizarFactura/"+_ClickDetalle;
+                tq= 2
+            }
+
+            let proveedor =document.getElementById('Proveedor').value;
+            let data = {
+                        Factura:_factura,
+                        TotalFactura:_totalFactura,
+                        Proveedor:proveedor,
+                        TotalProductos:_totalProdutos,
+                        Eliminados:_ProductosEliminados
+                       }
             swal({
-                title: "Total de la compra\n $ "+parseFloat(_totalFactura).toFixed(2),
-                text: "¿Seguro que desea registrar la factura en el sistema?\n\nAsegurece que el total de la factura registrada coincide con el de la factura física",
+                title: title,
+                text:text,
                 icon: "info",
                 buttons: true,
                 dangerMode: false,
-            })
-            .then((registrar) => {
+            }).then((registrar) => {
                 if (registrar) {
-                    let proveedor =document.getElementById('Proveedor').value;
-                    let data = {
-                        Factura:_factura,
-                        TotalFactura:_totalFactura,
-                        Proveedor:proveedor
-                    }
-                    let mensaje = "La factura fue registrada exitosamente y se le asignó el ID: "
                     Query_Factura(
                         1,
-                        'GuardarFactura',
+                        url,
                         data,
                         mensaje,
                     );
                 }
             });
         }
-       }
-    
+    }
 });
 
  function Query_Factura(tipo_query,url,data,mensaje) {
@@ -207,22 +244,21 @@ $('#btn_RFactura').on('click', function() {
         headers:GlobalToken,
         data: data,
         success:  function(payload){
+            swal(mensaje+payload,{icon:"success",});
             if (tipo_query == 1) {
                 $('#From_Factura').modal('hide');
-                Reinicio_Factura();
-                $('#tbl_Facturas').DataTable().ajax.reload();
             }
-            swal(mensaje+payload,{icon:"success",});
+            $('#tbl_Facturas').DataTable().ajax.reload();
         },
-        error: function(jqXHR, textStatus, errorThrown){
+        error: function(){
             alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
         }
      });
  }
 
 function detalleFactura(id){
-    if ( _ContadorClickDetalle == 0) {
-        _ContadorClickDetalle = 1;
+    if ( _ClickDetalle == 0) {
+        _ClickDetalle = id;
         document.getElementById('Title_From_Factura').innerText ="Factura - Id: "+id;
         document.getElementById('btn_RFactura').innerText ="Actualizar factura";
         $.ajax({
@@ -238,8 +274,8 @@ function detalleFactura(id){
 
                     CreateRowFactura(tbl, producto.Codigo, producto.Producto, producto.Costo, producto.Piezas, producto.SubTotal);
                     _totalFactura = _totalFactura + producto.SubTotal;
+                    _totalProdutos = _totalProdutos + producto.Piezas;
                  });
-
                 document.getElementById('total_factura').innerText = parseFloat(_totalFactura).toFixed(2)
                 $('#From_Factura').modal('show');
         },
@@ -247,6 +283,60 @@ function detalleFactura(id){
             alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
         }
      });
+    }   
+}
+
+function asignaciones(id) {
+    document.getElementById('Title_ModalAsigaciones').innerText = "Asignaciones - Factura - Id: "+id;
+    $.ajax({
+        url:'DetalleFactura',
+        type: "POST",
+        headers:GlobalToken,
+        data: {factura_id:id},
+        success:  function(payload){
+            _productosAsignacion = payload;
+            let select =document.getElementById('select_asignaciones');
+            let op = document.createElement('option');
+            op.value =0;
+            op.text = "Seleccione un producto"
+            select.appendChild(op);
+
+            _productosAsignacion.map(producto =>{
+                op = document.createElement('option');
+                op.value = producto.id;
+                op.text = producto.Producto
+                select.appendChild(op);
+           })
+           $('#From_Asignaciones').modal('show');
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
+        }
+    });
+}
+$('#select_asignaciones').on('change', function(e){
+    let op =e.target.value;
+    let tbl = document.getElementById("tbl_showAsignaciones");
+    if (op !=0) {
+        for (let i = 0; i < _productosAsignacion.length; i++) {
+            if (_productosAsignacion[i].id == op ) {
+                tbl.rows[0].cells[1].innerText =_productosAsignacion[i].Codigo;
+                tbl.rows[1].cells[1].innerText =_productosAsignacion[i].Piezas;
+                let porAsignar = (parseInt(_productosAsignacion[i].Piezas) - parseInt(_productosAsignacion[i].Asignadas))
+                tbl.rows[2].cells[1].innerText = porAsignar;
+                document.getElementById('piezas_asignacion').setAttribute('max',porAsignar);
+                tbl.rows[3].cells[1].innerText ="$ "+parseFloat(_productosAsignacion[i].Costo).toFixed(2);
+                document.getElementById('PrecioVenta').setAttribute('min',parseFloat(_productosAsignacion[i].Costo).toFixed(2));
+                break;
+            }  
+        }
+    }else{
+        document.getElementById('piezas_asignacion').setAttribute('max',0);
+        document.getElementById('PrecioVenta').setAttribute('min',0);
+        tbl.rows[0].cells[1].innerText ="";
+        tbl.rows[1].cells[1].innerText ="";
+        tbl.rows[2].cells[1].innerText ="";
+        tbl.rows[3].cells[1].innerText ="";
     }
     
-}
+})
