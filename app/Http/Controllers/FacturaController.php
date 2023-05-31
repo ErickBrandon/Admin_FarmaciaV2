@@ -13,10 +13,12 @@ class FacturaController extends Controller
     public function index()
     {
         $Proveedores = DB::table('proveedores')->select('id','Nombre')->get();
+        $Farmacias = DB::table('Farmacias')->select('id','Farmacia')->get();
        
         return view('Dashboard.Compras.compras')
         ->with([
-            'Proveedores' =>$Proveedores
+            'Proveedores' =>$Proveedores,
+            'Farmacias' =>$Farmacias
         ]);
     }
 
@@ -124,9 +126,8 @@ class FacturaController extends Controller
         
     }
 
-
-    public function destroy(Compra $compra)
+    public function GuardarAsignacion(Request $request)
     {
-        //
+       dd("llegó");
     }
 }

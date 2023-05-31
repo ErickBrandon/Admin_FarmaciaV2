@@ -4,7 +4,8 @@
 <link rel="stylesheet" href="{{asset('assets/plugins/data-tables/css/datatables.min.css')}}">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <script>
-    const _Proveedores=@json($Proveedores);
+    const _Farmacias=@json($Farmacias
+    );
 </script>
 @endsection
 @section('page')Configuración de administradores @endsection

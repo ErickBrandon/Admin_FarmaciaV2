@@ -32,8 +32,12 @@ background: #dae6fb;
 }
 #tbl_showAsignaciones tr td:nth-child(2){
     text-align: center;
+    color: #000 !important;
 }
 #tbl_showAsignaciones tr td:nth-child(1) i{
     font-size: 25px;
     margin-right: 10px;
+}
+#tbl_showAsignaciones tr:nth-child(3){
+    background: #ededed;
 }

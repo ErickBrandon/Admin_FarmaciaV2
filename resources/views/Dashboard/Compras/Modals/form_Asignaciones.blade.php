@@ -1,4 +1,4 @@
-<div id="From_Asignaciones" class="modal fade modal-form-asignaciones" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div id="Modal_Asignaciones" class="modal fade modal-form-asignaciones" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog ">
         <div class="modal-content">
             <div class="modal-header">
@@ -21,7 +21,7 @@
                 <div class="row justify-content-md-center">
                     <div class="col-12">
                         <div class="title_decoracion">
-                            Producto seleccionado
+                            Detalle seleccionado
                         </div>
                         <div class="table-responsive">
                             <table class="table">
@@ -59,66 +59,71 @@
                         </div>
                     </div>
                </div>
-               <div class="title_decoracion">
-                Información de asignación
-               </div>
-               <hr>
-               <div class="row">
-                    <div class="col-md-12">
-                        <div class='input-group input-group-md mb-3'>
-                            <div class='input-group-prepend'>
-                                <label class='input-group-text' for='select_farmacias'><span class='fas fa-hospital icon_r'></span>&nbsp;Farmacia</label>
+               <form id="From_Asignaciones">
+                    <div class="title_decoracion">
+                        Información de asignación
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class='input-group input-group-md mb-3'>
+                                <div class='input-group-prepend'>
+                                    <label class='input-group-text' for='select_farmacias'><span class='fas fa-hospital icon_r'></span>&nbsp;Farmacia</label>
+                                </div>
+                                <select class='custom-select' id='select_farmacias' name='select_farmacias' requried>
+                                    <option value>- Seleccione una farmacia -</option>
+                                    @foreach ($Farmacias as $Farmacia)
+                                        <option value="{{$Farmacia->id}}">{{$Farmacia->Farmacia}}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <select class='custom-select' id='select_farmacias' name='select_farmacias' requried>
-                                <option value="0">- Seleccione una farmacia -</option>
-                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <div class='input-group input-group-md mb-3'>
+                                <div class='input-group-prepend'>
+                                    <span class='input-group-text' id='inputGroup-sizing-sm'><span class='fas fa-boxes icon_r text-info'></span>&nbsp;Piezas</span>
+                                </div>
+                                <input id='piezas_asignacion' type='number' class='form-control' placeholder='Piezas a asignar' name='piezas_asignacion' min="1" max="">
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-12">
-                        <div class='input-group input-group-md mb-3'>
-                            <div class='input-group-prepend'>
-                                <span class='input-group-text' id='inputGroup-sizing-sm'><span class='fas fa-boxes icon_r text-info'></span>&nbsp;Piezas</span>
-                            </div>
-                            <input id='piezas_asignacion' type='number' class='form-control' placeholder='Piezas a asignar' name='piezas_asignacion' min="1" max="">
-                        </div>
+                    <div class="title_decoracion">
+                        Información de venta
                     </div>
-               </div>
-               <div class="title_decoracion">
-                Información de venta
-               </div>
-               <hr>
-               <div class="row">
-                    <div class="col-md-12">
-                        <div class='input-group input-group-md mb-3'>
-                            <div class='input-group-prepend'>
-                                <span class='input-group-text text-success'><span class="fas fa-dollar-sign"></span></span>
+                   <hr>
+                   <div class="row">
+                        <div class="col-md-12">
+                            <div class='input-group input-group-md mb-3'>
+                                <div class='input-group-prepend'>
+                                    <span class='input-group-text text-success'><span class="fas fa-dollar-sign"></span></span>
+                                </div>
+                                <input id='PrecioVenta' type='number' class='form-control' placeholder='Precio venta | 00.00' name='PrecioVenta' requried min="1">
                             </div>
-                            <input id='PrecioVenta' type='number' class='form-control' placeholder='Precio venta | 00.00' name='Precio' requried min="1">
                         </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class='input-group input-group-md mb-3'>
-                            <div class='input-group-prepend'>
-                                <label class='input-group-text' for='inputGroupSelect01'><span class='fas fa-tags icon_r'></span>&nbsp;Tipo de venta</label>
+                        <div class="col-md-12">
+                            <div class='input-group input-group-md mb-3'>
+                                <div class='input-group-prepend'>
+                                    <label class='input-group-text' for='select_TV'><span class='fas fa-tags icon_r'></span>&nbsp;Tipo de venta</label>
+                                </div>
+                                <select class='custom-select' id='select_TV' name='select_TV' requried>
+                                    <option value>- Seleccione tipo de venta -</option>
+                                    <option value='Caja'>Caja</option>
+                                    <option value='Pieza'>Pieza</option>
+                                </select>
                             </div>
-                            <select class='custom-select' id='inputGroupSelect01' name='TipoVenta' requried>
-                                <option value='0'>- Seleccione tipo de venta -</option>
-                                <option value='Caja'>Caja</option>
-                                <option value='Pieza'>Pieza</option>
-                            </select>
                         </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class='input-group input-group-md mb-3'>
-                            <div class='input-group-prepend'>
-                                <span class='input-group-text' id='inputGroup-sizing-sm'><span class='fas fa-calendar-times icon_r text-danger'></span>&nbsp;Caducidad</span>
+                        <div class="col-md-12">
+                            <div class='input-group input-group-md mb-3'>
+                                <div class='input-group-prepend'>
+                                    <span class='input-group-text' id='inputGroup-sizing-sm'><span class='fas fa-calendar-times icon_r text-danger'></span>&nbsp;Caducidad</span>
+                                </div>
+                                <input id="Caducidad" type='date' class='form-control' name='Caducidad'>
                             </div>
-                            <input type='date' class='form-control' name='Caducidad' requried>
                         </div>
-                    </div>
-                    
-                    
-               </div>
+                   </div>
+                   <hr>
+                    <button type="button" id="btn_GuardarAsignacion" class="btn btn-primary col-12" disabled>Asignar al almacen</button>
+               </form>
             </div>
         </div>
     </div>

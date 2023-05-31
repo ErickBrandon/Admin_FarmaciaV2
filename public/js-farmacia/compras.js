@@ -7,6 +7,8 @@ const GlobalErrorCRUD ="Soluciones:\n"
     +"3) Compruebe su conexión a Internet e intente de nuevo - si no hay conexión, comuniquese con el Administrador y con el Proveedor del servicio\n"
     +"4) ¡Si hay conexión a internet! y los problemas persisten comuniquese con el Administrador y con el Desarrollador del sistema";
 
+/* Constantes Componentes */
+const Tbl_showAsignaciones = document.getElementById("tbl_showAsignaciones");
 
 function notify() {
     $.growl({
@@ -47,12 +49,24 @@ $("#From_Factura").on("hidden.bs.modal", function () {
     Reinicio_Factura()
    
 });
+$("#Modal_Asignaciones").on("hidden.bs.modal", function () {
+    /* El evento detecta cuando se cierra el modal del formulario Factura */
+    Reinicio_Asignaciones();
+    document.getElementById('select_asignaciones').innerHTML=null
+    _productosAsignacion = [];
+    _ClikAsignaciones = 0;              
+   
+});
+/* Variables para factura */
 var _factura = [];
 var _totalFactura = 0.00;
 var _totalProdutos = 0;
 var _ClickDetalle = 0;
 var _ProductosEliminados = [];
+/* Variables para asignaciones */
 var _productosAsignacion = [];
+var _ClikAsignaciones = 0;
+var _AsignacionesDisponibles = 0;
 
 $("#Nueva_factura").on("click", function () {
     document.getElementById('Title_From_Factura').innerText ="Nueva factura";
@@ -287,56 +301,103 @@ function detalleFactura(id){
 }
 
 function asignaciones(id) {
-    document.getElementById('Title_ModalAsigaciones').innerText = "Asignaciones - Factura - Id: "+id;
-    $.ajax({
-        url:'DetalleFactura',
-        type: "POST",
-        headers:GlobalToken,
-        data: {factura_id:id},
-        success:  function(payload){
-            _productosAsignacion = payload;
-            let select =document.getElementById('select_asignaciones');
-            let op = document.createElement('option');
-            op.value =0;
-            op.text = "Seleccione un producto"
-            select.appendChild(op);
-
-            _productosAsignacion.map(producto =>{
-                op = document.createElement('option');
-                op.value = producto.id;
-                op.text = producto.Producto
+    if (_ClikAsignaciones == 0) {
+        _ClikAsignaciones = id;
+        document.getElementById('Title_ModalAsigaciones').innerText = "Asignaciones - Factura - Id: "+id;
+        $.ajax({
+            url:'DetalleFactura',
+            type: "POST",
+            headers:GlobalToken,
+            data: {factura_id:id},
+            success:  function(payload){
+                _productosAsignacion = payload;
+                let select =document.getElementById('select_asignaciones');
+                let op = document.createElement('option');
+                op.value =0;
+                op.text = "Seleccione un producto"
                 select.appendChild(op);
-           })
-           $('#From_Asignaciones').modal('show');
-        },
-        error: function(jqXHR, textStatus, errorThrown){
-            alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
-        }
-    });
+    
+                _productosAsignacion.map(producto =>{
+                    op = document.createElement('option');
+                    op.value = producto.id;
+                    op.text = producto.Producto
+                    select.appendChild(op);
+               })
+               $('#Modal_Asignaciones').modal('show');
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
+            }
+        });
+    }
+   
 }
 $('#select_asignaciones').on('change', function(e){
+    Reinicio_FormAsignaciones();
     let op =e.target.value;
-    let tbl = document.getElementById("tbl_showAsignaciones");
     if (op !=0) {
+        document.getElementById('btn_GuardarAsignacion').disabled=false;
         for (let i = 0; i < _productosAsignacion.length; i++) {
             if (_productosAsignacion[i].id == op ) {
-                tbl.rows[0].cells[1].innerText =_productosAsignacion[i].Codigo;
-                tbl.rows[1].cells[1].innerText =_productosAsignacion[i].Piezas;
+                Tbl_showAsignaciones.rows[0].cells[1].innerText =_productosAsignacion[i].Codigo;
+                Tbl_showAsignaciones.rows[1].cells[1].innerText =_productosAsignacion[i].Piezas;
                 let porAsignar = (parseInt(_productosAsignacion[i].Piezas) - parseInt(_productosAsignacion[i].Asignadas))
-                tbl.rows[2].cells[1].innerText = porAsignar;
+                Tbl_showAsignaciones.rows[2].cells[1].innerText = porAsignar;
+                _AsignacionesDisponibles = porAsignar
                 document.getElementById('piezas_asignacion').setAttribute('max',porAsignar);
-                tbl.rows[3].cells[1].innerText ="$ "+parseFloat(_productosAsignacion[i].Costo).toFixed(2);
+                Tbl_showAsignaciones.rows[3].cells[1].innerText ="$ "+parseFloat(_productosAsignacion[i].Costo).toFixed(2);
                 document.getElementById('PrecioVenta').setAttribute('min',parseFloat(_productosAsignacion[i].Costo).toFixed(2));
                 break;
             }  
         }
     }else{
-        document.getElementById('piezas_asignacion').setAttribute('max',0);
-        document.getElementById('PrecioVenta').setAttribute('min',0);
-        tbl.rows[0].cells[1].innerText ="";
-        tbl.rows[1].cells[1].innerText ="";
-        tbl.rows[2].cells[1].innerText ="";
-        tbl.rows[3].cells[1].innerText ="";
+       Reinicio_Asignaciones();
+    }
+    
+})
+function Reinicio_Asignaciones(){
+    document.getElementById('btn_GuardarAsignacion').disabled=true;
+    Tbl_showAsignaciones.rows[0].cells[1].innerText ="";
+    Tbl_showAsignaciones.rows[1].cells[1].innerText ="";
+    Tbl_showAsignaciones.rows[2].cells[1].innerText ="";
+    Tbl_showAsignaciones.rows[3].cells[1].innerText ="";
+    _AsignacionesDisponibles=0;
+    Reinicio_FormAsignaciones();
+}
+function Reinicio_FormAsignaciones(params) {
+    var validator = $("#From_Asignaciones").validate();
+    validator.resetForm();
+    document.getElementById('select_farmacias').value="";
+    document.getElementById('piezas_asignacion').value="";
+    document.getElementById('PrecioVenta').value="";
+    document.getElementById('select_TV').value="";
+    document.getElementById('Caducidad').value=null;
+    
+}
+$('#btn_GuardarAsignacion').on('click', function(){
+    let validate = $("#From_Asignaciones").valid();
+    if (validate) {
+        let formData = $("#From_Asignaciones").serialize();
+        $.ajax({
+            url:'GuardarAsignacion',
+            type: "POST",
+            headers:GlobalToken,
+            data: formData,
+            success:  function(payload){
+                
+            },
+            error: function(){
+                alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
+            }
+        });
+    }
+    
+})
+$('#piezas_asignacion').on('input', function(e){
+    if (e.target.value <= _AsignacionesDisponibles && e.target.value >= 1) {
+        Tbl_showAsignaciones.rows[2].cells[1].innerText =_AsignacionesDisponibles - e.target.value;
+    }else{
+        Tbl_showAsignaciones.rows[2].cells[1].innerText =_AsignacionesDisponibles;
     }
     
 })
