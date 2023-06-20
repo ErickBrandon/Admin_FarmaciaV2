@@ -17,9 +17,14 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('Codigo');
             $table->String('Producto');
-            $table->float('Costo');
-            $table->bigInteger('Piezas');
+            $table->bigInteger('Unidades');
+            $table->float('Costo_Unidad');
             $table->float('SubTotal');
+
+            $table->float('Precio_Unidad')->nullable();
+            $table->bigInteger('Piezas_unidad')->nullable();
+            $table->float('Precio_Piezas')->nullable();
+            
             $table->bigInteger('Asignadas')->default(0);
             $table->unsignedBigInteger('factura_id')->nullable();
 

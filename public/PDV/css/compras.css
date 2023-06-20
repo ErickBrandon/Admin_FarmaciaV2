@@ -38,6 +38,6 @@ background: #dae6fb;
     font-size: 25px;
     margin-right: 10px;
 }
-#tbl_showAsignaciones tr:nth-child(3){
+#tbl_showAsignaciones tr:nth-child(5){
     background: #ededed;
 }

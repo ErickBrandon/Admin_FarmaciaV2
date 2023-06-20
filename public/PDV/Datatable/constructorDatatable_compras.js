@@ -66,11 +66,11 @@ function btn_detalles(data) {
     let btn = "";
     if (data.Total_asignados == 0) {
         btn = "<button class='btn btn-info btn-icon' onclick=detalleFactura("+data.ID+")>"+
-                "<i class='fas fa-boxes'></i>"+
+                "<i class='fas fa-clipboard-list'></i>"+
               "</button>"
     }else{
       btn = "<button class='btn btn-info btn-icon' disabled>"+
-                "<i class='fas fa-boxes'></i>"+
+                "<i class='fas fa-clipboard-list'></i>"+
             "</button>"
     }
     
@@ -80,7 +80,7 @@ function btn_detalles(data) {
 function btn_eliminar(data){
     let btn = "";
     if (data.Total_productos == data.Total_asignados) {
-        btn = "<button class='btn btn-danger btn-icon' onclick=detalleFactura("+data+")>"+
+        btn = "<button class='btn btn-danger btn-icon' onclick=EliminarFactura("+data.ID+")>"+
                     "<i class='fas fa-trash-alt'></i>"+
               "</button>";
     } else {

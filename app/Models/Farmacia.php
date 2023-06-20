@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Corte;
 use App\Models\Venta;
 use App\Models\Producto;
+use App\Models\Asignacion;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -26,6 +27,10 @@ class Farmacia extends Model
     // Uno a Muchos
     public function ventas(){
         return $this->hasMany(Venta::class);
+    }
+
+    public function Asignacion(){
+        return $this->hasMany(Asignacion::class);
     }
 }
 

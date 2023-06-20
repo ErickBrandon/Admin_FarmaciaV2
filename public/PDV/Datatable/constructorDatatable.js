@@ -1,4 +1,5 @@
 $(document).ready(function() {
+   
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -16,7 +17,7 @@ $(document).ready(function() {
             "lengthMenu": "Mostrar _MENU_ Entradas",
             "loadingRecords": "Cargando...",
             "processing": "Procesando...",
-            "search": "<span class='feather icon-search'></span>",
+            "search": "<span class='fas fa-search'></span> Ingrese Producto | Código de barras ",
             "zeroRecords": "No hay concidencias",
             "paginate": {
             "first": "Primero",
@@ -25,11 +26,15 @@ $(document).ready(function() {
             "previous": "<span class='feather icon-chevron-left'>"
             }
         },
-        lengthMenu: [6],
+        lengthMenu: [20],
         bLengthChange : false,
         'ajax':{
             'url':'/ProductosVenta/'+document.getElementById("PntVenta").getAttribute('farmID'),
             'type': 'POST',
+            'dataSrc':function (data) {
+                 _ProductosVenta=data.data
+                return _ProductosVenta;
+            } 
         },
         "createdRow": function( row, data) {
             $(row).attr('id', data['id'] );
@@ -40,23 +45,39 @@ $(document).ready(function() {
                 "render":function () {
                 return "";
             }},
-            {data:"id",
-            "render": function (data) {
-                return "<button class='btn btn-primary fas fa-cart-arrow-down' onclick=carrito("+data+")></button>"
-              }
-            },
             {data:'Codigo'},
             {data:'Producto'},
-            {data:'Precio'},
-            {data:'Finalidad'},
-            {data:'Existencias'}
+            {data:'Precio',
+                "render": function (data) {
+                    return "$ "+parseFloat(data).toFixed(2);
+                }
+            },
+            {data:"id",
+            "render": function (data) {
+                return "<button class='btn btn-primary btn-icon fas fa-cart-arrow-down' onclick=carrito("+data+")></button>"
+              }
+            },
+            {data:'TipoVenta',
+            "render": function (data) {
+                return formatoTipoVenta(data);
+              }
+            },
+            {data:'Existencias'},
         ],
         columnDefs:[
-            { "width": "1px", "targets": 0 },
-            { "padding": "0 !important", "targets": 1 },
-            {"orderable":false, "targets":0},
             {"orderable":false, "targets":1},
+            {"orderable":false, "targets":4},
             {"orderable":false, "targets":6},
         ]
     });
 } );
+
+function formatoTipoVenta(data) {
+    let info;
+    if (data == "Unidad") {
+        info ="<span class='text-white label bg-c-blue f-12'><b>"+data+"</b></span>"
+    }else{
+        info="<span class='text-white label theme-bg2 f-12'><b>"+data+"</b></span>"
+    }
+    return info
+}

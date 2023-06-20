@@ -7,48 +7,51 @@
 @endsection
 @section('cont_PDV')
 <main>
-    <div class="contenido_productos">
-        <ul class="nav nav-pills mb-3 menu_taps" id="pills-tab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="pills-pdv-tab" data-toggle="pill" href="#pills-pdv" role="tab" aria-controls="pills-pdv" aria-selected="true">Productos con código</a>
-            </li>    
-        </ul>
-        <div class="tab-content" id="pills-tabContent" >
-            <div id="PntVenta" farmID={{$Farmacia->id}}></div>
-            <div class="tab-pane fade show active" id="pills-pdv" role="tabpanel" aria-labelledby="pills-pdv-tab">
-                <table id="tbl_Productos" class="display responsive nowrap" style="width:100%">
-                    <thead>
-                        <tr> 
-                            <th></th>
-                            <th>Agregar</th>
-                            <th>Código</th>
-                            <th>Producto</th>
-                            <th>$</th>
-                            <th>Finalidad</th>
-                            <th>Exist</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                    </tbody>
-                </table>
+        <div class="contenido_productos">
+          
+            <div class="card table-card">
+                <div class="row-table">
+                    <div class="col-auto bg-primary text-white p-t-10 p-b-10">
+                        <i class="fas fa-dollar-sign f-30"></i>
+                    </div>
+                    <div class="col text-center">
+                        <span class="text-uppercase d-block m-b-10">Total de compra</span>
+                        <h3 class="f-w-300"><b id="TotalCompra">$ 0.00</b></h3>
+                        <button id='btnVentanilla' type="button" class="btn btn-primary btn-sm col-12">COBRAR</button>
+                    </div>
+                </div>
             </div>
-            {{-- <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                <p class="mb-0">Ad pariatur nostrud pariatur exercitation ipsum ipsum culpa mollit commodo mollit ex. Aute sunt incididunt amet commodo est sint nisi deserunt pariatur do. Aliquip ex eiusmod voluptate exercitation
-                    cillum
-                    id incididunt
-                    elit sunt. Qui minim sit magna Lorem id et dolore velit Lorem amet exercitation duis deserunt. Anim id labore elit adipisicing ut in id occaecat pariatur ut ullamco ea tempor duis.
-                </p>
-            </div> --}}
-        </div>
-    </div>
+            <div class="card rides-bar">
+                <div class="card-block">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-auto ">
+                            <i class="fas fa-shopping-cart f-30 text-white rides-icon"></i>
+                        </div>
+                        <div class="col">
+                            <span class="text-uppercase d-block">Total de productos</span>
+                            <h3 class="f-w-300" id="txt_TotalProductos">0</h3>
+                            <button id="btn_LimpiarCarrito" type="button" class="btn btn-danger col-12 btn-sm" title="Vaciar Carrito">
+                                Vaciar Carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card theme-bg assets-value">
+                <div class="bg-img"></div>
+                <div class="card-block  text-center">
+                    <i class="fas fa-capsules text-white f-30 m-b-10"></i>
+                    <h5 class="text-white">Existencias</h5>
+                    <span class="text-white">Lista de productos</span>
+                    <button type="button" class="btn btn-dark col-12" data-toggle="modal" data-target=".modal_productos">Consultar</button>
+                </div>
+            </div>
+            {{-- <button id='btnVentanilla' type="button" class="btn btn-primary btn-lg col-12" onclick="ventanilla()">Ventanilla de pago</button>
+         --}}</div>
     <aside class="sidebar_carrito">
             <header>
-                <button type="button" class="btn btn-danger col-12" title="Vaciar Carrito" onclick=vaciarCarrito()>
-                    Vaciar Carrito
-                </button>
-                <p>Carrito de Compra <span class="fas fa-cart-plus text-c-blue"></span></p>
-            </header>
+                <p>Carrito de Compras <span class="fas fa-cart-plus text-c-blue"></span></p>
+            </header><hr>
             <div class="busquedaC">
                     <div class='form-group'>
                         <div class='input-group input-group-md mb-3'>
@@ -77,40 +80,89 @@
                 </table>
             </form>
             </div>
-            <div class="contTotal">
-               <div>Total $:</div><div id="TotalCarrito">00</div>
-            </div>
-            <button id='btnVentanilla' type="button" class="btn btn-primary btn-lg col-12" onclick="ventanilla()">Ventanilla de pago</button>
+            
+            
+            
     </aside>
 </main>
 <div id="ModalPago" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Ventanilla de pago</h5>
+                <div class="ventanaImg"><img src="{{asset('logo/FarmaPlus.png')}}" alt=""></div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
-                <div class="ventanaImg"><img src="{{asset('logo/FarmaPlus.png')}}" alt=""></div>
-                <div class="contTotal">
-                    <div>Total $:</div><div id="TotalCarritoModal">10000</div>
+                <div class="card theme-bg2 bitcoin-wallet">
+                    <div class="card-block">
+                        <h5 class="text-white mb-2">TOTAL DE COMPRA</h5>
+                        <h2 class="text-white mb-3 f-w-300" id="txt_confirmacionTotal"></h2>
+                        <span class="text-white d-block">De <span id="txt_confimacionNP"></span></span>
+                        <i class="fas fa-dollar-sign f-70 text-white"></i>
+                    </div>
                 </div>
                 <form action="">
                     <div class='form-group'>
                         <div class='input-group input-group-md mb-3'>
                             <div class='input-group-prepend'>
-                                <span class='input-group-text' id='inputGroup-sizing-sm'>Pago</span>
+                                <span class='input-group-text text-c-blue' id='inputGroup-sizing-sm'><i class="fas fa-hand-holding-usd"></i></span>
                             </div>
-                            <input id="PagoModal" type='number' class='form-control' placeholder='Ingrese el monto de pago del cliente' name='PagoCliente' oninput=PagoVentanilla() >
+                            <input id="PagoModal" type='number' class='form-control' placeholder='Ingrese el monto de pago del cliente' name='PagoCliente' min="1">
                         </div>
                     </div>
                 </form>
-                <div class="contTotal">
-                    <div>Cambio $:</div><div id="Cambio">-----</div>
+                <div class="card theme-bg bitcoin-wallet">
+                    <div class="card-block">
+                        <h5 class="text-white mb-2">CAMBIO</h5>
+                        <h2 class="text-white mb-3 f-w-300" id="txt_cambio"></h2>
+                        <i class="fas fa-money-bill-wave f-70 text-white"></i>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="btnCobrar" type="button" class="btn btn-dark" onclick="RegistrarVenta()">COBRAR</button>
+                <button id="btnCobrar" type="button" class="btn btn-dark col-12" disabled>COBRAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="Modal_Productos" class="modal fade modal_productos" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">  
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div id="PntVenta" farmID={{$Farmacia->id}}></div>
+                <div class="tab-pane fade show active" id="pills-pdv" role="tabpanel" aria-labelledby="pills-pdv-tab">
+                    <table id="tbl_Productos" class="display responsive nowrap" style="width:100%">
+                        <thead>
+                            <tr> 
+                                <th></th>
+                                <th>Código</th>
+                                <th>Producto</th>
+                                <th>Precio</th>
+                                <th>Agregar</th>
+                                <th>Tipo de venta</th>
+                                <th>Existencias</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                        </tbody>
+                        <tfoot>
+                            <tr> 
+                                <th></th>
+                                <th>Código</th>
+                                <th>Producto</th>
+                                <th>Precio</th>
+                                <th>Agregar</th>
+                                <th>Tipo de venta</th>
+                                <th>Existencias</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -124,6 +176,6 @@
 <script src="{{asset('PDV/js/pdv.js')}}"></script>
 <script src="{{asset('assets/plugins/sweetalert/js/sweetalert.min.js')}}"></script>
 <script>
-    const G_scan = new Audio('{{asset('Scanner/sound/scan.mp3')}}');
+    const Sound_scan = new Audio('{{asset('Scanner/sound/scan.mp3')}}');
 </script>
 @endsection

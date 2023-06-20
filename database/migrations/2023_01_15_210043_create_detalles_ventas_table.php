@@ -22,7 +22,7 @@ return new class extends Migration
             $table->float('Inversion');
             $table->date('Fecha');
             $table->unsignedBigInteger('venta_id');
-            $table->unsignedBigInteger('producto_id')->nullable();
+            $table->unsignedBigInteger  ('producto_id')->nullable();
 
 
             $table->foreign('venta_id')

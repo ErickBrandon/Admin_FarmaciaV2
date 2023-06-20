@@ -15,12 +15,9 @@ return new class extends Migration
     {
         Schema::create('producto_proveedor', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('producto_id')->nullable();
             $table->unsignedBigInteger('proveedor_id')->nullable();
 
-            $table->foreign('producto_id')
-            ->references('id')->on('productos')
-            ->onDelete('cascade');
+            
 
             $table->foreign('proveedor_id')
             ->references('id')->on('proveedores')

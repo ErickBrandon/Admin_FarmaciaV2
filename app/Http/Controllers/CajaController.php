@@ -102,7 +102,7 @@ class CajaController extends Controller
 
     public function tbl($Farmacia)
     {
-        $Productos = DB::table('productos')->select('id','Codigo','Producto','Precio','Finalidad','Existencias','Costo')
+        $Productos = DB::table('productos')->select('id','Codigo','Producto','Precio','Existencias','TipoVenta','Costo')
         ->where('Existencias','>',0)
         ->where('farmacia_id',$Farmacia)->get();
         

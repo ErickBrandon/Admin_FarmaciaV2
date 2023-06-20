@@ -10,8 +10,10 @@ $(document).bind('keydown',function(e){
 });
 //--- variable globales---
 GlobalToken = {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')};
+var _ProductosVenta = [];
 var ContCarrito = [];
-var TotalCarrito = 0;
+var TotalCarrito = parseInt(0);
+var _TotalProductos = parseInt(0);
 // -----------------------
 function notify(color,mnsj,icono) {
     $.growl({
@@ -58,51 +60,42 @@ function carrito(idProducto){
         agregarACarrito(idProducto);
         document.getElementById('btnVentanilla').disabled = false;
     }else{
-        busquedaP=0
-        for (let i = 0; i < ContCarrito.length; i++) {
-           if (ContCarrito[i]['Identificador'] == idProducto) {
-                busquedaP = 1;
-                break
+        let flag=false;
+        ContCarrito.forEach(p => {
+            if (p.id == idProducto) {
+                flag = true;
            }
+        });
+        if (flag == true) {
+            notify('inverse'," El producto ya se agregó al carrito de compras",'fas fa-hand-paper');
+            return !flag;
         }
-        if (busquedaP == 1) {
-            notify('inverse'," El producto ya se agregó al carrito de compras",'fas fa-hand-paper')
-        }else{
-            agregarACarrito(idProducto);
-        }
+        console.log("llega");
+        agregarACarrito(idProducto);
     }
 }
 function agregarACarrito(id){
-    producto = document.getElementById(id);
-    identificador = id
-    codigo = parseInt(producto.cells[2].innerText);
-    nombre = producto.cells[3].innerText;
-    precio = parseFloat(producto.cells[4].innerText);
-    template_producto(codigo,nombre,precio,1);
-    ContCarrito.push({
-        'Identificador': identificador,
-        'Codigo':codigo,
-        'Precio':precio,
-        'Unidades':1,
-        'SubTotal':precio,
-        'Nombre':nombre,
-    });
-   
-    TotalCarrito = TotalCarrito + precio;
-    TotalCarrito = parseFloat(TotalCarrito).toFixed(2)
-    document.getElementById('TotalCarrito').innerText = TotalCarrito;
+    let producto = _ProductosVenta.find(p => p.id == id)
+    template_producto(producto);
+    ContCarrito.push({'id':producto.id,'Codigo':producto.Codigo,'Producto':producto.Producto,'Precio':producto.Precio,'UnidadesVenta':1,'Existencias':producto.Existencias,'SubTotal':producto.Precio});   
+    TotalCarrito = TotalCarrito + producto.Precio;
+    document.getElementById('TotalCompra').innerText ="$ "+parseFloat(TotalCarrito).toFixed(2);
+
+    _TotalProductos = _TotalProductos +1;
+    document.getElementById('txt_TotalProductos').innerText = _TotalProductos;
+    Sound_scan.play();
 }
-function template_producto(codigo,nombre,precio,pz) {
+function template_producto(producto) {
     let tbl = document.getElementById('tbodyCarrito').insertRow(ContCarrito.length);
-    tbl.setAttribute('id',"car_"+codigo);
-    tbl.insertCell(0).innerText = nombre;
-    tbl.insertCell(1).innerText = precio;
-    tbl.insertCell(2).innerHTML = "<input id='CInput_"+codigo+"' class='CantidadP' type='number' value='"+pz+"' oninput=InputPz("+codigo+",this.value) onblur=vacio("+codigo+")></td>";
-    tbl.insertCell(3).innerText = precio;
-    tbl.insertCell(4).innerHTML = "<button type='button' class='btn btn-icon btn-rounded btn-danger' onclick=QuitarProductoCar("+codigo+")>"+
+    tbl.setAttribute('id',"car_"+producto.id);
+    tbl.insertCell(0).innerText = producto.Producto;
+    tbl.insertCell(1).innerText = producto.Precio;
+    tbl.insertCell(2).innerHTML = "<input id='CInput_"+producto.id+"' class='CantidadP' type='number' value='1' oninput=InputPz("+producto.id+",this.value) onblur=vacio("+producto.Existencias+","+producto.id+",this.value) min='1' max='"+producto.Existencias+"' step='1'></td>";
+    tbl.insertCell(3).innerText = producto.Precio;
+    tbl.insertCell(4).innerHTML = "<button type='button' class='btn btn-icon btn-rounded btn-danger' onclick=QuitarProductoCar("+producto.id+")>"+
                                         "<i class='feather icon-trash-2'></i>"+
                                   "</button>";
-    tbl.insertCell(5).innerHTML = "<btn class='btn btn-icon btn-rounded btn-info' onclick=buscarEnLista("+codigo+")>"+
+    tbl.insertCell(5).innerHTML = "<btn class='btn btn-icon btn-rounded btn-info' onclick=buscarEnLista("+producto.Codigo+")>"+
                                         "<i class='feather icon-search'></i>"+                               
                                     "</btn>";
     
@@ -112,46 +105,45 @@ function buscarEnLista(codigo) {
     table.search(codigo).draw();
 }
 function InputPz(id,pz){
-    console.log("pasó");
-    let row = document.querySelector(".c-"+id);
-    let Cantidad =parseInt(row.cells[6].innerText);
-    console.log(pz);
-    console.log(row.cells[6].innerText);
-    if (pz <= Cantidad)  {
-        if (document.getElementById("CInput_"+id).value != '' && document.getElementById("CInput_"+id).value >0) {
-            unidades = parseInt(document.getElementById("CInput_"+id).value);
-            if (unidades >= 1) {
+    let decimal = pz - Math.floor(pz);
+    if (decimal > 0) {
+        pz = pz - decimal;
+        document.getElementById('CInput_'+id).value =pz;
+        return false;
+    }
+   let producto = ContCarrito.find(p=> p.id == id)
+    if (pz <= producto.Existencias  && pz!="")  {
+        if (pz!=0 && pz >=1) {
                 for (let i = 0; i < ContCarrito.length; i++) {
-                    if (ContCarrito[i]['Codigo'] == id) {
+                    if (ContCarrito[i]['id'] == id) {
                         TotalCarrito = TotalCarrito - ContCarrito[i]['SubTotal'];
+                        _TotalProductos = _TotalProductos - ContCarrito[i]['UnidadesVenta'];
+                        
+                        ContCarrito[i]['UnidadesVenta'] = parseInt(pz);
+                        ContCarrito[i]['SubTotal'] =  ContCarrito[i]['UnidadesVenta'] * ContCarrito[i]['Precio'];
+                        TotalCarrito =parseFloat(TotalCarrito + ContCarrito[i]['SubTotal']).toFixed(2);
     
-                        ContCarrito[i]['Unidades'] = unidades;
-                        ContCarrito[i]['SubTotal'] =  ContCarrito[i]['Unidades'] * parseFloat(ContCarrito[i]['Precio']).toFixed(2);
-                        TotalCarrito = TotalCarrito + ContCarrito[i]['SubTotal'];
-    
-                        filaCar = document.getElementById("car_"+id);
-    
-                        filaCar.cells[3].innerText =  parseFloat(ContCarrito[i]['SubTotal']).toFixed(2);
-                        document.getElementById("TotalCarrito").innerText = parseFloat(TotalCarrito).toFixed(2);
+                        let filaCar = document.getElementById("car_"+ContCarrito[i]['id']);
+                        filaCar.cells[3].innerText ="$"+ContCarrito[i]['SubTotal'];
+                        document.getElementById("TotalCompra").innerText ="$"+ TotalCarrito;
+                        console.log(_TotalProductos);
+                        console.log(ContCarrito[i]['UnidadesVenta']);
+                        _TotalProductos =  _TotalProductos + ContCarrito[i]['UnidadesVenta'];
+                        document.getElementById('txt_TotalProductos').innerText = _TotalProductos
+                        
                         break;
                     }
                 }
-            }
-        }else{
-            document.getElementById("CInput_"+id).value = "";
         }
-    } else {
-        document.getElementById("CInput_"+id).value = row.cells[6].innerText;
-        InputPz(id,row.cells[6].innerText);
-    }
+    } 
 }
-function vacio(id) {
-    if (document.getElementById("CInput_"+id).value == "" || document.getElementById("CInput_"+id).value <= 0) {
-        document.getElementById("CInput_"+id).value = 1;
+function vacio(max,id,value) {
+   if (value<=0 || value > max || value=='') {
         InputPz(id,1);
-    }
+        document.getElementById('CInput_'+id).value =1;
+   }
 }
-function vaciarCarrito(){
+$("#btn_LimpiarCarrito").on("click", function () {
     swal({
         title: "¡Carrito de compras!",
         text: "¿Seguro que desea vaciar el carrito?",
@@ -162,31 +154,37 @@ function vaciarCarrito(){
     .then((willDelete) => {
         if (willDelete) {
             limpiarCarrito();
-            swal("Se han removido todos los productos del carrito", {
+            swal("Se han vaciado el carrito de compras", {
                 icon: "success",
             });
         }
-    });
-}
+    });  
+});
 function limpiarCarrito(){
     document.getElementById('btnVentanilla').disabled = true;
     for (let i = 0; i < ContCarrito.length; i++) {
-        document.getElementById("car_"+ContCarrito[i]['Codigo']).remove();
+        document.getElementById("car_"+ContCarrito[i]['id']).remove();
     }
     ContCarrito = [];
     TotalCarrito = 0;
-    document.getElementById('TotalCarrito').innerText = 00;
+    _TotalProductos=0;
+    document.getElementById('TotalCompra').innerText ="$ "+parseFloat(0).toFixed(2);
     document.getElementById('PagoModal').value = '';
     document.getElementById('TotalCarritoModal').innerText = '';
     document.getElementById('Cambio').innerText = '';
+    document.getElementById('txt_TotalProductos').innerText = 0;
+    
 }
 function QuitarProductoCar(id){
     for (let i = 0; i < ContCarrito.length; i++) {
-       if(ContCarrito[i]['Codigo'] == id){
+       if(ContCarrito[i]['id'] == id){
            TotalCarrito = TotalCarrito - ContCarrito[i]['SubTotal'];
-           document.getElementById('TotalCarrito').innerText = TotalCarrito;
+           document.getElementById('TotalCompra').innerText ="$ "+ TotalCarrito;
+           _TotalProductos = _TotalProductos - ContCarrito[i]['UnidadesVenta'];
+           document.getElementById('txt_TotalProductos').innerText = _TotalProductos;
            ContCarrito.splice(i,1);
            document.getElementById("car_"+id).remove()
+           break;
        }      
    }
    if (ContCarrito.length == 0) {
@@ -195,38 +193,38 @@ function QuitarProductoCar(id){
    }
        // producto = document.getElementById("car_"+id);
 }
-function ventanilla(){
+
+$("#btnVentanilla").on("click", function () {
     if(TotalCarrito != 0){
-        document.getElementById("TotalCarritoModal").innerText = TotalCarrito;
+        document.getElementById("txt_confirmacionTotal").innerText ="$"+parseFloat(TotalCarrito).toFixed(2);
+        if (_TotalProductos == 1) {
+            document.getElementById("txt_confimacionNP").innerText =_TotalProductos+" producto.";
+        }else{
+            document.getElementById("txt_confimacionNP").innerText =_TotalProductos+" productos.";
+        }
         $("#ModalPago").modal('show');
     }
-}
-function PagoVentanilla(){
-    if (document.getElementById("PagoModal").value != '' && document.getElementById("PagoModal").value != 0 && document.getElementById("PagoModal").value >=1) {
-        pago = parseFloat(document.getElementById("PagoModal").value);
-        cambio = pago - TotalCarrito;
+});
+$("#PagoModal").on("input", function (e) {
+    if (e.target.value != "") {
+        pago = parseFloat(e.target.value);
+        let cambio = pago - TotalCarrito;
+         
         if (cambio >=0) {
-            document.getElementById("Cambio").innerText = cambio;
+            document.getElementById('txt_cambio').innerText ="$"+parseFloat(cambio).toFixed(2);
             document.getElementById('btnCobrar').disabled = false;
-            document.getElementById('btnCobrar').classList.remove('btn-dark');
-            document.getElementById('btnCobrar').classList.add('btn-primary');
         }else{
-            document.getElementById("Cambio").innerText = "-----"
-            document.getElementById('btnCobrar').classList.remove('btn-primary');
-            document.getElementById('btnCobrar').classList.add('btn-dark');
             document.getElementById('btnCobrar').disabled = true;
+            document.getElementById('txt_cambio').innerText = ""
         }
     }else{
-        document.getElementById('btnCobrar').classList.remove('btn-primary');
-        document.getElementById('btnCobrar').classList.add('btn-dark');
         document.getElementById('btnCobrar').disabled = true;
-
-        if (document.getElementById("PagoModal").value <0 || document.getElementById("PagoModal").value == '-0') {
-            document.getElementById("PagoModal").value = "";
-            document.getElementById("Cambio").innerText = "-----"
-
-        }
+        document.getElementById('txt_cambio').innerText = "";
     }
+});
+
+function PagoVentanilla(){
+    
 }
 function RegistrarVenta() {
     let farmacia = +document.getElementById("PntVenta").getAttribute('farmID');
@@ -241,7 +239,6 @@ function RegistrarVenta() {
             'Farmacia':farmacia
         },
         success:  function(data){
-            console.log(data);
             if (data == 1) {
                 VentaExitosa();
                 $('#tbl_Productos').DataTable().ajax.reload();
@@ -331,7 +328,6 @@ function OpenScanner() {
               console.log(err);
               return
           }
-          console.log("Initialization finished. Ready to start");
           Quagga.start();
       });
 
