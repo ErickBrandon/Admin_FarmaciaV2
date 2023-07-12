@@ -18,7 +18,7 @@
                         </div>
                         <div class="col text-center">
                             <span class="text-uppercase d-block m-b-10">Caja:</span>
-                            <h4 id="PntVenta" class="f-w-300" farmID={{$Farmacia->id}}>{{$Farmacia->Farmacia}}</h4>
+                            <h4 id="PntVenta" class="f-w-300">{{$Farmacia->Farmacia}}</h4>
                         </div>
                     </div>
                 </div>
@@ -54,26 +54,27 @@
                 <span class="d-block m-t-5">Ventas realizadas el día de hoy <span id="FechaHoy"></span></span>
             </div>
             <div class="card-block table-border-style">
-                <div class="table-responsive">
-                    <table id="tbl_ventas" class="table">
+                <div class="tab-pane fade show active" id="pills-pdv" role="tabpanel" aria-labelledby="pills-pdv-tab">
+                    <table id="tbl_ventas" class="display responsive nowrap" style="width:100%">
                         <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Total venta</th>
-                                <th>Detalles</th>
+                            <tr> 
+                                <th>Id</th>
+                                <th>Total de venta</th>
+                                <th>Fecha de venta</th>
+                                <th>Detalles de venta</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($Ventas as $Venta)
-                                <tr>
-                                    <td>{{$Venta->id}}</td>
-                                    <td>{{$Venta->Total}}</td>
-                                    <td>
-                                        <button class="feather icon-eye btn btn-info" onclick="VerDetalle({{$Venta->id}})"></button>
-                                    </td>
-                                </tr>
-                            @endforeach
+                            
                         </tbody>
+                        <tfoot>
+                            <tr> 
+                                <th>Id</th>
+                                <th>Total de venta</th>
+                                <th>Fecha de venta</th>
+                                <th>Detalles</th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -84,6 +85,6 @@
    @include('PuntoVenta.Ventas.Modals.Historico')
 @endsection
 @section('foot_extras')
-<script src="{{asset('assets/plugins/sweetalert/js/sweetalert.min.js')}}"></script>
+<script src="{{asset('PDV/Datatable/constructorDatatable_ventas.js')}}"></script>
 <script src="{{asset('js-farmacia/ventas.js')}}"></script>
 @endsection

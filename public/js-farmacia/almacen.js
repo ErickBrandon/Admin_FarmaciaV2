@@ -288,7 +288,7 @@ function actualizar(id){
         }
         
     } else {
-        setTimeout(notify,0000,"inverse",' Ningún campo ha sido modificado','fas fa-leaf');
+        setTimeout(notify,10000,"inverse",' Ningún campo ha sido modificado','fas fa-leaf');
         document.getElementById('Codigo').disabled = false;
         document.getElementById('btn_formAlmacen').disabled = false;
     }
@@ -496,3 +496,9 @@ function searchProvedores() {
         }
      });
 }
+
+$("#tbl_almacen").on("click","button.editar",function(){
+    table= $("#tbl_almacen").DataTable
+    var data=table.row($(this).parents("tr")).data();
+    console.log(data);
+});

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -16,6 +17,91 @@ class UserController extends Controller
     {
         return view('Dashboard.Administradores.administradores');
     }
+
+    public function Guardarusuario(Request $request){
+        $existe  = User::where('email',$request->email)->first();
+        DB::beginTransaction();
+        try {
+            $user = new User();
+            $user->name = $request->Nombre;
+            $user->rol = $request->Rol;
+            $user->email = $request->email;
+            $user->save();
+
+            if ($existe !=null) {
+                $user->email = $user->id."_".$request->email;
+                $user->save();
+            }
+            DB::commit();
+            
+            return true;
+        } catch (Exception $e) {
+           DB::rollback();
+           return $e;
+        }
+    }
+    public function ActualizarUsuario(User $usuario, Request $request){
+        $existe  = User::where('email',$request->email)
+                    ->where('id','!=',$usuario->id)
+                    ->first();
+
+        DB::beginTransaction();
+        try {
+            $usuario->name = $request->Nombre;
+            $usuario->rol = $request->Rol;
+            $usuario->save();
+
+            if ($existe !=null) {
+                $usuario->email = $usuario->id."_".$request->email;
+               
+            }else{
+                $usuario->email = $request->email;
+            }
+            $usuario->save();
+            DB::commit();
+            
+            return true;
+        } catch (Exception $e) {
+           DB::rollback();
+           return $e;
+        }
+    }
+    public function EliminarUsuario(User $usuario){
+        DB::beginTransaction();
+        try {
+           $usuario->delete();
+           DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return $e;
+        }
+
+    }
+
+    public function TblUsuarios(){
+        $usuarios = User::all();
+        return datatables()->of($usuarios)->toJson();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Show the form for creating a new resource.

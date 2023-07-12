@@ -15,10 +15,11 @@ return new class extends Migration
     {
         Schema::create('detalles_ventas', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('Codigo',60);
             $table->string('Producto',100);
             $table->integer('Unidades');
             $table->float('SubTotal');
-            $table->string('Codigo',60);
+            $table->string('TipoVenta',60);
             $table->float('Inversion');
             $table->date('Fecha');
             $table->unsignedBigInteger('venta_id');

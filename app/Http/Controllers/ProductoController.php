@@ -110,15 +110,19 @@ class ProductoController extends Controller
         return 1;
     }
     public function ProductoEnAlmacen($Farmacia){
-        
-        $productos =DB::table('producto_proveedor')
-        ->join('productos','producto_proveedor.producto_id','=','productos.id')
-        ->join('proveedores','producto_proveedor.proveedor_id','=','proveedores.id')
-        ->where('producto_proveedor.producto_id',$Farmacia)
+    
+        $productos =DB::table('productos')
+        ->where('farmacia_id',$Farmacia)
         ->select('productos.id AS ID','Codigo','Producto','Precio','Existencias',
-                 'TipoVenta','Caducidad','Finalidad','Costo',
-                 'CostoAnterior','proveedores.Nombre as Proveedor','proveedor_id')->get();
-        return dataTables()->of($productos)->toJson();
+                 'TipoVenta','Caducidad','Costo','Ultima_asignacion')->get();
+        return dataTables()->of($productos)
+        ->addColumn('btn',function($productos){
+           return "<button class='btn btn-primary btn-icon' onclick='regresarAFactura(".$productos->ID.")'><i class='fas fa-cloud-upload-alt'></i></button>";
+        }
+        
+        )
+        ->rawColumns(['btn'])
+        ->toJson();
         
     }
 

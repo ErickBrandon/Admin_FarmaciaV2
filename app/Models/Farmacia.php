@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use App\Models\Corte;
 use App\Models\Venta;
 use App\Models\Producto;
@@ -32,5 +33,11 @@ class Farmacia extends Model
     public function Asignacion(){
         return $this->hasMany(Asignacion::class);
     }
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+   
 }
 

@@ -2,14 +2,13 @@
     <div class="navbar-wrapper">
         <div class="navbar-brand header-logo">
             <a href="{{route('HomeAdmin')}}" class="b-brand">
-                <div class="b-bg">
-                    <i class="fas fa-capsules"></i>
-                </div>
-                <span class="b-title">Farmacia</span>
+                <div class="logoPDV"><img src="{{asset('logo/FarmaPlus.png')}}" alt="" style="border-radius: 14px"></div>
+                <span class="b-title"></span>
             </a>
             <a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>
         </div>
         <div class="navbar-content scroll-div">
+            
             <ul class="nav pcoded-inner-navbar">
                 <li class="nav-item pcoded-menu-caption"><label>Navegación</label></li>
                 <li  class="nav-item">

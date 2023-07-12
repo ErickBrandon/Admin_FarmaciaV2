@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Farmacia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class FarmaciaController extends Controller
@@ -16,7 +18,12 @@ class FarmaciaController extends Controller
      */
     public function index()
     {
-        return view('Dashboard.Farmacias.farmacias');
+        $vendedores = User::where('rol','Vendedor')
+        ->where('password',null)
+        ->get();
+        return view('Dashboard.Farmacias.farmacias')->with([
+            "vendedores"=>$vendedores
+        ]);
     }
 
     /**
@@ -31,52 +38,70 @@ class FarmaciaController extends Controller
 
     public function store(Request $request)
     {
+       // dd($request);
         DB::beginTransaction();
 
         try {
-        $Farm = new Farmacia();
+        $farmacia = new Farmacia();
 
-            $Farm->Farmacia = $request->Farmacia;
-            $Farm->Encargado = $request->Encargado;
-           
-            $Farm->save();
-            DB::commit( );
-            
-            return 1;
+            $farmacia->Farmacia = $request->Farmacia;
+            $farmacia->Llave = $request->Llave;
+            $farmacia->user()->associate($request->Vendedor);
+            if ($request->Vendedor != null) {
+                $user = User::where('id',$request->Vendedor)->first();
+                $user->password = Hash::make($Farmacia->Llave);
+                $user->save();
+            }
+            $farmacia->save();
+            DB::commit();
+            return true;
         } catch (Exception $e) {
            DB::rollback();
-           return $e;
+           dd($e);
         }
     }
 
+    public function ActualizarFarmacia(Farmacia $Farmacia, Request $request){
+        DB::beginTransaction();
+        try {
+            $anterior = $Farmacia->user_id;
 
-    public function show(Farmacia $farmacia)
-    {
-        //
+
+            $Farmacia->Farmacia = $request->Farmacia;
+            $Farmacia->Llave = $request->Llave;
+            $Farmacia->user()->associate($request->Vendedor);
+            $Farmacia->save();
+
+            if ($request->Vendedor != null) {
+                $actual = User::where('id',$request->Vendedor)
+                ->where('rol','Vendedor')
+                ->first();
+                $actual->password = Hash::make($Farmacia->Llave);
+                $actual->save();
+            }
+
+          
+            if ($anterior != $Farmacia->user_id && $anterior != null) {
+                $user_anterior = User::where('id',$anterior)
+                ->where('rol','Vendedor')
+                ->first();
+                $user_anterior->password = null;
+                $user_anterior->save();
+            }
+           
+
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+           DB::rollback();
+           dd($e);
+        }
     }
 
-    public function edit(Farmacia $farmacia)
-    {
-        //
-    }
-
-  
-    public function update(Request $request, Farmacia $Farmacia)
-    {
-        $Farmacia->Farmacia = $request->Farmacia;
-        $Farmacia->Encargado = $request->Encargado;
-
-        $Farmacia->save();
-        return 1;
-    }
-
-    public function destroy(Farmacia $farmacia)
-    {
-        //
-    }
     public function DataTableFarmacia()
     {   
-        $farmacias = Farmacia::all();
+        $farmacias = Farmacia::leftJoin('users','users.id','=','farmacias.user_id')
+                    ->select('farmacias.id AS ID','Farmacia','Llave','users.name AS Vendedor','users.id AS user_id');
         return datatables()->of($farmacias)->toJson();
     }
 }

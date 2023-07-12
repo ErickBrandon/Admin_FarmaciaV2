@@ -36,46 +36,51 @@ $(document).ready(function() {
         "createdRow": function( row, data) {
             $(row).attr('id', data['ID'] );
             $(row).attr('class', "c-"+data['Codigo'] );
-            $(row).attr('ID_Proveedor',data['proveedor_id'] );
         },
         'columns':[
             {data:'Codigo'},
             {data:'Producto'},
-            {data:'Precio'},
+            {data:'Precio',
+                'createdCell':function(cells,data){
+                    cells.innerText ="$"+parseFloat(data).toFixed(2);
+                }
+            },
             {data:'Existencias'},
             {data:'TipoVenta'},
             {data:'Caducidad',
-                "createdCell":
+                "createdCell": //// solo se ejecuta una vez en la renderización
                 function (cells,data){
                     validacionCaducidad(cells,data);
                 }
             },
-            {data:'Finalidad'},
-            {data:'Costo'},
-            {data:'CostoAnterior'},
-            {data:'Proveedor'},
-            {data:"ID",
-            "render": function (data) {
-                return "<button class='btn btn-primary btn-icon btn-icon fas fa-edit' data-toggle='modal' data-target='#modal_almacen' onclick='form_editar("+data+")'></button>"
-                +"<button class='btn btn-danger btn-icon fas fa-trash-alt' data-toggle='modal' data-target='#modal_almacen' onclick='form_eliminar("+data+")'></button>";
-              }
+            {data:'Costo',
+                'createdCell':function(cells,data){
+                    cells.innerText ="$"+parseFloat(data).toFixed(2);
+                }
             },
+            {data:"Ultima_asignacion"},
+            {data:"btn"}
 
         ],
         'columnDefs':[
-            {"orderable":false, "targets":0},
+    
+           /*  {"orderable":false, "targets":0},
             {"orderable":false, "targets":3},
             {"orderable":false, "targets":5},
-            {"orderable":false, "targets":8},
+            {"orderable":false, "targets":8}, */
            // {"orderable":false, "targets":10, "visible":false,"searchable":false},
-            {"orderable":false, "targets":10},
-
+           /*  {"orderable":false, "targets":10},
+ */
         ]
     },
    );
 } );
 
 function validacionCaducidad(cells,data) {
+   /*  let btn = document.createElement('button') ////////// posible solución de evitar la renderizacion varias veces por fila
+    btn.className =("btn btn-danger btn-icon fas fa-trash-alt")
+    btn.innerText= data;
+    cells.appendChild(btn); */
   let caducidad = new Date(data)
   caducidad = (caducidad.getDate()+1)+"/"+(caducidad.getMonth()+1) +"/"+caducidad.getFullYear();
   let hoy = new Date()
@@ -95,4 +100,11 @@ function validacionCaducidad(cells,data) {
  if (dias >=0 && dias<=20) {
     $(cells).attr('class',"ProximoAcudar");
  }
+}
+
+function btnRegreso(cells,data) {
+    let btn = document.createElement('button');
+    btn.className = 'btn btn-info btn-icon fas fa-cloud-upload-alt'
+    cells.appendChild(btn);
+    cells.innerHTML = "<button class='btn btn-info btn-icon fas fa-cloud-upload-alt'></button>"
 }

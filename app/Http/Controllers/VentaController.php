@@ -14,28 +14,30 @@ class VentaController extends Controller
     public function ventas(Farmacia $Farmacia)
     {   
         $Hoy=date('Y/m/d');
-        $Ventas = DB::table('venta')->where('farmacia_id',$Farmacia->id)
-        ->where('Fecha',$Hoy)->get();
+
         
-        $NoVentas = sizeof($Ventas);
-        if ($NoVentas >= 0 && $NoVentas <= 9) {
-            $NoVentas = "0".$NoVentas;
-        }
+        
         $Corte = Corte::where('farmacia_id',$Farmacia->id)
         ->where('Fecha',$Hoy)->first();
 
 
         return view('PuntoVenta.Ventas.ventas')->with([
-            'Ventas' => $Ventas,
             'Farmacia'=>$Farmacia,
-            'NoVentas'=>$NoVentas,
             'Corte'=>$Corte
         ]);
+    }
+    public function TblVentas($farmacia_id){
+        $Hoy=date('Y/m/d');
+        $Ventas = DB::table('venta')->where('farmacia_id',$farmacia_id)
+        ->where('Fecha',$Hoy)->get();
+
+        return dataTables()->of($Ventas)->toJson();
+
     }
 
     public function corte(Request $request, $Farmacia)
     {   
-        dd($request['HTTP_CLIENT_IP'] );
+       // dd($request['HTTP_CLIENT_IP'] );
         $Hoy=date('Y/m/d');
 
         
@@ -67,7 +69,6 @@ class VentaController extends Controller
                 DB::beginTransaction();
                 
                 try {
-                    dd($Corte);
                     $Corte->TotalCorte = $corteNuevo['Corte'];
                     $Corte->InversionXcorte = $corteNuevo['Inversion'];
                     $Corte->Fecha = $Hoy;
@@ -87,7 +88,7 @@ class VentaController extends Controller
     {
        $Detalles = DB::table('detalles_ventas')
        ->where('venta_id',$Venta)
-       ->where('Fecha',date('Y/m/d'))->select('Codigo','Producto','Unidades','SubTotal')->get();
+       ->where('Fecha',date('Y/m/d'))->select('Codigo','Producto','Unidades','SubTotal','TipoVenta')->get();
 
        return $Detalles;
     }

@@ -20,21 +20,6 @@
         </div>
     </div>
     <div class="col-md-6 col-xl-4">
-        <div class="card rides-bar">
-            <div class="card-block">
-                <div class="row d-flex align-items-center">
-                    <div class="col-auto">
-                        <i class="fas fa-boxes f-30 text-white rides-icon"></i>
-                    </div>
-                    <div class="col text-center">
-                        <h3 class="f-w-300">Agregar producto</h3>
-                        <button class="btn btn-sm  btn-primary feather icon-plus shadow col-12" data-toggle="modal" data-target="#modal_almacen" onclick="form_agregar()"></button>
-                    </div>
-                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-xl-4">
         <div class="card table-card">
             <div class="row-table">
                 <div class="col-auto bg-info text-white p-t-50 p-b-50">
@@ -65,11 +50,9 @@
                         <th>Existencias</th>
                         <th>Tipo de venta</th>
                         <th>Caducidad</th>
-                        <th>Finalidad</th>
                         <th>Costo</th>
-                        <th>Costo anterior</th>
-                        <th>Proveedor</th>
-                        <th>Acción</th>
+                        <th>Última asignación</th>
+                        <th>Regresar a factura</th>
                     </tr>
                 </thead>
             

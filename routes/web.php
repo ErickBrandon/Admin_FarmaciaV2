@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Middleware\General;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CajaController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\Administradores;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\FacturaController;
@@ -24,48 +26,36 @@ use App\Http\Controllers\ProveedorController;
 |
 */
 
-Route::get('/', function () {
+Route::get('/Inicio', function () {
     return view('welcome');
-});
+})->name('login')->middleware('guest');
 /* Grupo de rutas que solo puede accesar un administrador autenticado */
 Route::POST('/Auth',[LoginController::class,'AuthAdmin']);
+Route::POST('/logout',[LoginController::class,'logout'])->middleware('auth');
 
+Route::middleware(["Administradores"])->group(function () {
+    //Inicio de Administrador
+    Route::GET('HomeAdmin',[DashboardController::class,'index'])->name('HomeAdmin');
+   /*  ------------------- Rutas de modulo Proveedores ------------------------------------ */
+   Route::GET('Proveedores',[ProveedorController::class,'index'])->name('Proveedores');
+   Route::POST('GuardarProveedor',[ProveedorController::class,'store'])->name('GuardarProveedor');
+   Route::POST('ActualizarProveedor/{Proveedor}',[ProveedorController::class,'update'])->name('ActualizarProveedor');
+   Route::POST('EliminarProveedor/{Proveedor}',[ProveedorController::class,'destroy'])->name('EliminarProveedor');
+   Route::POST('TblProveedores',[ProveedorController::class,'DataTableProveedor'])->name('TblProveedores');
+  /* -------------------------------------------------------------------------------------- */
 
-Route::GET('HomeAdmin',[DashboardController::class,'index'])->name('HomeAdmin');
-/*  ------------------- Rutas de modulo Proveedores ------------------------------------ */
-    Route::GET('Proveedores',[ProveedorController::class,'index'])->name('Proveedores');
-    Route::POST('GuardarProveedor',[ProveedorController::class,'store'])->name('GuardarProveedor');
-    Route::POST('ActualizarProveedor/{Proveedor}',[ProveedorController::class,'update'])->name('ActualizarProveedor');
-    Route::POST('EliminarProveedor/{Proveedor}',[ProveedorController::class,'destroy'])->name('EliminarProveedor');
-    Route::POST('TblProveedores',[ProveedorController::class,'DataTableProveedor'])->name('TblProveedores');
-/* -------------------------------------------------------------------------------------- */
-
-/* ----------------------- Rutas del modulo de Farmacias ----------------- */
-    Route::GET('Farmacias',[FarmaciaController::class,'index'])->name('Farmacias');
-    Route::POST('GuardarFarmacia',[FarmaciaController::class,'store'])->name('GuardarFarmacia');
-    Route::POST('ActualizarFarmacia/{Farmacia}',[FarmaciaController::class,'update'])->name('ActualizarFarmacia');
-    Route::POST('TblFarmacia',[FarmaciaController::class,'DataTableFarmacia'])->name('TblFarmacias');
+  /* ----------------------- Rutas del modulo de Farmacias ----------------- */
+  Route::GET('Farmacias',[FarmaciaController::class,'index'])->name('Farmacias');
+  Route::POST('GuardarFarmacia',[FarmaciaController::class,'store'])->name('GuardarFarmacia');
+  Route::POST('ActualizarFarmacia/{Farmacia}',[FarmaciaController::class,'ActualizarFarmacia'])->name('ActualizarFarmacia');
+  Route::POST('TblFarmacia',[FarmaciaController::class,'DataTableFarmacia'])->name('TblFarmacias');
 /* -------------------------------------------------------------------------- */
 /*  ------------------- Rutas de modulo Administradores------------------------------- */
 Route::GET('Usuarios',[UserController::class,'index'])->name('Usuarios');
-Route::POST('GuardarAdministrador',[UserController::class,'store'])->name('GuardarProveedor');
-
-/* Punto de venta */
-Route::POST('/ProductosVenta/{Farmacia}',[CajaController::class,'tbl']);
-Route::GET('PuntoDeVenta/{Farmacia}',[CajaController::class,'show'])->name('PuntoVenta');
-Route::POST('RegistrarVenta',[CajaController::class,'store']);
-
-Route::GET('PuntoDeVenta/{Farmacia}/Ventas',[VentaController::class,'ventas'])->name('Ventas');
-Route::POST('CorteDeCaja/{Farmacia}',[VentaController::class,'corte'])->name('Corte');
-Route::POST('Detalle/{Venta}',[VentaController::class,'detalles'])->name('DetalleVenta');
-
-Route::GET('PuntoDeVenta/{Farmacia}/Almacen',[ProductoController::class,'almacen'])->name('Almacen');
-Route::POST('ProductoEnAlmacen/{Farmacia}',[ProductoController::class,'ProductoEnAlmacen'])->name('Productos');
-Route::POST('AlmacenarProducto',[ProductoController::class,'store'])->name('GuardarProducto');
-Route::POST('ActualizarProducto/{Producto}',[ProductoController::class,'update'])->name('EditarProducto');
-Route::POST('EliminarProducto/{Producto}',[ProductoController::class,'destroy'])->name('EliminarProducto');
-Route::POST('ProveedoresProducto',[ProductoController::class,'Productos_Proveedores'])->name('ProveedoresProducto');
-
+Route::POST('Guardarusuario',[UserController::class,'Guardarusuario'])->name('Guardarusuario');
+Route::POST('TblUsuarios',[UserController::class,'TblUsuarios'])->name('TblUsuarios');
+Route::POST('ActualizarUsuario/{usuario}',[UserController::class,'ActualizarUsuario'])->name('ActualizarUsuario');
+Route::POST('EliminarUsuario/{usuario}',[UserController::class,'EliminarUsuario'])->name('EliminarUsuario');
 
 Route::GET('Contable',[ContableController::class,'index'])->name('Contable');
 Route::POST('tblCortes',[ContableController::class,'DataTableCortesHoy'])->name('tblCortes');
@@ -90,6 +80,26 @@ Route::POST('OtrasAsignaciones',[FacturaController::class,'OtrasAsignaciones'])-
 Route::POST('PrecioUnidad/{FacturaProducto}',[FacturaController::class,'PrecioUnidad'])->name('PrecioUnidad');
 Route::POST('PrecioPieza/{FacturaProducto}',[FacturaController::class,'PrecioPieza'])->name('PrecioPieza');
 Route::POST('EliminarFactura/{Factura}',[FacturaController::class,'EliminarFactura'])->name('EliminarFactura');
+});
 
-
+Route::middleware(["General"])->group(function () {
+    /* Punto de venta */
+    Route::POST('/ProductosVenta/{Farmacia}',[CajaController::class,'tbl']);
+    Route::GET('PuntoDeVenta/{Farmacia}',[CajaController::class,'show'])->name('PuntoVenta');
+    Route::POST('RegistrarVenta',[CajaController::class,'store']);
+    
+    Route::GET('PuntoDeVenta/{Farmacia}/Ventas',[VentaController::class,'ventas'])->name('Ventas');
+    Route::POST('PuntoDeVenta/{farmacia_id}/TblVentas',[VentaController::class,'TblVentas'])->name('TblVentas');
+    Route::POST('PuntoDeVenta/{farmacia_id}/CorteDeCaja',[VentaController::class,'corte'])->name('Corte');
+    Route::POST('Detalle/{Venta}',[VentaController::class,'detalles'])->name('DetalleVenta');
+    
+    Route::GET('PuntoDeVenta/{Farmacia}/Almacen',[ProductoController::class,'almacen'])->name('Almacen');
+    Route::POST('ProductoEnAlmacen/{Farmacia}',[ProductoController::class,'ProductoEnAlmacen'])->name('Productos');
+    
+    Route::POST('AlmacenarProducto',[ProductoController::class,'store'])->name('GuardarProducto');
+    Route::POST('ActualizarProducto/{Producto}',[ProductoController::class,'update'])->name('EditarProducto');
+    Route::POST('EliminarProducto/{Producto}',[ProductoController::class,'destroy'])->name('EliminarProducto');
+    Route::POST('ProveedoresProducto',[ProductoController::class,'Productos_Proveedores'])->name('ProveedoresProducto');
+    
+});
 

@@ -16,7 +16,13 @@ return new class extends Migration
         Schema::create('farmacias', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('Farmacia');
-            $table->string('Encargado');
+            $table->bigInteger('Llave');
+            $table->unsignedBigInteger('user_id')->nullable()->unique();
+
+            $table->foreign('user_id')
+                    ->references('id')
+                    ->on('users')
+                    ->onDelete('set null');
         });
     }
 

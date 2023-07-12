@@ -70,39 +70,46 @@ function carrito(idProducto){
             notify('inverse'," El producto ya se agregó al carrito de compras",'fas fa-hand-paper');
             return !flag;
         }
-        console.log("llega");
         agregarACarrito(idProducto);
     }
 }
 function agregarACarrito(id){
     let producto = _ProductosVenta.find(p => p.id == id)
     template_producto(producto);
-    ContCarrito.push({'id':producto.id,'Codigo':producto.Codigo,'Producto':producto.Producto,'Precio':producto.Precio,'UnidadesVenta':1,'Existencias':producto.Existencias,'SubTotal':producto.Precio});   
+    ContCarrito.push({'id':producto.id,'Codigo':producto.Codigo,'Producto':producto.Producto,'Precio':producto.Precio,'UnidadesVenta':1,'Existencias':producto.Existencias,'SubTotal':producto.Precio,'TipoVenta':producto.TipoVenta});   
     TotalCarrito = TotalCarrito + producto.Precio;
     document.getElementById('TotalCompra').innerText ="$ "+parseFloat(TotalCarrito).toFixed(2);
 
     _TotalProductos = _TotalProductos +1;
-    document.getElementById('txt_TotalProductos').innerText = _TotalProductos;
+    document.getElementById('txt_TotalProductos').innerText =_TotalProductos;
     Sound_scan.play();
 }
 function template_producto(producto) {
     let tbl = document.getElementById('tbodyCarrito').insertRow(ContCarrito.length);
     tbl.setAttribute('id',"car_"+producto.id);
     tbl.insertCell(0).innerText = producto.Producto;
-    tbl.insertCell(1).innerText = producto.Precio;
+    tbl.insertCell(1).innerText = "$"+parseFloat(producto.Precio).toFixed(2);
     tbl.insertCell(2).innerHTML = "<input id='CInput_"+producto.id+"' class='CantidadP' type='number' value='1' oninput=InputPz("+producto.id+",this.value) onblur=vacio("+producto.Existencias+","+producto.id+",this.value) min='1' max='"+producto.Existencias+"' step='1'></td>";
-    tbl.insertCell(3).innerText = producto.Precio;
-    tbl.insertCell(4).innerHTML = "<button type='button' class='btn btn-icon btn-rounded btn-danger' onclick=QuitarProductoCar("+producto.id+")>"+
+    tbl.insertCell(3).innerText = "$"+parseFloat(producto.Precio).toFixed(2);
+    let info;
+    if (producto.TipoVenta == "Unidad") {
+        info ="<span class='text-white label bg-c-blue f-12'><b>"+producto.TipoVenta+"</b></span>"
+    }else{
+        info="<span class='text-white label theme-bg2 f-12'><b>"+producto.TipoVenta+"</b></span>"
+    }
+    tbl.insertCell(4).innerHTML = info;
+    tbl.insertCell(5).innerHTML = "<button type='button' class='btn btn-icon btn-rounded btn-danger' onclick=QuitarProductoCar("+producto.id+")>"+
                                         "<i class='feather icon-trash-2'></i>"+
                                   "</button>";
-    tbl.insertCell(5).innerHTML = "<btn class='btn btn-icon btn-rounded btn-info' onclick=buscarEnLista("+producto.Codigo+")>"+
-                                        "<i class='feather icon-search'></i>"+                               
+    tbl.insertCell(6).innerHTML = "<btn class='btn btn-icon btn-rounded btn-info' onclick=buscarEnLista("+producto.Codigo+")>"+
+                                        "<i class='fas fa-search'></i>"+                               
                                     "</btn>";
     
 }
 function buscarEnLista(codigo) {
     let table = $('#tbl_Productos').DataTable();
     table.search(codigo).draw();
+    $("#Modal_Productos").modal('show');
 }
 function InputPz(id,pz){
     let decimal = pz - Math.floor(pz);
@@ -117,19 +124,18 @@ function InputPz(id,pz){
                 for (let i = 0; i < ContCarrito.length; i++) {
                     if (ContCarrito[i]['id'] == id) {
                         TotalCarrito = TotalCarrito - ContCarrito[i]['SubTotal'];
+                        console.log(TotalCarrito);
                         _TotalProductos = _TotalProductos - ContCarrito[i]['UnidadesVenta'];
                         
                         ContCarrito[i]['UnidadesVenta'] = parseInt(pz);
                         ContCarrito[i]['SubTotal'] =  ContCarrito[i]['UnidadesVenta'] * ContCarrito[i]['Precio'];
-                        TotalCarrito =parseFloat(TotalCarrito + ContCarrito[i]['SubTotal']).toFixed(2);
+                        TotalCarrito =TotalCarrito + ContCarrito[i]['SubTotal'];
     
                         let filaCar = document.getElementById("car_"+ContCarrito[i]['id']);
-                        filaCar.cells[3].innerText ="$"+ContCarrito[i]['SubTotal'];
-                        document.getElementById("TotalCompra").innerText ="$"+ TotalCarrito;
-                        console.log(_TotalProductos);
-                        console.log(ContCarrito[i]['UnidadesVenta']);
+                        filaCar.cells[3].innerText ="$"+parseFloat(ContCarrito[i]['SubTotal']).toFixed(2);
+                        document.getElementById("TotalCompra").innerText ="$"+ parseFloat(TotalCarrito).toFixed(2);
                         _TotalProductos =  _TotalProductos + ContCarrito[i]['UnidadesVenta'];
-                        document.getElementById('txt_TotalProductos').innerText = _TotalProductos
+                        document.getElementById('txt_TotalProductos').innerText = _TotalProductos;
                         
                         break;
                     }
@@ -170,8 +176,8 @@ function limpiarCarrito(){
     _TotalProductos=0;
     document.getElementById('TotalCompra').innerText ="$ "+parseFloat(0).toFixed(2);
     document.getElementById('PagoModal').value = '';
-    document.getElementById('TotalCarritoModal').innerText = '';
-    document.getElementById('Cambio').innerText = '';
+    document.getElementById('TotalCompra').innerText = '$0.00';
+    document.getElementById('txt_cambio').innerText = '';
     document.getElementById('txt_TotalProductos').innerText = 0;
     
 }
@@ -179,9 +185,9 @@ function QuitarProductoCar(id){
     for (let i = 0; i < ContCarrito.length; i++) {
        if(ContCarrito[i]['id'] == id){
            TotalCarrito = TotalCarrito - ContCarrito[i]['SubTotal'];
-           document.getElementById('TotalCompra').innerText ="$ "+ TotalCarrito;
+           document.getElementById('TotalCompra').innerText ="$ "+ parseFloat(TotalCarrito).toFixed(2);
            _TotalProductos = _TotalProductos - ContCarrito[i]['UnidadesVenta'];
-           document.getElementById('txt_TotalProductos').innerText = _TotalProductos;
+           document.getElementById('txt_TotalProductos').innerText =_TotalProductos;
            ContCarrito.splice(i,1);
            document.getElementById("car_"+id).remove()
            break;
@@ -226,7 +232,7 @@ $("#PagoModal").on("input", function (e) {
 function PagoVentanilla(){
     
 }
-function RegistrarVenta() {
+$("#btnCobrar").on("click", function () {
     let farmacia = +document.getElementById("PntVenta").getAttribute('farmID');
    
     $.ajax({
@@ -239,9 +245,9 @@ function RegistrarVenta() {
             'Farmacia':farmacia
         },
         success:  function(data){
+            console.log(data);
             if (data == 1) {
                 VentaExitosa();
-                $('#tbl_Productos').DataTable().ajax.reload();
             }else{
                 $('#tbl_Productos').DataTable().ajax.reload();
                 let mensaje =data.length+" de los productos que se encuentran en el carrito "+
@@ -256,13 +262,21 @@ function RegistrarVenta() {
             }
         },
         error: function(jqXHR, textStatus, errorThrown){
+          
         }
      });
-}
+});
+
 function VentaExitosa(){
     limpiarCarrito();
+    $('#tbl_Productos').DataTable().ajax.reload();
     $("#ModalPago").modal('hide');
     swal("Venta registrada", "La venta se ha registrado exitosamente", "success");
+    document.getElementById('txt_confirmacionTotal').innerText="";
+    document.getElementById('txt_confimacionNP').innerText="";
+    document.getElementById('PagoModal').value="";
+    document.getElementById('txt_cambio').innerText="";
+    document.getElementById('btnCobrar').disabled=true;
 }
 function IngresarAlCarrito(codigo) {
    

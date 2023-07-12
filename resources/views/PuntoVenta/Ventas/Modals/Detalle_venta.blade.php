@@ -33,6 +33,7 @@
                                 <th>Producto</th>
                                 <th>Pz</th>
                                 <th>SubTotal</th>
+                                <th>Tipo de venta</th>
                             </tr>
                         </thead>
                         <tbody id='tbl_detalle'>

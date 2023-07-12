@@ -71,6 +71,7 @@
                             <th class="TPrecio">Precio</th>
                             <th class="TCantidad">Cantidad</th>
                             <th class="TSubTotal">SubTotal</th>
+                            <th class="TSubTotal">Tipo de venta</th>
                             <th class="TQuitar">Quitar</th>
                             <th class="TProducto">Buscar</th>
                         </tr>
@@ -130,6 +131,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
+                <div class="ventanaImg"><img src="{{asset('logo/FarmaPlus.png')}}" alt=""></div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
@@ -174,7 +176,6 @@
 <script src="{{asset('assets/plugins/notification/js/bootstrap-growl.min.js')}}"></script>
 <script src="{{asset('Scanner/quagga.min.js')}}"></script>
 <script src="{{asset('PDV/js/pdv.js')}}"></script>
-<script src="{{asset('assets/plugins/sweetalert/js/sweetalert.min.js')}}"></script>
 <script>
     const Sound_scan = new Audio('{{asset('Scanner/sound/scan.mp3')}}');
 </script>

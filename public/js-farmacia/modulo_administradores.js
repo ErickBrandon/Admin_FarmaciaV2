@@ -3,79 +3,102 @@ $(document).ready(function() {
         event.preventDefault();
     });
 });
-function cuerpo_form() {
-    return "<div class='form-group'>" +
-            "<div class='container'>" +
-                "<div class='input-group input-group-md mb-3'>"+
-                    "<div class='input-group-prepend'>" +
-                        "<span class='input-group-text' id='inputGroup-sizing-sm'><span class='fas fa-user-tie mr-2'></span>Nombre</span>" +
-                    "</div>" +
-                    "<input id='Proveedor' type='text' class='form-control' placeholder='' name='Proveedor'>" +
-                "</div>" +
-                "<div class='input-group input-group-md mb-3'>" +
-                "<div class='input-group-prepend'>" +
-                    "<span class='input-group-text' id='inputGroup-sizing-sm'><span class='fas fa-shield-alt icon_r text-info mr-2'></span>Contraseña</span>" +
-                "</div>" +
-                "<input id='Password' type='password' class='form-control' placeholder='....' name='Password'>" +
-            "</div>" +
-            "<div class='input-group input-group-md mb-3'>" +
-                "<div class='input-group-prepend'>" +
-                    "<span class='input-group-text' id='inputGroup-sizing-sm'><span class='fas fa-shield-alt icon_r text-info mr-2'></span>Confirmar contraseña</span>" +
-                "</div>" +
-                "<input id='validate_Password' type='password' class='form-control' name='validate_Password'>" +
-            "</div>"+
-        "</div>"+
-    "</div>"
-}
-function form_agregar() {
-    document.getElementById("tituloModal").innerText = "Nuevo Administrador";
-    document.getElementById("form_administradores").innerHTML = cuerpo_form();
-    document.getElementById('btn_form_administradores').setAttribute("onclick","guardar()")
-    document.getElementById("btn_form_administradores").innerText ="Guardar";
-    document.getElementById("btn_form_administradores").classList.add('btn-primary');
-}
-function form_editar() {
-    document.getElementById("tituloModal").innerText = "Editar Administrador";
-    document.getElementById("form_administradores").innerHTML = cuerpo_form();
-    document.getElementById("btn_form_administradores").innerText ="Actualizar";
-    document.getElementById("btn_form_administradores").classList.add('btn-primary');
-}
 // --------- Variables Globales
-GlobalToken = {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')};
-GlobalErrorCRUD ="Soluciones:\n"
+const GlobalToken = {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')};
+const GlobalErrorCRUD ="Soluciones:\n"
 +"1) Intente de nuevo Guardar el registro\n"
 +"2) Recargue la página e intente de nuevo guardar el registro\n"
 +"3) Compruebe su conexión a Internet e intente de nuevo - si no hay conexión, comuniquese con el Administrador y con el Proveedor del servicio\n"
 +"4) ¡Si hay conexión a internet! y los problemas persisten comuniquese con el Administrador y con el Desarrollador del sistema";
 // --------- -----------------
+var _usuarioEnJuego =[];
 
-function CRUD(ruta,formData,colorA,mnsjA,inconoA){
-    $.ajax({
-        url:ruta,
-        type: "POST",
-        headers:GlobalToken,
-        data: formData,
-        success:  function(data){       
-            $('#tbl_farmacia').DataTable().ajax.reload();
+$("#Modal_Usuarios").on("hidden.bs.modal", function () {
+    
+    ReinicioFormUsuarios();
+});
 
-            setTimeout(notify,1000,colorA,mnsjA,inconoA);
-
-            $('#modal_farmacias').modal('hide');
-            document.getElementById('btn_form_farmacias').disabled = false;
-        },
-        error: function(jqXHR, textStatus, errorThrown){
-            alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
-            document.getElementById('btn_form_farmacias').disabled = false;
-        }
-     });
+$('#btn_usuarioNuevo').on('click', function() {
+    $("#Modal_Usuarios").modal('show');
+});
+function ReinicioFormUsuarios() {
+    _usuarioEnJuego = []
+    document.getElementById('Nombre').value = null;
+    document.getElementById('Rol').value = null;
 }
-function guardar() {
-    document.getElementById('btn_form_administradores').disabled = true;
-    CRUD(
-        "GuardarAdministrador",
-        $("#form_farmacias").serialize(),
-        "info",
-        "Farmacia guardada con exito",
-        "fas fa-save"
-    );
+
+$('#btn_guardarUsuario').on('click', function() {
+    let url;
+    let text
+    if (_usuarioEnJuego.length ==0) {
+        console.log("entró");
+        url = 'Guardarusuario';
+        text="Se ha registrado el nuevo usuario"
+    }else{
+        console.log(2);
+        url = 'ActualizarUsuario/'+_usuarioEnJuego.id;
+        text = 'Se ha actualizado la información del usuario'
+    }
+
+    let validate = $("#form_usuarios_nuevos").valid();
+    if (validate) {
+        let nombre= document.getElementById('Nombre').value;
+        let email =nombre.split(" ").join("");
+        email = email.toLowerCase();
+        email = email+"@farmaplus"
+        let formData = $("#form_usuarios_nuevos").serialize();
+        console.log(formData);
+        $.ajax({
+            url:url,
+            type: "POST",
+            headers:GlobalToken,
+            data: formData+"&email="+email,
+            success:  function(data){
+                $('#tbl_Usuarios').DataTable().ajax.reload();   
+                $("#Modal_Usuarios").modal('hide');
+                swal(text,{icon:"success"});
+                ReinicioFormUsuarios();
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
+                document.getElementById('btn_form_farmacias').disabled = false;
+            }
+         });
+    }
+});
+
+function editarUsuario(id) {
+    _usuarioEnJuego = _usuarios.find(u => u.id == id )
+    document.getElementById('Nombre').value = _usuarioEnJuego.name;
+    document.getElementById('Rol').value = _usuarioEnJuego.rol;
+    $("#Modal_Usuarios").modal('show');
+}
+
+function eliminarUsuario(id) {
+    _usuarioEnJuego = _usuarios.find(u => u.id == id )
+    swal({
+        title: "¿Desea eliminar el usuario?",
+        text: "Nombre: "+_usuarioEnJuego.name+"\n Nombre de usuario: "+_usuarioEnJuego.email+"\nRol: "+_usuarioEnJuego.rol,
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((Eliminar) => {
+        if (Eliminar) {
+            $.ajax({
+                url:'EliminarUsuario/'+id,
+                type: "POST",
+                headers:GlobalToken,
+                data: true,
+                success:  function(payload){
+                    _usuarioEnJuego = []
+                $('#tbl_Usuarios').DataTable().ajax.reload();
+                    swal("Se ha eliminado el usuario correctamente",
+                        {icon:"success",});
+                },
+                error: function(){
+                    alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);    
+                }
+            });
+        }
+    });
 }

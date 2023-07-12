@@ -3,11 +3,11 @@ $(document).ready(function() {
     $(function() {
         // [ Add phone validator ] start
         $.validator.addMethod(
-            'phone_format',
+            'llave_format',
             function(value, element) {
-                return this.optional(element) || /^\(\d{3}\)[ ]\d{3}\-\d{4}$/.test(value);
+                return this.optional(element) || /^[0-9]+$/.test(value);
             },
-            'Invalid phone number.'
+            'La llave no es una serie numérica.'
         );
 
         // [ Initialize validation ] start
@@ -20,16 +20,19 @@ $(document).ready(function() {
                     minlength: 3,
 
                 },
-                'Encargado': {
+                /* 'Vendedor': {
                     required: true,
-                    minlength: 3,
-                },
+                }, */
+                'Llave':{
+                    required:true,
+                    llave_format:true,
+                }
             },
 
             // Errors //
 
             errorPlacement: function errorPlacement(error, element) {
-                var $parent = $(element).parents('.form-group');
+                var $parent = $(element).parents('.input-group');
 
                 // Do not duplicate errors
                 if ($parent.find('.jquery-validation-error').length) {
@@ -42,7 +45,7 @@ $(document).ready(function() {
             },
             highlight: function(element) {
                 var $el = $(element);
-                var $parent = $el.parents('.form-group');
+                var $parent = $el.parents('.input-group');
 
                 $el.addClass('is-invalid');
 
@@ -52,7 +55,7 @@ $(document).ready(function() {
                 }
             },
             unhighlight: function(element) {
-                $(element).parents('.form-group').find('.is-invalid').removeClass('is-invalid');
+                $(element).parents('.input-group').find('.is-invalid').removeClass('is-invalid');
             }
         });
 
