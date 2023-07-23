@@ -30,8 +30,12 @@ $(document).ready(function() {
         lengthMenu: [30],
         bLengthChange : false,
         'ajax':{
-            'url':'/ProductoEnAlmacen/'+document.getElementById("from_body").getAttribute('farmID'),
+            'url':'ProductoEnAlmacen',
             'type': 'POST',
+             'dataSrc':function (data) {
+                _productosAlmacen=data.data
+                return _productosAlmacen;
+            } 
         },
         "createdRow": function( row, data) {
             $(row).attr('id', data['ID'] );

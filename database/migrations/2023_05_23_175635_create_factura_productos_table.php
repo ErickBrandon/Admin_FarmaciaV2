@@ -20,10 +20,10 @@ return new class extends Migration
             $table->bigInteger('Unidades');
             $table->float('Costo_Unidad');
             $table->float('SubTotal');
-
             $table->float('Precio_Unidad')->nullable();
             $table->bigInteger('Piezas_unidad')->nullable();
             $table->float('Precio_Piezas')->nullable();
+            $table->date('Caducidad');
             
             $table->bigInteger('Asignadas')->default(0);
             $table->unsignedBigInteger('factura_id')->nullable();

@@ -45,6 +45,7 @@
                         <thead>
                             <tr>
                                 <th>Id Factura</th>
+                                <th>Farmacia</th>
                                 <th>Fecha de registro</th>
                                 <th>Proveedor</th>
                                 <th>Total de compra</th>

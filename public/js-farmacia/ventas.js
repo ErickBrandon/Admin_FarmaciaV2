@@ -53,6 +53,7 @@ function GenerarCorte() {
                 document.getElementById('FechaCorte').innerText = data.Fecha;
                 document.getElementById('Corte').innerText = parseFloat(data.Corte).toFixed(2);
                 swal("¡Ok!", "Se ha generado un corte de caja con fecha "+data.Fecha, "success");
+                document.getElementById('btn_GenerarCorte').innerText ="Actualizar corte";
             }
             
         },

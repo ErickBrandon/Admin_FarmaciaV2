@@ -80,6 +80,13 @@ Route::POST('OtrasAsignaciones',[FacturaController::class,'OtrasAsignaciones'])-
 Route::POST('PrecioUnidad/{FacturaProducto}',[FacturaController::class,'PrecioUnidad'])->name('PrecioUnidad');
 Route::POST('PrecioPieza/{FacturaProducto}',[FacturaController::class,'PrecioPieza'])->name('PrecioPieza');
 Route::POST('EliminarFactura/{Factura}',[FacturaController::class,'EliminarFactura'])->name('EliminarFactura');
+Route::POST('Asignacion/{Producto}/{Factura}',[FacturaController::class,'Asignacion'])->name('Asignacion');
+
+        /* ALMACEN */
+Route::POST('PuntoDeVenta/{Farmacia}/ProductoEnAlmacen/',[ProductoController::class,'ProductoEnAlmacen'])->name('Productos');
+Route::POST('Traspaso/{Producto}',[ProductoController::class,'Traspaso'])->name('Traspaso');
+Route::GET('PuntoDeVenta/{Farmacia}/Almacen',[ProductoController::class,'almacen'])->name('Almacen');
+
 });
 
 Route::middleware(["General"])->group(function () {
@@ -93,8 +100,7 @@ Route::middleware(["General"])->group(function () {
     Route::POST('PuntoDeVenta/{farmacia_id}/CorteDeCaja',[VentaController::class,'corte'])->name('Corte');
     Route::POST('Detalle/{Venta}',[VentaController::class,'detalles'])->name('DetalleVenta');
     
-    Route::GET('PuntoDeVenta/{Farmacia}/Almacen',[ProductoController::class,'almacen'])->name('Almacen');
-    Route::POST('ProductoEnAlmacen/{Farmacia}',[ProductoController::class,'ProductoEnAlmacen'])->name('Productos');
+   
     
     Route::POST('AlmacenarProducto',[ProductoController::class,'store'])->name('GuardarProducto');
     Route::POST('ActualizarProducto/{Producto}',[ProductoController::class,'update'])->name('EditarProducto');

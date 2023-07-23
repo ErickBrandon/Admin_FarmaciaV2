@@ -48,18 +48,21 @@ function notify() {
 
 $("#From_Factura").on("hidden.bs.modal", function () {
     /* El evento detecta cuando se cierra el modal del formulario Factura */
+    $('input, select').removeClass('is-invalid')
     Reinicio_Factura()
    
 });
 $("#Modal_Asignaciones").on("hidden.bs.modal", function () {
     /* El evento detecta cuando se cierra el modal del formulario Factura */
+    $('input, select').removeClass('is-invalid')
     Reinicio_Asignaciones();
-    AccesoFormAsignacion(true);
+  
     Slt_ProductoAsignacion.innerHTML=null
-    _productosAsignacion = [];
-    _ClikAsignaciones = 0;       
+    _productosAsignacion=[];
+    _ProductoEnJuego = [];
+    _AsignacionesDisponibles = 0;   
          
-   
+    _ClikAsignaciones = 0;
 });
 /* Variables para factura */
 var _factura = [];
@@ -79,26 +82,42 @@ $("#Nueva_factura").on("click", function () {
  });
 
 function Reinicio_Factura(){
+    $("#form_factura_1").validate().resetForm()
+    $("#form_ProductoNuevo").validate().resetForm()
     _ClickDetalle = 0;
     if (_factura.length !=0) {
         _factura.map(producto =>{
             $("#producto"+producto.Codigo).rules('remove');
+            $("#producto"+producto.Codigo).rules('remove');
+            $("#costo"+producto.Codigo).rules('remove');
+            $("#pz"+producto.Codigo).rules('remove');
+            $("#caducidad"+producto.Codigo).rules('remove');
+            $("#pz_Caja"+producto.Codigo).rules('remove');
        })
     }
+    document.getElementById('Proveedor').value= "";
+    document.getElementById('Factura_farmacia').value = "";
+    document.getElementById('Proveedor').disabled = false;
+    document.getElementById('Factura_farmacia').disabled = false;
+    _FacturaEnJuego=[];
     _factura = [];
     _ProductosEliminados = []
     _totalFactura = 0.00;
     _totalProdutos = 0
     document.getElementById('total_factura').innerText=parseFloat(0).toFixed(2)
-    document.getElementById('tbodyCompras').innerHTML=null
+    document.getElementById('tbodyCompras').innerHTML=null;
+
 }
 
-function CreateRowFactura(tbl,codigo,producto,costo,pz, sub) {
-    if (!producto && !costo && !pz && !sub) {
+function CreateRowFactura(tbl,codigo,producto,costo,pz, sub,caducidad,pz_caja) {
+   
+    if (!producto && !costo && !pz && !sub && !caducidad && !pz_caja) {
        producto = "";
        costo = "";
        pz = 1;
+       pz_caja= 1;
        sub = parseFloat(0).toFixed(2);
+       caducidad = "";
     }
 
     tbl.setAttribute('id',"row_"+codigo);
@@ -115,16 +134,25 @@ function CreateRowFactura(tbl,codigo,producto,costo,pz, sub) {
         "<input type='number' class='form-control' id='pz"+codigo+"' name='pz"+codigo+"' value='"+pz+"' oninput=calculo(2,"+codigo+",this.value) min='1'>"+
     "</div>";
     tbl.insertCell(4).innerText = sub;
+    tbl.insertCell(5).innerHTML = "<div class='form-group'>"+
+        "<input type='number' class='form-control' id='pz_Caja"+codigo+"' name='pz_Caja"+codigo+"' value='"+pz_caja+"' min='1' onchange='P_pz("+codigo+",this.value)'>"+
+    "</div>";
+    tbl.insertCell(6).innerHTML = "<div class='form-group'>"+
+        "<input type='date' class='form-control' id='caducidad"+codigo+"' name='caducidad"+codigo+"' value='"+caducidad+"' onchange='P_caducidad("+codigo+",this.value)'>"+
+    "</div>";
 
-    tbl.insertCell(5).innerHTML = "<button type='button' class='btn btn-danger btn-icon' onclick=eliminarRow("+codigo+")><i class='fas fa-trash'><i></button>";
 
+    tbl.insertCell(7).innerHTML = "<button type='button' class='btn btn-danger btn-icon' onclick=eliminarRow("+codigo+")><i class='fas fa-trash'><i></button>";
+
+    
   
     $("#producto"+codigo).rules('add',{required:true});
     $("#costo"+codigo).rules('add',{required:true});
     $("#pz"+codigo).rules('add',{required:true});
+    $("#caducidad"+codigo).rules('add',{required:true});
+    $("#pz_Caja"+codigo).rules('add',{required:true});
 }
-
-function AgregarProducto() {
+$('#btn_agregarProducto').on('click', function () {
     let validate = $("#form_ProductoNuevo").valid()
     if (validate) {
         codigo = document.getElementById('Codigo_nuevo').value;
@@ -133,14 +161,14 @@ function AgregarProducto() {
             let tbl = document.getElementById('tbodyCompras').insertRow(_factura.length);
             CreateRowFactura(tbl,codigo)
             _totalProdutos = _totalProdutos+1;
-            _factura.push({Codigo:codigo,Producto:'',Costo_Unidad:0.00, Unidades:1,SubTotal:0});
+            _factura.push({Codigo:codigo,Producto:'',Costo_Unidad:0.00, Unidades:1,SubTotal:0,Caducidad:'',Piezas_unidad:1});
             document.getElementById('Codigo_nuevo').value =null
         }else{
             notify();   
         }
     }
-   
-}
+});
+
 function calculo (op,codigo,valor){
     if (valor == "") {
         valor = 0;
@@ -186,6 +214,23 @@ function Nombre_Producto(codigo,value){
         }
     }
 }
+function P_caducidad (codigo,value){
+    for (let i = 0; i < _factura.length; i++) {
+        if (_factura[i].Codigo == codigo) {
+            _factura[i].Caducidad = value;
+            break;
+        }
+    }
+}
+function P_pz(codigo,value) {
+    for (let i = 0; i < _factura.length; i++) {
+        if (_factura[i].Codigo == codigo) {
+            _factura[i].Piezas_unidad = parseInt(value);
+            break;
+        }
+    }
+}
+
 function eliminarRow(codigo) {
     let sub = 0;
     let Nproductos = 0;
@@ -199,6 +244,8 @@ function eliminarRow(codigo) {
             $("#producto"+codigo).rules('remove');
             $("#costo"+codigo).rules('remove');
             $("#pz"+codigo).rules('remove');
+            $("#caducidad"+codigo).rules('remove');
+            $("#pz_Caja"+codigo).rules('remove');
             break;
         }
     }
@@ -214,49 +261,56 @@ $('#btn_RFactura').on('click', function(){
     let url;
     let tq;
     if (_factura.length !=0) {
-        let validate = $("#form_factura").valid();
-        if (validate) {
-
-            if (_ClickDetalle == 0) {
-                title = "Total de la factura:\n $ "+parseFloat(_totalFactura).toFixed(2);
-                text = "¿Desea continuar con el registro de la factura en el sistema?\n\nAsegúrese que el total de la factura registrada coincida con el total de la factura entregada por el proveedor."
-                mensaje = "La factura fue registrada exitosamente y se le asignó el Id: ";
-                url = 'GuardarFactura';
-                tq = 1;
-            }else{
-                title = "Nuevo Total de la factura:\n $ "+parseFloat(_totalFactura).toFixed(2);
-                text = "¿Desea continuar con la actualización de la factura?\n\nAsegurece que el total de la factura registrada coincide con el de la factura física."
-                mensaje = "Se actualizó correctamente la FACTURA de Id: ";
-                url = "ActualizarFactura/"+_ClickDetalle;
-                tq= 2
-            }
-
-            let proveedor =document.getElementById('Proveedor').value;
-            let data = {
-                        Factura:_factura,
-                        TotalFactura:_totalFactura,
-                        Proveedor:proveedor,
-                        TotalProductos:_totalProdutos,
-                        Eliminados:_ProductosEliminados
-                       }
-            swal({
-                title: title,
-                text:text,
-                icon: "info",
-                buttons: true,
-                dangerMode: false,
-            }).then((registrar) => {
-                if (registrar) {
-                    Query_Factura(
-                        1,
-                        url,
-                        data,
-                        mensaje,
-                    );
+        let form_factura =$('#form_factura_1').valid();
+     
+        if (form_factura) {
+            let validate = $("#form_factura_2").valid();
+            if (validate) {
+    
+                if (_ClickDetalle == 0) {
+                    title = "Total de la factura:\n $ "+parseFloat(_totalFactura).toFixed(2);
+                    text = "¿Desea continuar con el registro de la factura en el sistema?\n\nAsegúrese que el total de la factura registrada coincida con el total de la factura entregada por el proveedor."
+                    mensaje = "La factura fue registrada exitosamente y se le asignó el Id: ";
+                    url = 'GuardarFactura';
+                    tq = 1;
+                }else{
+                    title = "Nuevo Total de la factura:\n $ "+parseFloat(_totalFactura).toFixed(2);
+                    text = "¿Desea continuar con la actualización de la factura?\n\nAsegurece que el total de la factura registrada coincide con el de la factura física."
+                    mensaje = "Se actualizó correctamente la FACTURA de Id: ";
+                    url = "ActualizarFactura/"+_ClickDetalle;
+                    tq= 2
                 }
-            });
+    
+                let proveedor =document.getElementById('Proveedor').value;
+                let farmacia =document.getElementById('Factura_farmacia').value;
+                let data = {
+                            Factura:_factura,
+                            TotalFactura:_totalFactura,
+                            Proveedor:proveedor,
+                            Farmacia:farmacia,
+                            TotalProductos:_totalProdutos,
+                            Eliminados:_ProductosEliminados
+                           }
+                swal({
+                    title: title,
+                    text:text,
+                    icon: "info",
+                    buttons: true,
+                    dangerMode: false,
+                }).then((registrar) => {
+                    if (registrar) {
+                        Query_Factura(
+                            1,
+                            url,
+                            data,
+                            mensaje,
+                        );
+                    }
+                });
+            }
         }
-    }h
+       
+    }
 });
 
  function Query_Factura(tipo_query,url,data,mensaje) {
@@ -281,24 +335,45 @@ $('#btn_RFactura').on('click', function(){
 function detalleFactura(id){
     if ( _ClickDetalle == 0) {
         _ClickDetalle = id;
+
+   
+        _factura =_Facturas.find(f=>f.ID == id);
+      
+        document.getElementById('Proveedor').value= _factura.proveedor_id;
+        document.getElementById('Factura_farmacia').value = _factura.farmacia_id;
+      
+
         document.getElementById('Title_From_Factura').innerText ="Factura - Id: "+id;
         document.getElementById('btn_RFactura').innerText ="Actualizar factura";
+
+
         $.ajax({
             url:'DetalleFactura',
             type: "POST",
             headers:GlobalToken,
             data: {factura_id:id},
             success:  function(payload){
-
                 _factura = payload;
+                console.log(_factura);
                 payload.forEach((producto,i) => {
                     let tbl = document.getElementById('tbodyCompras').insertRow(i);
 
-                    CreateRowFactura(tbl, producto.Codigo, producto.Producto, producto.Costo_Unidad, producto.Unidades, producto.SubTotal);
+                    CreateRowFactura(
+                        tbl, 
+                        producto.Codigo, 
+                        producto.Producto, 
+                        producto.Costo_Unidad, 
+                        producto.Unidades, 
+                        producto.SubTotal,
+                        producto.Caducidad,
+                        producto.Piezas_unidad
+                    );
                     _totalFactura = _totalFactura + producto.SubTotal;
                     _totalProdutos = _totalProdutos + producto.Unidades;
                  });
+                 
                 document.getElementById('total_factura').innerText = parseFloat(_totalFactura).toFixed(2)
+              
                 $('#From_Factura').modal('show');
         },
         error: function(jqXHR, textStatus, errorThrown){
@@ -307,8 +382,36 @@ function detalleFactura(id){
      });
     }   
 }
-
+function EliminarFactura(id) {
+    swal({
+        title: "¿Desea eliminar la factura \nid: "+id+"?",
+        text: "Se eliminará el CONTENIDO de la factura asi como su Historial de asignaciones, pero NO los productos en del almacen",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((Eliminar) => {
+        if (Eliminar) {
+            $.ajax({
+                url:'EliminarFactura/'+id,
+                type: "POST",
+                headers:GlobalToken,
+                data: {id:id},
+                success:  function(payload){
+                $('#tbl_Facturas').DataTable().ajax.reload();
+                    swal("La Factura se eliminó correctamente",
+                        {icon:"success",});
+                },
+                error: function(){
+                    alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);    
+                }
+            });
+        }
+    });
+}
+/* ////////////////////////////////////////   Asignaciones /////////////////////////////////////////////////////// */
 function asignaciones(id) {
+    console.log(_ClikAsignaciones);
     if (_ClikAsignaciones == 0) {
         _ClikAsignaciones = id;
         document.getElementById('Title_ModalAsigaciones').innerText = "Asignaciones - Factura - Id: "+id;
@@ -341,72 +444,69 @@ function asignaciones(id) {
     }
    
 }
-function AccesoFormAsignacion(flag){
-    document.getElementById('select_farmacias').disabled=flag
-    document.getElementById('piezas_asignacion').disabled=flag
-    document.getElementById('select_TV').disabled=flag
-    document.getElementById('Caducidad').disabled=flag
-    document.getElementById('btn_GuardarAsignacion').disabled=flag;
-}
+
 $(Slt_ProductoAsignacion).on('change', function(e){
     let op =e.target.value;
 
     if (op !=0) {
-        Reinicio_Asignaciones();
+        //Reinicio_Asignaciones();
         for (let i = 0; i < _productosAsignacion.length; i++) {
             if (_productosAsignacion[i].id == op ) {
                 _ProductoEnJuego = _productosAsignacion[i];
                 break;
             }  
         }
-        if ((_ProductoEnJuego.Unidades - _ProductoEnJuego.Asignadas) !=0) {
-           
-            AccesoFormAsignacion(false);
-        }
+   
         
-        document.getElementById('btn_PrecioUnidad').disabled = false;
-        document.getElementById('btn_PrecioPz').disabled = false;
+        /* document.getElementById('btn_PrecioUnidad').disabled = false;
+        document.getElementById('btn_PrecioPz').disabled = false; */
 
         
 
         Tbl_showAsignaciones.rows[0].cells[1].innerText =_ProductoEnJuego.Codigo;
-        Tbl_showAsignaciones.rows[1].cells[1].innerText =_ProductoEnJuego.Unidades;
+        Tbl_showAsignaciones.rows[1].cells[1].innerText =_ProductoEnJuego.Caducidad;
+        Tbl_showAsignaciones.rows[2].cells[1].innerText =_ProductoEnJuego.Unidades;
 
         let piezasUnidad = "";
-        document.getElementById('PrecioPz').setAttribute('min',1);
+        //document.getElementById('PrecioPz').setAttribute('min',1);
 
         if (_ProductoEnJuego.Piezas_unidad != null) {
             piezasUnidad =_ProductoEnJuego.Piezas_unidad
-            document.getElementById('PiezasUnidad').value = piezasUnidad;
+            //document.getElementById('PiezasUnidad').value = piezasUnidad;
             let min = parseFloat(_ProductoEnJuego.Costo_Unidad / piezasUnidad).toFixed(2);
-            document.getElementById('PrecioPz').setAttribute('min',min);
+           // document.getElementById('PrecioPz').setAttribute('min',min);
         }
 
-        Tbl_showAsignaciones.rows[2].cells[1].innerText =piezasUnidad;
+        Tbl_showAsignaciones.rows[3].cells[1].innerText =piezasUnidad;
+
+        
 
         let porAsignar = (parseInt(_ProductoEnJuego.Unidades) - parseInt(_ProductoEnJuego.Asignadas))
-        Tbl_showAsignaciones.rows[3].cells[1].innerText = porAsignar;
+        Tbl_showAsignaciones.rows[4].cells[1].innerText = porAsignar;
         _AsignacionesDisponibles = porAsignar
 
-        document.getElementById('piezas_asignacion').setAttribute('max',porAsignar);
-        Tbl_showAsignaciones.rows[4].cells[1].innerText ="$ "+parseFloat(_ProductoEnJuego.Costo_Unidad).toFixed(2);
-        document.getElementById('PrecioUnidad').setAttribute('min',parseFloat(_ProductoEnJuego.Costo_Unidad).toFixed(2));
+        if (_AsignacionesDisponibles != 0) {
+            document.getElementById('Cajas').disabled = false;
+            document.getElementById('Venta_caja').disabled = false;
+            document.getElementById('Venta_pz').disabled = false;
+            document.getElementById('Piezas').disabled = false;
+            document.getElementById('btn_formAsignaciones').disabled = false;
+        }
+
         
-        let opTipoVenta = document.createElement('option');
-        opTipoVenta.value="";
-        opTipoVenta.text = "- Seleccione tipo de venta -";
-        document.getElementById('select_TV').appendChild(opTipoVenta);
+        Tbl_showAsignaciones.rows[5].cells[1].innerText ="$ "+parseFloat(_ProductoEnJuego.Costo_Unidad).toFixed(2);
+        //document.getElementById('PrecioUnidad').setAttribute('min',parseFloat(_ProductoEnJuego.Costo_Unidad).toFixed(2));
+        
         
         let precioUnidad="";
         if (_ProductoEnJuego.Precio_Unidad != null) {   
             precioUnidad = "$ "+_ProductoEnJuego.Precio_Unidad;
             opTipoVenta = document.createElement('option');
-            opTipoVenta.value="Unidad";
-            opTipoVenta.text="Unidad";
-            document.getElementById('select_TV').appendChild(opTipoVenta);
+            opTipoVenta.value="Caja";
+            opTipoVenta.text="Caja";
         }
 
-        Tbl_showAsignaciones.rows[5].cells[1].innerText=precioUnidad
+        Tbl_showAsignaciones.rows[6].cells[1].innerText=precioUnidad
 
         let precioPieza="";
         if (_ProductoEnJuego.Precio_Piezas!= null) {
@@ -414,347 +514,88 @@ $(Slt_ProductoAsignacion).on('change', function(e){
             opTipoVenta = document.createElement('option');
             opTipoVenta.value="Piezas";
             opTipoVenta.text="Piezas";
-            document.getElementById('select_TV').appendChild(opTipoVenta);
+           // document.getElementById('select_TV').appendChild(opTipoVenta);
         }
-        Tbl_showAsignaciones.rows[6].cells[1].innerText=precioPieza
+        Tbl_showAsignaciones.rows[7].cells[1].innerText=precioPieza
 
     }else{
      
        Reinicio_Asignaciones();
-       AccesoFormAsignacion(true);
-       document.getElementById('btn_PrecioUnidad').disabled = true;
-       document.getElementById('btn_PrecioPz').disabled = true;
     }
     
 })
-function Reinicio_Asignaciones(){
-    
-    Tbl_showAsignaciones.rows[0].cells[1].innerText ="";
-    Tbl_showAsignaciones.rows[1].cells[1].innerText ="";
-    Tbl_showAsignaciones.rows[2].cells[1].innerText ="";
-    Tbl_showAsignaciones.rows[3].cells[1].innerText ="";
-    Tbl_showAsignaciones.rows[4].cells[1].innerText ="";
-    Tbl_showAsignaciones.rows[5].cells[1].innerText ="";
-    Tbl_showAsignaciones.rows[6].cells[1].innerText ="";
-    _AsignacionesDisponibles=0;
-    Reinicio_FormAsignaciones();
-    Reinicio_FromPreciosVentas();
-    document.getElementById('btn_PrecioUnidad').disabled = true;
-    document.getElementById('btn_PrecioPz').disabled = true;  
-}
-function Reinicio_FormAsignaciones() {
-    
-    let validate = $("#From_Asignaciones").validate();
-    validate.resetForm();
-    document.getElementById('select_farmacias').value="";
-    document.getElementById('piezas_asignacion').value="";
-    
-    document.getElementById('select_TV').innerHTML=null;
-    document.getElementById('Caducidad').value=null;
-    
-}
-
-$('#btn_GuardarAsignacion').on('click', function(){
-   
-    let validate = $("#From_Asignaciones").valid();
-    if (validate) {
-        let formData = $("#From_Asignaciones").serialize();
-        formData='Factura='+_ClikAsignaciones+'&Producto_id='+_ProductoEnJuego.id+"&"+formData;
-        
-        $.ajax({
-            url:'GuardarAsignacion',
-            type: "POST",
-            headers:GlobalToken,
-            data: formData,
-            success:  function(payload){
-                
-                for (let i = 0; i < _productosAsignacion.length; i++) {
-                    if (_productosAsignacion[i].id == _ProductoEnJuego.id) {
-                       
-                        _ProductoEnJuego.Asignadas = parseInt(_ProductoEnJuego.Asignadas) + parseInt(payload.Asignadas);
-                        _productosAsignacion[i] =  _ProductoEnJuego;
-        
-                        Tbl_showAsignaciones.rows[3].cells[1].innerText =_ProductoEnJuego.Unidades - _ProductoEnJuego.Asignadas  ;
-                        break;
-                    }
-                }
-                let Farmacia =$("#select_farmacias option:selected").text();
-                
-                if ((_ProductoEnJuego.Unidades - _ProductoEnJuego.Asignadas) == 0) {
-                    AccesoFormAsignacion(true);
-                }
-                Reinicio_FormAsignaciones();
-                $('#tbl_Facturas').DataTable().ajax.reload();
-                swal("El producto se ha asignado correctamente\n En farmacia: "+Farmacia,{icon:"success",});
-              
-            },
-            error: function(){
-                alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
-            }
-        });
-    }  
-})
-
-
-function Reinicio_FromPreciosVentas(){
-    let validate = $("#from_PrecioUnidad").validate();
-    validate.resetForm();
-    let validate2 =$("#form_PrecioPieza").validate();
-    validate2.resetForm();
-    document.getElementById('PiezasUnidad').value=""
-    document.getElementById('PrecioUnidad').value=""
-    document.getElementById('PrecioPz').value=""
-}
-function AddTipoVenta(tipo) {
-    let tipos =document.getElementById('select_TV').options;
-    let agregado = false;
-    for (let i = 0; i < tipos.length; i++) {
-        if (tipos[i].value == tipo) {
-            agregado = true;
-            break;
-        }
-    }
-    if (!agregado) {
-        op = document.createElement('option');
-        op.value=tipo;
-        op.text=tipo;
-        document.getElementById('select_TV').appendChild(op);
-    }
-}
-$('#btn_PrecioUnidad').on('click', function () {
-    document.getElementById('btn_PrecioUnidad').disabled = true;
-    Slt_ProductoAsignacion.disabled = true;
-    
-    let validate = $("#from_PrecioUnidad").valid();
-    if (validate) {
-        let precio = parseFloat(document.getElementById('PrecioUnidad').value).toFixed(2);
-        $.ajax({
-            url:'PrecioUnidad/'+_ProductoEnJuego.id,
-            type: "POST",
-            headers:GlobalToken,
-            data: {Precio:precio},
-            success:  function(payload){
-                for (let i = 0; i < _productosAsignacion.length; i++) {
-                    if (_productosAsignacion[i].id==payload) {
-                         _productosAsignacion[i].Precio_Unidad = precio;
-                         _ProductoEnJuego.Precio_Unidad = precio;
-                         Tbl_showAsignaciones.rows[5].cells[1].innerText="$ "+precio;
-                         break;
-                    } 
-                 }
-                Reinicio_FromPreciosVentas()
-                document.getElementById('btn_PrecioUnidad').disabled = false;
-                Slt_ProductoAsignacion.disabled = false;
-                AddTipoVenta("Unidad");
-                swal("El precio por unidad del producto se actualizó",{icon:"success",});
-            },
-            error: function(){
-                alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
-                document.getElementById('btn_PrecioUnidad').disabled = false;
-                Slt_ProductoAsignacion.disabled = false;
-                
-            }
-        });
-    }else{
-        document.getElementById('btn_PrecioUnidad').disabled = false;
-        Slt_ProductoAsignacion.disabled = false;
-    }
-});
-$('#btn_PrecioPz').on('click', function () {
-    document.getElementById('form_PrecioPieza').disabled = true;
-    Slt_ProductoAsignacion.disabled = true;
-    
-    let validate = $("#form_PrecioPieza").valid();
-    if (validate) {
-        let piezas= document.getElementById('PiezasUnidad').value;
-        let precio = parseFloat(document.getElementById('PrecioPz').value).toFixed(2);
-        $.ajax({
-            url:'PrecioPieza/'+_ProductoEnJuego.id,
-            type: "POST",
-            headers:GlobalToken,
-            data: {
-                Piezas: piezas,
-                Precio:precio
-            },
-            success:  function(payload){
-                for (let i = 0; i < _productosAsignacion.length; i++) {
-                    if (_productosAsignacion[i].id==payload) {
-                         _productosAsignacion[i].Precio_Piezas = precio;
-                         _productosAsignacion[i].Piezas_unidad = piezas;
-                            //document.getElementById('PiezasUnidad').value=piezas
-                        
-                         _ProductoEnJuego.Precio_Piezas = precio;
-                         _ProductoEnJuego.Piezas_unidad = piezas;
-
-                         Tbl_showAsignaciones.rows[6].cells[1].innerText="$ "+precio;
-                         Tbl_showAsignaciones.rows[2].cells[1].innerText=piezas;
-                         break;
-                    } 
-                 }
-                Reinicio_FromPreciosVentas()
-                document.getElementById('btn_PrecioPz').disabled = false;
-                Slt_ProductoAsignacion.disabled = false;
-                AddTipoVenta("Piezas");
-                swal("El precio de piezas por unidad del producto se actualizó",{icon:"success",});
-            },
-            error: function(){
-                alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
-                document.getElementById('btn_PrecioPz').disabled = false;
-                Slt_ProductoAsignacion.disabled = false;
-                
-            }
-        });
-    }else{
-        document.getElementById('btn_PrecioPz').disabled = false;
-        Slt_ProductoAsignacion.disabled = false;
-    }
-})
-
-$('#PiezasUnidad').on('change', function (e) {
-    let piezas = e.target.value
-    if (_ProductoEnJuego != []) {
-        let min = parseFloat(_ProductoEnJuego.Costo_Unidad / piezas).toFixed(2);
-        document.getElementById('PrecioPz').setAttribute('min',min);
-    }
-});
-function EliminarFactura(id) {
-    swal({
-        title: "¿Desea eliminar la factura \nid: "+id+"?",
-        text: "Se eliminará el CONTENIDO de la factura asi como su Historial de asignaciones, pero NO los productos en del almacen",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-    })
-    .then((Eliminar) => {
-        if (Eliminar) {
+$("#btn_formAsignaciones").on('click', function(){
+   let valid = $("#form_Asignaciones").validate();
+   if (valid) {
+        let unidades_caja= parseInt(document.getElementById('Cajas').value);
+        let unidades_pz= parseInt(document.getElementById('Piezas').value);
+        let totalCajas = unidades_caja + unidades_pz;
+        console.log(unidades_caja + unidades_pz);
+        if (totalCajas == _ProductoEnJuego.Unidades) {
+            let data = $("#form_Asignaciones").serialize();
             $.ajax({
-                url:'EliminarFactura/'+id,
+                url:"Asignacion/"+_ProductoEnJuego.id+"/"+_ProductoEnJuego.factura_id,
                 type: "POST",
                 headers:GlobalToken,
-                data: {id:id},
+                data: data,
                 success:  function(payload){
-                $('#tbl_Facturas').DataTable().ajax.reload();
-                    swal("La Factura se eliminó correctamente",
-                        {icon:"success",});
+                   if (payload) {
+                    _productosAsignacion.forEach((p)=>{
+                        if (p.id == _ProductoEnJuego.id) {
+                            p.Precio_Unidad = parseFloat(document.getElementById('Venta_caja').value);
+                            p.Precio_Piezas = parseFloat(document.getElementById('Venta_pz').value);
+                            console.log(p.Precio_Piezas);
+                            _ProductoEnJuego.Precio_Unidad = p.Precio_Unidad;
+                            _ProductoEnJuego.Precio_Piezas = p.Precio_Piezas;
+
+                            Tbl_showAsignaciones.rows[6].cells[1].innerText="$"+ parseFloat(p.Precio_Unidad).toFixed(2)
+                            Tbl_showAsignaciones.rows[7].cells[1].innerText="$"+ parseFloat(p.Precio_Piezas).toFixed(2)
+
+                        }
+                    })
+                    Reinicio_FromAsignaciones();
+                    
+                   }
                 },
                 error: function(){
-                    alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);    
+                    alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
                 }
-            });
-        }
-    });
-}
-$('#btn_OtrasAsignaciones').on('click', function () {
-    let op=document.getElementById('cbx_otrasAsignaciones').value;
-    console.log(op);
-    let producto;
-    switch (op) {
-        case '1':
-            console.log("entra 1");
-            producto = _ProductoEnJuego.id
-        break;
-        case '2':
-            console.log("entra 2");
-            producto= _ProductoEnJuego.Codigo
-        break;
-        case '3':
-            console.log("entra 3");
-            producto = _ProductoEnJuego.Producto;
-            console.log(producto);
-        break;
-    }
-console.log(producto);
-    $.ajax({
-        url:'OtrasAsignaciones',
-        type: "POST",
-        headers:GlobalToken,
-        data: {
-            op:op,
-            producto:producto
-        },
-        success:  function(payload){
-            document.getElementById('Cont_OA').innerText = payload;
-            TblOtrasAsignaciones(payload,op);
-        },
-        error: function(){
-            alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);    
-        }
-    });
-});
-
-function TblOtrasAsignaciones(data,op) {
-    let tbl = document.createElement('table');
-    let thead = document.createElement('thead');
-    let row = document.createElement('tr');
-    let titulos;
-    if (op == 1) {
-         titulos = ["Producto","Tipo de venta","Unidades asignadas","Piezas x Unidad","Fecha asignación","Farmacia"]
-      
-    }else{
-         titulos = ["Producto","Tipo de venta","Precio venta","Existencias","Farmacia","Última asignación"]
-    }
-    titulos.forEach((t) => {
-           
-        let cell = document.createElement('th');
-        cell.innerText = t;
-        row.appendChild(cell);
-    });
-    thead.appendChild(row);
-    tbl.appendChild(thead);
-
-    let tbody = document.createElement('tbody');
-  
-    data.forEach(e => {
-        row = document.createElement('tr');
-        
-        if (op == 1) {
-            let producto = document.createElement('td');
-            producto.innerText = e.Producto
-            let tv = document.createElement('td');
-            tv.innerText = e.Tipo_Venta
-            let unidades = document.createElement('td');
-            unidades.innerText = e.Unidades;
-            let pz = document.createElement('td');
-            pz.innerText = e.Piezas_unidad;
-            console.log(e.Piezas_unidad);
-            let fecha = document.createElement('td');
-            fecha.innerText = e.Fecha_asignacion;
-            let farmacia = document.createElement('td');
-            farmacia.innerText = e.farmacia_id;
-
-            row.appendChild(producto)
-            row.appendChild(tv)
-            row.appendChild(unidades)
-            row.appendChild(pz)
-            row.appendChild(fecha)
-            row.appendChild(farmacia)
+             });
         }else{
-            let producto = document.createElement('td');
-            producto.innerText = e.Producto
-            let tv = document.createElement('td');
-            tv.innerText = e.Tipo_Venta
-            let precio = document.createElement('td');
-            precio.innerText = e.Unidades;
-            let existencia = document.createElement('td');
-            existencia.innerText = e.Unidades;
-            let farmacia = document.createElement('td');
-            farmacia.innerText = e.Piezas_unidad;
-            let Fecha = document.createElement('td');
-            Fecha.innerText = e.Fecha_asignacion;
-
-            row.appendChild(producto)
-            row.appendChild(tv)
-            row.appendChild(precio)
-            row.appendChild(existencia)
-            row.appendChild(farmacia)
-            row.appendChild(fecha)
-
+            let error;
+            if (totalCajas>_ProductoEnJuego.Unidades) {
+                error = "Error: En la asignación de las cajas ya sea para tipo de venta CAJA o PIEZAS de los productos supera el total de cajas compradas en la factura"
+            }
+            if (totalCajas<_ProductoEnJuego.Unidades) {
+                error = "¡Ojo! Aun te faltan cajas por asignar a un tipo de venta, recuerda que tienes que asignar todas las cajas del porducto seleccionado";
+            }
+            swal(error,{icon:"error",});
         }
-        tbody.appendChild(row   )
-    });
+   }
+})
+function Reinicio_Asignaciones(){
+    Reinicio_FromAsignaciones();
+    Tbl_showAsignaciones.rows[0].cells[1].innerText =""   
+    Tbl_showAsignaciones.rows[1].cells[1].innerText =""
+    Tbl_showAsignaciones.rows[2].cells[1].innerText =""
+    Tbl_showAsignaciones.rows[3].cells[1].innerText =""
+    Tbl_showAsignaciones.rows[4].cells[1].innerText =""
+    Tbl_showAsignaciones.rows[5].cells[1].innerText =""
+    Tbl_showAsignaciones.rows[6].cells[1].innerText =""
+    Tbl_showAsignaciones.rows[7].cells[1].innerText =""
+ 
+   
+}
 
-    tbl.appendChild(tbody);
-
-   document.getElementById('Cont_OA').appendChild(tbl)
-
+function Reinicio_FromAsignaciones() {
+    
+    document.getElementById('Cajas').disabled = true;
+    document.getElementById('Venta_caja').disabled = true;
+    document.getElementById('Venta_pz').disabled = true;
+    document.getElementById('Piezas').disabled = true;
+    document.getElementById('btn_formAsignaciones').disabled = true;
+    document.getElementById('Cajas').value = "";
+    document.getElementById('Venta_caja').value = "";
+    document.getElementById('Venta_pz').value = "";
+    document.getElementById('Piezas').value = "";
 }

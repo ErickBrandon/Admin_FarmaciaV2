@@ -12,8 +12,14 @@ class ProductoController extends Controller
 {
   
     public function almacen(Farmacia $Farmacia)
-    {
-        return view('PuntoVenta.Almacen.almacen')->with('Farmacia',$Farmacia);
+    {   
+        $Farmacias = Farmacia::where('id','!=',($Farmacia->id+22))->get();
+        
+        return view('PuntoVenta.Almacen.almacen')
+        ->with([
+            'Farmacia'=>$Farmacia,
+            'Farmacias'=>$Farmacias
+        ]);
     }
 
     
@@ -117,7 +123,9 @@ class ProductoController extends Controller
                  'TipoVenta','Caducidad','Costo','Ultima_asignacion')->get();
         return dataTables()->of($productos)
         ->addColumn('btn',function($productos){
-           return "<button class='btn btn-primary btn-icon' onclick='regresarAFactura(".$productos->ID.")'><i class='fas fa-cloud-upload-alt'></i></button>";
+            if ($productos->TipoVenta == "Caja") {
+                return "<button class='btn btn-primary btn-icon' onclick='traslado(".$productos->ID.")'><i class='fas fa-ambulance'></i></button>";
+            }
         }
         
         )
@@ -129,5 +137,47 @@ class ProductoController extends Controller
     public function Productos_Proveedores(){
         $Proveedores = Proveedor::select('id','Nombre')->get();
         return $Proveedores;
+    }
+
+    
+    public function  Traspaso(Producto $Producto, Request $request){
+        $Hoy=date('Y/m/d');
+        DB::beginTransaction();
+
+        try {
+            $Producto->Existencias = $Producto->Existencias - $request->N_cajas;
+            $Producto->save();
+            
+            
+            $similar =Producto::where('farmacia_id',$request->Traslado_Farmacias)
+            ->where('Codigo',$Producto->Codigo)
+            ->where('Caducidad',$Producto->Caducidad)->first();
+
+            if ($similar != null) {
+                $similar->Existencias = $similar->Existencias + $request->N_cajas;
+               
+                $similar->Ultima_asignacion = $Hoy;
+               
+                $similar->save();
+            }else{
+                $traslado = new Producto();
+                $traslado->Codigo = $Producto->Codigo;
+                $traslado->Producto = $Producto->Producto;
+                $traslado->Precio = $Producto->Precio;
+                $traslado->Existencias = $request->N_cajas;
+                $traslado->TipoVenta = "Caja";
+                $traslado->Caducidad = $Producto->Caducidad;
+                $traslado->Costo = $Producto->Costo;
+                $traslado->farmacia()->associate( $request->Traslado_Farmacias);
+                $traslado->Ultima_asignacion = $Hoy;
+                $traslado->save();
+
+            }
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+           DB::rollback();
+           return $e;
+        }
     }
 }

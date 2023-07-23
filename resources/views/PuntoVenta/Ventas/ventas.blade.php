@@ -35,11 +35,11 @@
                                 @if ($Corte === null)
                                     <span id='FechaCorte' class="text-muted">AAA/mm/ddd</span>
                                     <h4 class="mb-2 f-w-400"><span>$</span><span id="Corte">00.0</span></h4>
-                                    <button type="button" class="btn btn-primary btn-sm col-10" onclick="GenerarCorte()">Generar corte</button>
+                                    <button id="btn_GenerarCorte" type="button" class="btn btn-primary btn-sm col-10" onclick="GenerarCorte()">Generar corte</button>
                                 @else
                                     <span id='FechaCorte' class="text-muted">{{$Corte['Fecha']}}</span>
                                     <h4 class="mb-2 f-w-400"><span>$</span><span id="Corte">{{$Corte['TotalCorte']}}</span></h4>
-                                    <button type="button" class="btn btn-primary btn-sm col-10" onclick="GenerarCorte()">Generar corte</button>
+                                    <button id="btn_GenerarCorte" type="button" class="btn btn-primary btn-sm col-10" onclick="GenerarCorte()">Actualizar corte</button>
                                 @endif
                             </div>
                             

@@ -28,6 +28,7 @@ class FacturaController extends Controller
    
     public function store(Request $request)
     {
+        //  dd($request);
         DB::beginTransaction();
         $Hoy=date('Y/m/d');
         try {
@@ -36,8 +37,9 @@ class FacturaController extends Controller
             $Factura->Fecha_registro = $Hoy;
             $Factura->Total_productos = $request->TotalProductos;
             $Factura->Proveedor()->associate($request->Proveedor);
+            $Factura->farmacia()->associate($request->Farmacia);
             $Factura->save();
-           
+
             $Productos = $request->Factura;
             foreach ($Productos as $key => $ProductoTEMP) {
                 $producto = new FacturaProducto();
@@ -46,29 +48,44 @@ class FacturaController extends Controller
                 $producto->Costo_Unidad = $ProductoTEMP['Costo_Unidad'];
                 $producto->Unidades = $ProductoTEMP['Unidades'];
                 $producto->SubTotal = $ProductoTEMP['SubTotal'];
-              
+                $producto->Caducidad = $ProductoTEMP['Caducidad'];
+                $producto->Piezas_unidad = $ProductoTEMP['Piezas_unidad'];
                 $producto->Factura()->associate($Factura->id);
                 $producto->save();
-            }
+           
 
+            }
             DB::commit( );
             return $Factura->id;
-        } catch (Exception $e) {
-           DB::rollback();
-           return $e;
+        } catch (\Throwable $th) {
+            DB::rollback();
+           return $th;
         }
     }
 
     public function DetalleFactura(Request $request)
     {
+        $Precios;
         $Productos = FacturaProducto::where('factura_id',$request->factura_id)->get();
+        foreach ($Productos as $key => $p) {
+          
+        }
         return $Productos;
     }
   
     public function tbl_facturas()
     {
       $Facturas = Factura::leftjoin('proveedores','proveedores.id','=','facturas.proveedor_id')
-      ->select('facturas.id AS ID','Nombre','TotalCompra','Fecha_registro','Total_productos','Total_asignados')
+      ->leftjoin('farmacias','farmacias.id','=','facturas.farmacia_id')
+      ->select('facturas.id AS ID',
+                'proveedor_id',
+                'Nombre',
+                'TotalCompra',
+                'Fecha_registro',
+                'Total_productos',
+                'Total_asignados',
+                'Farmacia',
+                'farmacia_id')
       ->get();
       
       return datatables()->of($Facturas)->toJson();
@@ -98,12 +115,15 @@ class FacturaController extends Controller
             
             foreach ($request->Factura as $key => $producto) {
                if (array_key_exists('id', $producto)) {
+                
                     $Editado = FacturaProducto::where('id',$producto['id'])->first();
                     
                     $Editado->Producto = $producto['Producto'];
                     $Editado->Costo_Unidad = $producto['Costo_Unidad'];
                     $Editado->Unidades = $producto['Unidades'];
                     $Editado->SubTotal = $producto['SubTotal'];
+                    $Editado->Caducidad = $producto['Caducidad'];
+                    $Editado->Piezas_unidad = $producto['Piezas_unidad'];
                     $Editado->save();
                }else{
                     $Nuevo = new FacturaProducto();
@@ -112,6 +132,8 @@ class FacturaController extends Controller
                     $Nuevo->Costo_Unidad = $producto['Costo_Unidad'];
                     $Nuevo->Unidades = $producto['Unidades'];
                     $Nuevo->SubTotal = $producto['SubTotal'];
+                    $Nuevo->Caducidad = $producto['Caducidad'];
+                    $Nuevo->Piezas_unidad = $producto['Piezas_unidad'];
                     $Nuevo->Factura()->associate($Factura->id);
                     $Nuevo->save();
                }
@@ -120,6 +142,7 @@ class FacturaController extends Controller
             $Factura->TotalCompra = $request->TotalFactura;
             $Factura->Total_productos = $request->TotalProductos;
             $Factura->Proveedor()->associate($request->Proveedor);
+            $Factura->Farmacia()->associate($request->Farmacia);
             $Factura->save();
 
             DB::commit();
@@ -212,7 +235,7 @@ class FacturaController extends Controller
         $Producto = new Producto();
         $Producto->Codigo = $producto_factura->Codigo;
         $Producto->Producto = $producto_factura->Producto;
-        if ($request->select_TV == "Unidad") {
+        if ($request->select_TV == "Caja") {
             $Producto->Existencias = $request->piezas_asignacion;
             $Producto->Costo = $producto_factura->Costo_Unidad;
             $Producto->Precio = $producto_factura->Precio_Unidad;
@@ -308,5 +331,80 @@ class FacturaController extends Controller
         }
         
         return $Otra;
+    }
+    public function Asignacion(FacturaProducto $Producto,Factura $Factura, Request $request){
+      //dd($request);
+      $Hoy=date('Y/m/d');
+        DB::beginTransaction();
+        try {
+           $Producto->Asignadas = $Producto->Asignadas+ ($request->Cajas + $request->Piezas);
+           $Producto->Precio_Unidad =$request->Venta_caja;
+           $Producto->Precio_Piezas =$request->Venta_pz;
+           $Producto->save();
+            
+           $Factura->Total_asignados = $Factura->Total_asignados + $Producto->Asignadas;
+           $Factura->save();
+
+
+           $similar = Producto::where('Codigo',$Producto->Codigo)
+           ->where('Caducidad', $Producto->Caducidad)
+           ->where('TipoVenta','Caja')
+           ->where('farmacia_id',$Producto->farmacia_id)
+           ->first();
+
+           if ($similar != null) {
+            $similar->Precio = $request->Venta_caja;
+            $similar->Existencias = $similar->Existencias + $request->Cajas;
+            $similar->Costo = $Producto->Costo_Unidad;
+            $similar->Ultima_asignacion =$Hoy;
+            $similar->update();
+            
+
+           }else{
+            $cj = new Producto();
+            $cj->Codigo = $Producto->Codigo;
+            $cj->Producto = $Producto->Producto;
+            $cj->Precio = $request->Venta_caja;
+            $cj->Existencias = $request->Cajas;
+            $cj->Caducidad = $Producto->Caducidad;
+            $cj->Costo = $Producto->Costo_Unidad;
+            $cj->TipoVenta = "Caja";
+            $cj->Ultima_asignacion =$Hoy;
+            $cj->farmacia()->associate($Factura->farmacia_id);
+            $cj->save();
+           }
+           $similar = null;
+
+           $similar = Producto::where('Codigo',$Producto->Codigo)
+           ->where('Caducidad', $Producto->Caducidad)
+           ->where('TipoVenta','Piezas')
+           ->where('farmacia_id',$Producto->farmacia_id)
+           ->first();
+
+           if ($similar != null) {
+            $similar->Precio = $request->Venta_caja;
+            $similar->Existencias = $similar->Existencias + $request->Piezas;
+            $similar->Costo =$Producto->Costo_Unidad/$Producto->Piezas_unidad;
+            $similar->Ultima_asignacion =$Hoy;
+            $similar->save();
+           }else{
+            $pz = new Producto();
+            $pz->Codigo = $Producto->Codigo;
+            $pz->Producto = $Producto->Producto;
+            $pz->Precio = $request->Venta_pz;
+            $pz->Existencias = $request->Piezas;
+            $pz->Caducidad = $Producto->Caducidad;
+            $pz->Costo = $Producto->Costo_Unidad/$Producto->Piezas_unidad;
+            $pz->TipoVenta = "Piezas";
+            $pz->Ultima_asignacion =$Hoy;
+            $pz->farmacia()->associate($Factura->farmacia_id);
+            $pz->save();
+           }
+           DB::commit();
+           return true;
+        } catch (\Throwable $th) {
+           DB::rollback();
+           dd($th);
+        }
     }
 }

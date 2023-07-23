@@ -1,3 +1,4 @@
+var _Facturas=[];
 $(document).ready(function() {
     $.ajaxSetup({
         headers: {
@@ -32,12 +33,18 @@ $(document).ready(function() {
         'ajax':{
             'url':'/Facturas',
            'type': 'POST',
+           'dataSrc':function (data) {
+                _Facturas=data.data
+                console.log(_Facturas);
+                return _Facturas;
+            },
         },
         "createdRow": function( row, data) {
             $(row).attr('id', "Fac-"+data['ID'] );
         },
         'columns':[
             {data:'ID'},
+            {data:'Farmacia'},
             {data:'Fecha_registro'},
             {data:'Nombre'},
             {data:'TotalCompra'},

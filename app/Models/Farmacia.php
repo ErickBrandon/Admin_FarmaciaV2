@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\User;
 use App\Models\Corte;
 use App\Models\Venta;
+use App\Models\Factura;
 use App\Models\Producto;
 use App\Models\Asignacion;
 use Illuminate\Database\Eloquent\Model;
@@ -36,6 +37,10 @@ class Farmacia extends Model
 
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    public function Facturas(){
+        return $this->hasMany(Factura::class);
     }
 
    

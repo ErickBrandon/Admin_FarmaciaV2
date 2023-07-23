@@ -92,7 +92,7 @@ function template_producto(producto) {
     tbl.insertCell(2).innerHTML = "<input id='CInput_"+producto.id+"' class='CantidadP' type='number' value='1' oninput=InputPz("+producto.id+",this.value) onblur=vacio("+producto.Existencias+","+producto.id+",this.value) min='1' max='"+producto.Existencias+"' step='1'></td>";
     tbl.insertCell(3).innerText = "$"+parseFloat(producto.Precio).toFixed(2);
     let info;
-    if (producto.TipoVenta == "Unidad") {
+    if (producto.TipoVenta == "Caja") {
         info ="<span class='text-white label bg-c-blue f-12'><b>"+producto.TipoVenta+"</b></span>"
     }else{
         info="<span class='text-white label theme-bg2 f-12'><b>"+producto.TipoVenta+"</b></span>"
@@ -279,14 +279,41 @@ function VentaExitosa(){
     document.getElementById('btnCobrar').disabled=true;
 }
 function IngresarAlCarrito(codigo) {
-   
-    try {
+   console.log(1);
+    /* try {
        let similar = document.querySelector(".c-"+codigo).getAttribute('id');
        carrito(similar);
     } catch (error) {
         notify('inverse'," No se encontró el producto, intente de nuevo",'fas fa-times');
     }
-    document.getElementById('Codigo').value =null;
+    document.getElementById('Codigo').value =null; */
+    let similar = [];
+    _ProductosVenta.forEach((p,i)=>{
+        if (p.Codigo == codigo) {
+            similar.push(p.Codigo)
+            /* if (similar.length>1) {
+                return;
+            } */
+
+        }
+    })
+    if (similar.length == 1) {
+        document.getElementById('Codigo').value =null;
+
+        carrito(similar);
+       
+    }
+    if (similar.length>1) {
+        document.getElementById('Codigo').value =null;
+        $('#tbl_Productos').DataTable().search(similar[0]).draw();
+            $("#Modal_Productos").modal('show')
+           
+    }
+    if (similar.length < 1) {
+        notify('inverse'," No se encontró el producto, intente de nuevo",'fas fa-times');
+        document.getElementById('Codigo').value =null;
+    }
+    
 }
 function OpenScanner() {
     $('#modal_Scanner').modal('show');     

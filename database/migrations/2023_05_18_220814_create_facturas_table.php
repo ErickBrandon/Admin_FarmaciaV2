@@ -20,10 +20,15 @@ return new class extends Migration
             $table->integer('Total_productos');
             $table->integer('Total_asignados')->default(0);
             $table->unsignedBigInteger('proveedor_id')->nullable();
+            $table->unsignedBigInteger('farmacia_id')->nullable();
 
             $table->foreign('proveedor_id')
             ->references('id')->on('proveedores')
-            ->onDelete('cascade');
+            ->onDelete('set null');
+
+            $table->foreign('farmacia_id')
+            ->references('id')->on('farmacias')
+            ->onDelete('set null');
         });
     }
 

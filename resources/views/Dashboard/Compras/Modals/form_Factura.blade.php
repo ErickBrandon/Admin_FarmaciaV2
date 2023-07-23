@@ -9,17 +9,42 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
-               
-                <div id="cont_select_proveedores" class='input-group input-group-md mb-3'>
-                    <div class='input-group-prepend'>
-                        <label class='input-group-text' for='Proveedor'><i class='fas fa-user-lock text-primary'></i>&nbsp;Proveedor</label>
-                    </div>
-                    <select class='custom-select' id='Proveedor' name='Proveedor'>
-                       @foreach ($Proveedores as $Proveedor)
-                           <option value="{{$Proveedor->id}}">{{$Proveedor->Nombre}}</option>
-                       @endforeach
-                    </select>
+                <div class="col-12">
+                    <form id="form_factura_1">
+                        <div class="row">
+                            <div class="col-6">
+                                <div id="cont_select_proveedores" class='input-group input-group-md mb-3 col-12'>
+                                    <div class='input-group-prepend'>
+                                        <label class='input-group-text' for='Proveedor'><i class='fas fa-user-lock text-primary'></i>&nbsp;Proveedor</label>
+                                    </div>
+                                    <select class='custom-select' id='Proveedor' name='Proveedor'>
+                                        <option value="">- Selecciona un proveedor -</option>
+                                       @foreach ($Proveedores as $Proveedor)
+                                           <option value="{{$Proveedor->id}}">{{$Proveedor->Nombre}}</option>
+                                       @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div id="cont_select_proveedores" class='input-group input-group-md mb-3 col-12'>
+                                    <div class='input-group-prepend'>
+                                        <label class='input-group-text' for='Proveedor'><i class='fas fa-hospital text-info'></i>&nbsp;Farmacias</label>
+                                    </div>
+                                    <select class='custom-select' id='Factura_farmacia' name='Factura_farmacia'>
+                                        <option value="">- Selecciona una farmacia -</option>
+                                       @foreach ($Farmacias as $farmacia)
+                                           <option value="{{$farmacia->id}}">{{$farmacia->Farmacia}}</option>
+                                       @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </form>
+                  
                 </div>
+                <br><br>
+                
                 <div class="col-12">
                     <div class="row">
                         <form id="form_ProductoNuevo" class="col-5">
@@ -31,11 +56,11 @@
                             </div>
                         </form>
                         <div>
-                            <button class="btn btn-primary" onclick="AgregarProducto()"><span class="fas fa-plus-circle"></span> Agregar produto</button>
+                            <button id="btn_agregarProducto" class="btn btn-primary"><span class="fas fa-plus-circle"></span> Agregar produto</button>
                         </div>
                     </div>
                 </div><br>
-                <form id="form_factura">
+                <form id="form_factura_2">
                     <div class="container col-12">
                         <table id="tbl_compras" class="table table-hover productos">
                             <thead>
@@ -43,8 +68,10 @@
                                     <th>Código</th>
                                     <th>Producto</th>
                                     <th>Costo</th>
-                                    <th>Piezas</th>
+                                    <th>Cajas</th>
                                     <th>Subtotal</th>
+                                    <th>Piezas X Caja</th>
+                                    <th>Caducidad</th>
                                     <th>Quitar</th>
                                 </tr>
                             </thead>

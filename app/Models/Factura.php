@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Farmacia;
 use App\Models\Proveedor;
 use App\Models\FacturaProducto;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,9 @@ class Factura extends Model
 
     public function Proveedor(){
         return $this->belongsTo(Proveedor::class);
+    }
+    public function Farmacia(){
+        return $this->belongsTo(Farmacia::class);
     }
 
     public function comments()
