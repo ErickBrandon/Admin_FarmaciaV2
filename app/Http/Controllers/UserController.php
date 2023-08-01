@@ -19,17 +19,27 @@ class UserController extends Controller
     }
 
     public function Guardarusuario(Request $request){
+       //dd($request);
         $existe  = User::where('email',$request->email)->first();
         DB::beginTransaction();
         try {
             $user = new User();
             $user->name = $request->Nombre;
             $user->rol = $request->Rol;
-            $user->email = $request->email;
+            $user->email = $request->Email;
+            if ($user->rol == "Administrador") {
+                $user->password = $request->PasswordA;
+            }
             $user->save();
 
             if ($existe !=null) {
-                $user->email = $user->id."_".$request->email;
+                $user->name = $request->Nombre;
+                $user->email = $user->id."_".$request->Email;
+                $user->rol = $request->Rol;
+                if ($user->rol == "Administrador") {
+
+                    $user->password = $request->PasswordA;
+                }
                 $user->save();
             }
             DB::commit();

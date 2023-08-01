@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Middleware\Administradores;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\VentaController;
+use App\Http\Controllers\EntradaController;
 use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\ContableController;
 use App\Http\Controllers\FarmaciaController;
@@ -87,6 +88,9 @@ Route::POST('PuntoDeVenta/{Farmacia}/ProductoEnAlmacen/',[ProductoController::cl
 Route::POST('Traspaso/{Producto}',[ProductoController::class,'Traspaso'])->name('Traspaso');
 Route::GET('PuntoDeVenta/{Farmacia}/Almacen',[ProductoController::class,'almacen'])->name('Almacen');
 
+    /* Control de entradas de personal*/
+    Route::GET('CtrlEntradas',[EntradaController::class,'index'])->name('CtrlEntradas');
+    Route::POST('tbl_entradas',[EntradaController::class,'tbl_entradas'])->name('tbl_entradas');
 });
 
 Route::middleware(["General"])->group(function () {

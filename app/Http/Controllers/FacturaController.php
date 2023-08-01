@@ -333,73 +333,89 @@ class FacturaController extends Controller
         return $Otra;
     }
     public function Asignacion(FacturaProducto $Producto,Factura $Factura, Request $request){
-      //dd($request);
+      dd($request);
       $Hoy=date('Y/m/d');
         DB::beginTransaction();
         try {
            $Producto->Asignadas = $Producto->Asignadas+ ($request->Cajas + $request->Piezas);
-           $Producto->Precio_Unidad =$request->Venta_caja;
-           $Producto->Precio_Piezas =$request->Venta_pz;
+           if ($request->Cajas != 0) {
+            $Producto->Precio_Unidad =$request->Venta_caja;
+           }
+           if ($request->Piezas!= 0) {
+            $Producto->Precio_Piezas =$request->Venta_pz;
+           }
+           
+           
            $Producto->save();
             
            $Factura->Total_asignados = $Factura->Total_asignados + $Producto->Asignadas;
            $Factura->save();
 
+           if ($request->Cajas != 0) {
 
-           $similar = Producto::where('Codigo',$Producto->Codigo)
-           ->where('Caducidad', $Producto->Caducidad)
-           ->where('TipoVenta','Caja')
-           ->where('farmacia_id',$Producto->farmacia_id)
-           ->first();
+            $similar = Producto::where('Codigo',$Producto->Codigo)
+            ->where('Caducidad', $Producto->Caducidad)
+            ->where('TipoVenta','Caja')
+            ->where('farmacia_id',$Producto->farmacia_id)
+            ->first();
 
-           if ($similar != null) {
-            $similar->Precio = $request->Venta_caja;
-            $similar->Existencias = $similar->Existencias + $request->Cajas;
-            $similar->Costo = $Producto->Costo_Unidad;
-            $similar->Ultima_asignacion =$Hoy;
-            $similar->update();
-            
+            if ($similar != null) {
+                $similar->Precio = $request->Venta_caja;
+                $similar->Existencias = $similar->Existencias + $request->Cajas;
+                $similar->Costo = $Producto->Costo_Unidad;
+                $similar->Ultima_asignacion =$Hoy;
+                $similar->update();
+                
+    
+               }else{
+                $cj = new Producto();
+                $cj->Codigo = $Producto->Codigo;
+                $cj->Producto = $Producto->Producto;
+                $cj->Precio = $request->Venta_caja;
+                $cj->Existencias = $request->Cajas;
+                $cj->Caducidad = $Producto->Caducidad;
+                $cj->Costo = $Producto->Costo_Unidad;
+                $cj->TipoVenta = "Caja";
+                $cj->Ultima_asignacion =$Hoy;
+                $cj->farmacia()->associate($Factura->farmacia_id);
+                $cj->save();
+               }
 
-           }else{
-            $cj = new Producto();
-            $cj->Codigo = $Producto->Codigo;
-            $cj->Producto = $Producto->Producto;
-            $cj->Precio = $request->Venta_caja;
-            $cj->Existencias = $request->Cajas;
-            $cj->Caducidad = $Producto->Caducidad;
-            $cj->Costo = $Producto->Costo_Unidad;
-            $cj->TipoVenta = "Caja";
-            $cj->Ultima_asignacion =$Hoy;
-            $cj->farmacia()->associate($Factura->farmacia_id);
-            $cj->save();
            }
            $similar = null;
-
-           $similar = Producto::where('Codigo',$Producto->Codigo)
-           ->where('Caducidad', $Producto->Caducidad)
-           ->where('TipoVenta','Piezas')
-           ->where('farmacia_id',$Producto->farmacia_id)
-           ->first();
-
-           if ($similar != null) {
-            $similar->Precio = $request->Venta_caja;
-            $similar->Existencias = $similar->Existencias + $request->Piezas;
-            $similar->Costo =$Producto->Costo_Unidad/$Producto->Piezas_unidad;
-            $similar->Ultima_asignacion =$Hoy;
-            $similar->save();
-           }else{
-            $pz = new Producto();
-            $pz->Codigo = $Producto->Codigo;
-            $pz->Producto = $Producto->Producto;
-            $pz->Precio = $request->Venta_pz;
-            $pz->Existencias = $request->Piezas;
-            $pz->Caducidad = $Producto->Caducidad;
-            $pz->Costo = $Producto->Costo_Unidad/$Producto->Piezas_unidad;
-            $pz->TipoVenta = "Piezas";
-            $pz->Ultima_asignacion =$Hoy;
-            $pz->farmacia()->associate($Factura->farmacia_id);
-            $pz->save();
+           if ($request->Piezas!= 0) {
+            $similar = Producto::where('Codigo',$Producto->Codigo)
+            ->where('Caducidad', $Producto->Caducidad)
+            ->where('TipoVenta','Piezas')
+            ->where('farmacia_id',$Producto->farmacia_id)
+            ->first();
+ 
+            if ($similar != null) {
+             $similar->Precio = $request->Venta_caja;
+             $similar->Existencias = $similar->Existencias + $request->Piezas;
+             $similar->Costo =$Producto->Costo_Unidad/$Producto->Piezas_unidad;
+             $similar->Ultima_asignacion =$Hoy;
+             $similar->save();
+            }else{
+             $pz = new Producto();
+             $pz->Codigo = $Producto->Codigo;
+             $pz->Producto = $Producto->Producto;
+             $pz->Precio = $request->Venta_pz;
+             $pz->Existencias = $request->Piezas;
+             $pz->Caducidad = $Producto->Caducidad;
+             $pz->Costo = $Producto->Costo_Unidad/$Producto->Piezas_unidad;
+             $pz->TipoVenta = "Piezas";
+             $pz->Ultima_asignacion =$Hoy;
+             $pz->farmacia()->associate($Factura->farmacia_id);
+             $pz->save();
+            }
            }
+           
+
+           
+           
+
+           
            DB::commit();
            return true;
         } catch (\Throwable $th) {

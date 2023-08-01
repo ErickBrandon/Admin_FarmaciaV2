@@ -26,7 +26,7 @@
   </div>
 
   <div class="col-md-6 col-xl-4">
-    <a href="">
+    <a href="{{route('CtrlEntradas')}}">
       <div class="card table-card">
         <div class="row-table">
             <div class="col-auto bg-primary text-white">

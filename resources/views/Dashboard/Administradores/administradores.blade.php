@@ -49,12 +49,15 @@
                         <div class='input-group-prepend'>
                             <label class='input-group-text' for='select_farmacias'><span class='fas fa-child text-warning'></span>&nbsp;Rol</label>
                         </div>
-                        <select class='custom-select' id='Rol' name='Rol' >
+                        <select class='custom-select' id='Rol' name='Rol'>
                              <option value="">- SELECCIONA UN ROL -</option>
                              <option value="Vendedor">Vendedor</option>
                              <option value="Administrador">Administrador</option>
                         </select>
                     </div>
+                    <span id='password_admin'>
+                        
+                    </span>
                 </form>
             </div>
             <div class="modal-footer">

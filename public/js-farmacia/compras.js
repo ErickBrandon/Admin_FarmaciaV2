@@ -553,6 +553,7 @@ $("#btn_formAsignaciones").on('click', function(){
 
                         }
                     })
+                    swal("La asignaciones del producto fue exitoso",{icon:"success",});
                     Reinicio_FromAsignaciones();
                     
                    }
@@ -599,3 +600,23 @@ function Reinicio_FromAsignaciones() {
     document.getElementById('Venta_pz').value = "";
     document.getElementById('Piezas').value = "";
 }
+$("#Cajas").on("input",function(e) {
+    
+    if (e.target.value == 0) {
+        document.getElementById('Venta_caja').value = "";
+        document.getElementById('Venta_caja').disabled = true;
+        return;
+    }
+    document.getElementById('Venta_caja').disabled = false;
+    console.log(1);
+
+})
+$("#Piezas").on("input",function(e) {
+    if (e.target.value == 0) {
+        document.getElementById('Venta_pz').value = "";
+        document.getElementById('Venta_pz').disabled = true;
+        return;
+    }
+    document.getElementById('Venta_pz').disabled = false;
+    console.log(1);
+})

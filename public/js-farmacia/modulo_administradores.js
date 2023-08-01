@@ -24,7 +24,8 @@ $('#btn_usuarioNuevo').on('click', function() {
 function ReinicioFormUsuarios() {
     _usuarioEnJuego = []
     document.getElementById('Nombre').value = null;
-    document.getElementById('Rol').value = null;
+    document.getElementById('Rol').value = "";
+    document.getElementById('password_admin').innerHTML=null
 }
 
 $('#btn_guardarUsuario').on('click', function() {
@@ -42,17 +43,31 @@ $('#btn_guardarUsuario').on('click', function() {
 
     let validate = $("#form_usuarios_nuevos").valid();
     if (validate) {
-        let nombre= document.getElementById('Nombre').value;
-        let email =nombre.split(" ").join("");
+        let data = {};
+        data.Nombre = document.getElementById('Nombre').value;
+        data.Rol = document.getElementById('Rol').value;
+       
+        let email =data.Nombre.split(" ").join("");
         email = email.toLowerCase();
-        email = email+"@farmaplus"
-        let formData = $("#form_usuarios_nuevos").serialize();
-        console.log(formData);
+        
+       
+        if (document.getElementById('Rol').value == "Administrador") {
+            email = email+"_admin@farmaplus"
+            data.Email =email;
+            data.Password = document.getElementById('PasswordA').value;
+        }else{
+            data.Email= email+"@farmaplus";
+        }
+
+       
+       
+        
+       
         $.ajax({
             url:url,
             type: "POST",
             headers:GlobalToken,
-            data: formData+"&email="+email,
+            data: data,
             success:  function(data){
                 $('#tbl_Usuarios').DataTable().ajax.reload();   
                 $("#Modal_Usuarios").modal('hide');
@@ -102,3 +117,22 @@ function eliminarUsuario(id) {
         }
     });
 }
+
+$('#Rol').on('change', function(e) {
+    if (e.target.value == 'Administrador') {
+        document.getElementById('password_admin').innerHTML=`<div class='input-group input-group-md mb-3'>
+        <div class='input-group-prepend'>
+            <span class='input-group-text'><span class="fas fa-unlock text-info"></span></span>
+        </div>
+        <input id='PasswordA' type='password' class='form-control' placeholder='Contraseña' name='PasswordA' requried>
+    </div>
+    <div class='input-group input-group-md mb-3'>
+        <div class='input-group-prepend'>
+            <span class='input-group-text'><span class="fas fa-unlock-alt text-info"></span></span>
+        </div>
+        <input id='PasswordA_confirmacion' type='password' class='form-control' placeholder='Confirmar contraseña' name='PasswordA_confirmacion' requried>
+    </div>`
+    }else{
+        document.getElementById('password_admin').innerHTML=null
+    }
+});

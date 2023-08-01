@@ -12,6 +12,7 @@ class LoginController extends Controller
     {
         
         $credenciales = $request ->only('email','password');
+       
         if (Auth::attempt($credenciales)) {
             request()->session()->regenerate();
             if (auth()->user()->rol == 'Administrador' ) {
