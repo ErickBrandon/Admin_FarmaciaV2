@@ -49,7 +49,7 @@ class FarmaciaController extends Controller
             $farmacia->user()->associate($request->Vendedor);
             if ($request->Vendedor != null) {
                 $user = User::where('id',$request->Vendedor)->first();
-                $user->password = Hash::make($Farmacia->Llave);
+                $user->password = Hash::make($farmacia->Llave);
                 $user->save();
             }
             $farmacia->save();
