@@ -15,8 +15,9 @@ class FacturaController extends Controller
     
     public function index()
     {
+        
         $Proveedores = DB::table('proveedores')->select('id','Nombre')->get();
-        $Farmacias = DB::table('Farmacias')->select('id','Farmacia')->get();
+        $Farmacias = DB::table('farmacias')->select('id','Farmacia')->get();
        
         return view('Dashboard.Compras.compras')
         ->with([
