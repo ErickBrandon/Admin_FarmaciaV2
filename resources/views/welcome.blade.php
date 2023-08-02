@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/fonts/fontawesome/css/fontawesome-all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="{{asset('assets/fonts/fontawesome/css/fontawesome-all.min.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
     <title>Inicio de sesión</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
@@ -47,8 +47,8 @@
 
     <!-- Required Js -->
     <script src="{{asset('assets/js/vendor-all.min.js')}}"></script>
-    <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/pcoded.min.js"></script>
+    <script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('assets/js/pcoded.min.js')}}"></script>
     <script src="{{asset('js-farmacia/login.js')}}"></script>
     <script src="{{asset('assets/plugins/sweetalert/js/sweetalert.min.js')}}"></script>
 

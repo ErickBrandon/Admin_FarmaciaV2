@@ -1,7 +1,7 @@
 @extends('Dashboard.layout.master')
 @section('extras_header')
 <link rel="stylesheet" href="{{asset('assets/fonts/fontawesome/css/fontawesome-all.min.css')}}">
-<link rel="stylesheet" href="assets/plugins/data-tables/css/datatables.min.css">
+<link rel="stylesheet" href="{{asset('assets/plugins/data-tables/css/datatables.min.css')}}">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('body-content')
@@ -117,8 +117,8 @@
 @endsection
 
 @section('extras_footer')
-<script src="assets/plugins/data-tables/js/datatables.min.js"></script>
-<script src="PDV/Datatable/constructorDatatable_contable.js"></script>
+<script src="{{asset('assets/plugins/data-tables/js/datatables.min.js')}}"></script>
+<script src="{{asset('PDV/Datatable/constructorDatatable_contable.js')}}"></script>
 <script src="{{asset('assets/plugins/sweetalert/js/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-validation/js/jquery.validate.min.js')}}"></script>
 <script src="{{asset('validationJS/form-validation-contable.js')}}"></script>

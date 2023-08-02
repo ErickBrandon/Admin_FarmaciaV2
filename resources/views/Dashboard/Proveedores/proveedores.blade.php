@@ -1,6 +1,6 @@
 @extends('Dashboard.layout.master')
 @section('extras_header')
-<link rel="stylesheet" href="assets/plugins/data-tables/css/datatables.min.css">
+<link rel="stylesheet" href="{{asset('assets/plugins/data-tables/css/datatables.min.css')}}">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
