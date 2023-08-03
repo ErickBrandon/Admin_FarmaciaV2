@@ -19,7 +19,7 @@
             </div>
             <div class="card">
                 <div class="card-body text-center">
-                    se actualizí
+                    se actualizoooooooooooooooo
                     <div class="col-12">
                         <img src="{{asset('logo/FarmaPlus.png')}}" alt="" style="width: 100%">
                     </div>
