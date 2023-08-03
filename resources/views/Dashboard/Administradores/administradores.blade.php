@@ -75,5 +75,4 @@
 <script src="{{asset('assets/plugins/jquery-validation/js/jquery.validate.min.js')}}"></script>
 <script src="{{asset('validationJS/form-validation-usuarios.js')}}"></script>
 <script src="{{asset('js-farmacia/modulo_administradores.js')}}"></script>
-<script src="{{asset('assets/plugins/sweetalert/js/sweetalert.min.js')}}"></script>
 @endsection

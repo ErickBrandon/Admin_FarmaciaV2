@@ -119,7 +119,7 @@
 @section('extras_footer')
 <script src="{{asset('assets/plugins/data-tables/js/datatables.min.js')}}"></script>
 <script src="{{asset('PDV/Datatable/constructorDatatable_contable.js')}}"></script>
-<script src="{{asset('assets/plugins/sweetalert/js/sweetalert.min.js')}}"></script>
+
 <script src="{{asset('assets/plugins/jquery-validation/js/jquery.validate.min.js')}}"></script>
 <script src="{{asset('validationJS/form-validation-contable.js')}}"></script>
 <script src="{{asset('js-farmacia/contable.js')}}"></script>

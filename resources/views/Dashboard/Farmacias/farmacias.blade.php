@@ -84,5 +84,4 @@
 <script src="assets/plugins/jquery-validation/js/jquery.validate.min.js"></script>
 <script src="validationJS/form-validation-farmacia.js"></script>
 <script src="js-farmacia/modulo_farmacias.js"></script>
-<script src="{{asset('assets/plugins/sweetalert/js/sweetalert.min.js')}}"></script>
 @endsection

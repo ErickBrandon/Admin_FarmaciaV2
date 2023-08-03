@@ -72,5 +72,5 @@
 <script src="{{asset('validationJS/form-validation-compras.js')}}"></script>
 <script src="{{asset('js-farmacia/compras.js')}}"></script>
 <script src="{{asset('assets/plugins/notification/js/bootstrap-growl.min.js')}}"></script>
-<script src="{{asset('assets/plugins/sweetalert/js/sweetalert.min.js')}}"></script>
+
 @endsection
