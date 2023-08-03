@@ -44,7 +44,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="" class="">
+                    <a href="#" id='btn_Logout'>
                         <span class="pcoded-micon">
                             <i class="feather icon-power"></i>
                         </span>
