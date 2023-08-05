@@ -34,7 +34,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="titulo_Modal">Usuario nuevo</h5>
+                <h5 class="modal-title" id="titulo_ModalUsuarios"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
@@ -62,7 +62,7 @@
             </div>
             <div class="modal-footer">
                 <div class="col-12">
-                    <button id="btn_guardarUsuario" type="button" class="btn btn-primary btn-sm col-12">Agregar usuario</button>
+                    <button id="btn_guardarUsuario" type="button" class="btn btn-primary btn-sm col-12">Guardar usuario</button>
                 </div>
             </div>
         </div>

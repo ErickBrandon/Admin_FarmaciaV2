@@ -20,12 +20,15 @@ $("#Modal_Usuarios").on("hidden.bs.modal", function () {
 
 $('#btn_usuarioNuevo').on('click', function() {
     $("#Modal_Usuarios").modal('show');
+    document.getElementById('titulo_ModalUsuarios').innerText ="Agregar usuario";
+    document.getElementById('btn_guardarUsuario').innerText= "Guardar";
 });
 function ReinicioFormUsuarios() {
     _usuarioEnJuego = []
     document.getElementById('Nombre').value = null;
     document.getElementById('Rol').value = "";
     document.getElementById('password_admin').innerHTML=null
+    console.log(document.getElementById('password_admin').innerHTML);
 }
 
 $('#btn_guardarUsuario').on('click', function() {
@@ -86,6 +89,11 @@ function editarUsuario(id) {
     _usuarioEnJuego = _usuarios.find(u => u.id == id )
     document.getElementById('Nombre').value = _usuarioEnJuego.name;
     document.getElementById('Rol').value = _usuarioEnJuego.rol;
+    if (document.getElementById('Rol').value == "Administrador") {
+        pass_admin();
+    }
+    document.getElementById('titulo_ModalUsuarios').innerText =_usuarioEnJuego.rol+": "+_usuarioEnJuego.name;
+    document.getElementById('btn_guardarUsuario').innerText= "Actualizar información"
     $("#Modal_Usuarios").modal('show');
 }
 
@@ -120,19 +128,23 @@ function eliminarUsuario(id) {
 
 $('#Rol').on('change', function(e) {
     if (e.target.value == 'Administrador') {
-        document.getElementById('password_admin').innerHTML=`<div class='input-group input-group-md mb-3'>
-        <div class='input-group-prepend'>
-            <span class='input-group-text'><span class="fas fa-unlock text-info"></span></span>
-        </div>
-        <input id='PasswordA' type='password' class='form-control' placeholder='Contraseña' name='PasswordA' requried>
-    </div>
-    <div class='input-group input-group-md mb-3'>
-        <div class='input-group-prepend'>
-            <span class='input-group-text'><span class="fas fa-unlock-alt text-info"></span></span>
-        </div>
-        <input id='PasswordA_confirmacion' type='password' class='form-control' placeholder='Confirmar contraseña' name='PasswordA_confirmacion' requried>
-    </div>`
+        pass_admin();
     }else{
         document.getElementById('password_admin').innerHTML=null
     }
 });
+ 
+ function pass_admin() {
+    document.getElementById('password_admin').innerHTML=`<div class='input-group input-group-md mb-3'>
+    <div class='input-group-prepend'>
+        <span class='input-group-text'><span class="fas fa-unlock text-info"></span></span>
+    </div>
+    <input id='PasswordA' type='password' class='form-control' placeholder='Contraseña' name='PasswordA' requried>
+</div>
+<div class='input-group input-group-md mb-3'>
+    <div class='input-group-prepend'>
+        <span class='input-group-text'><span class="fas fa-unlock-alt text-info"></span></span>
+    </div>
+    <input id='PasswordA_confirmacion' type='password' class='form-control' placeholder='Confirmar contraseña' name='PasswordA_confirmacion' requried>
+</div>`;
+ }

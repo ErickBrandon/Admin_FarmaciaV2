@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -51,6 +52,7 @@ class UserController extends Controller
         }
     }
     public function ActualizarUsuario(User $usuario, Request $request){
+        //dd($request);
         $existe  = User::where('email',$request->email)
                     ->where('id','!=',$usuario->id)
                     ->first();
@@ -62,10 +64,15 @@ class UserController extends Controller
             $usuario->save();
 
             if ($existe !=null) {
-                $usuario->email = $usuario->id."_".$request->email;
+                $usuario->email = $usuario->id."_".$request->Email;
                
             }else{
-                $usuario->email = $request->email;
+                $usuario->email = $request->Email;
+            }
+
+            if ($usuario->rol == "Administrador") {
+               
+                $usuario->password =  Hash::make($request->PasswordA);
             }
             $usuario->save();
             DB::commit();
