@@ -59,6 +59,9 @@ class UserController extends Controller
 
         DB::beginTransaction();
         try {
+            if ($usuario->rol == "Administrador" && $request->Rol == "Vendedor") {
+                $usuario->password = null;
+            }
             $usuario->name = $request->Nombre;
             $usuario->rol = $request->Rol;
             $usuario->save();
@@ -70,10 +73,17 @@ class UserController extends Controller
                 $usuario->email = $request->Email;
             }
 
+            
+
             if ($usuario->rol == "Administrador") {
                
                 $usuario->password =  Hash::make($request->PasswordA);
+                if ($usuario->farmacia != null) {
+                    $usuario->farmacia->user_id = null;
+                    $usuario->farmacia->save();
+                }
             }
+        
             $usuario->save();
             DB::commit();
             
