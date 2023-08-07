@@ -1,4 +1,4 @@
-const GlobalToken = {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')};
+//const GlobalToken = {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')};
 $("#btn_Logout").on("click", function () {
     swal({
         title: "¿Desea cerrar su sesión?",
