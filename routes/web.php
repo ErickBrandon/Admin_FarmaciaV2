@@ -32,6 +32,7 @@ Route::get('/Inicio', function () {
 })->name('login')->middleware('guest');
 /* Grupo de rutas que solo puede accesar un administrador autenticado */
 Route::POST('/Auth',[LoginController::class,'AuthAdmin']);
+Route::POST('/AuthVendedor',[LoginController::class,'AuthVendedor']);
 Route::POST('/logout',[LoginController::class,'logout'])->middleware('auth');
 
 Route::middleware(["Administradores"])->group(function () {

@@ -21,7 +21,9 @@ $("#btn_PDV").on("click", function () {
             <span class='input-group-text'><span class="fas fa-barcode text-primary"></span>&nbsp;</span>
         </div>
         <input id='Password-scan' type='password' class='form-control' placeholder='Escanea la llave' name='password' requried style="color: transparent">
-    </div>`
+    </div>
+    <button id='btn_loginVendedor' type='button' class="btn btn-primary mb-4 shadow-2">Ingresar</button>`
+    
 });
 
 $("#btn_Admin").on("click", function () {
@@ -45,46 +47,63 @@ $("#btn_Admin").on("click", function () {
 $(document).on("click","#btn_login", function () {
     let data = $("#from_login").serialize();
     data=data+"&_typeUser="+_typeUser;
-    loadig(1,"btn_login")
-    login(data);
+    loadingShow("btn_login")
+    login(data,"/Auth");
 });
 
-function login(data){
+function login(data,url){
     $.ajax({
-        url:"/Auth",
+        url:url,
         type: "POST",
         headers:GlobalToken,
         data: data,
         success:  function(data){
-            if (data == false) {
-                swal({
-                    title: "Las credenciales son incorrectas",
-                    text: "",
-                    icon: "error",
-                })
-                loadig(2,"btn_login")
-                return false;
-            }
-    
-            $(location).attr('href',data);
+           if (!data.status) {
+            swal({
+                title:"Error",
+                text: data.menssage,
+                icon: "error",
+            })
+            return
+           }
+            $(location).attr('href',data.data);
         },
         error: function(jqXHR, textStatus, errorThrown){
             alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
             document.getElementById('btn_form_farmacias').disabled = false;
+            window.location.reload();
         }
      });
 }
 
-function loadig(flag,id) {
-    if (flag == 1) {
-        document.getElementById(id).disabled =true;
-        let loading =document.createElement('span')
-        $(loading).attr('class', "spinner-border spinner-border-sm");
-        $(loading).attr('id', "load_btn");
-        document.getElementById(id).appendChild(loading)
+function loadingShow(id){
+    document.getElementById(id).disabled =true;
+    let loading =document.createElement('span')
+    $(loading).attr('class', "spinner-border spinner-border-sm");
+    $(loading).attr('id', "load_btn");
+    document.getElementById(id).appendChild(loading)
+}
+
+function loadingHide(id){
+    document.getElementById("load_btn").remove();
+    document.getElementById(id).disabled =false;
+}
+
+$(document).on("click","#btn_loginVendedor", function () {
+    loadingShow("btn_loginVendedor");
+    let hora = new Date();
+    console.log(hora.getHours());
+    if (hora.getHours() >= 8 && hora.getHours() <= 21) {
+        let data = $("#from_login").serialize();
+        data=data+"&_typeUser="+_typeUser;
+        login(data,"/AuthVendedor");
     }else{
-        document.getElementById("load_btn").remove();
-        document.getElementById(id).disabled =false;
+        loadingHide("btn_loginVendedor")
+        swal({
+            title:"Lo sentimos",
+            text: "No se puede iniciar sesión fuera de horario laboral",
+            icon: "error",
+        })
     }
     
-}
+});
