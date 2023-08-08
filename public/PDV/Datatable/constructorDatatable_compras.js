@@ -86,7 +86,7 @@ function btn_detalles(data) {
 
 function btn_eliminar(data){
     let btn = "";
-    if (data.Total_productos == data.Total_asignados) {
+    if (data.Total_productos == data.Total_asignados || data.Total_asignados == 0) {
         btn = "<button class='btn btn-danger btn-icon' onclick=EliminarFactura("+data.ID+")>"+
                     "<i class='fas fa-trash-alt'></i>"+
               "</button>";
