@@ -67,7 +67,7 @@ function form_borrar(id){
     document.getElementById('form_proveedores').innerHTML= "<div class='alert alert-danger f-20' role='alert'>"+
     "Precaución usted esta por eliminar un proveedor con el nombre: <div class='f-30 text-center'>"+row.cells[0].innerText+"</div>"+
     "<h1 class='feather icon-alert-triangle display-1 text-center text-danger'></h1></div>";
-    document.getElementById('btn_form_proveedores').innerText="Eliminar Producto";
+    document.getElementById('btn_form_proveedores').innerText="Eliminar";
     document.getElementById('btn_form_proveedores').classList.remove('btn-primary');
     document.getElementById('btn_form_proveedores').classList.add('btn-danger');
 }
@@ -148,7 +148,7 @@ function actualizar(id){
             document.getElementById('btn_form_proveedores').disabled = false;
         }
     } else {
-        setTimeout(notify,0000,"inverse",' Ningún campo ha sido modificado','fas fa-leaf');
+        setTimeout(notify,"inverse",' Ningún campo ha sido modificado','fas fa-leaf');
         document.getElementById('btn_form_proveedores').disabled = false;
     }
 }
