@@ -556,7 +556,7 @@ $("#btn_formAsignaciones").on('click', function(){
 
                             Tbl_showAsignaciones.rows[6].cells[1].innerText="$"+ parseFloat(p.Precio_Unidad).toFixed(2)
                             Tbl_showAsignaciones.rows[7].cells[1].innerText="$"+ parseFloat(p.Precio_Piezas).toFixed(2)
-
+                            $('#tbl_Facturas').DataTable().ajax.reload();
                         }
                     })
                     swal("La asignaciones del producto fue exitoso",{icon:"success",});
