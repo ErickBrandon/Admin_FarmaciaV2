@@ -75,6 +75,7 @@ function carrito(idProducto){
 }
 function agregarACarrito(id){
     let producto = _ProductosVenta.find(p => p.id == id)
+    console.log(_ProductosVenta);
     template_producto(producto);
     ContCarrito.push({'id':producto.id,'Codigo':producto.Codigo,'Producto':producto.Producto,'Precio':producto.Precio,'UnidadesVenta':1,'Existencias':producto.Existencias,'SubTotal':producto.Precio,'TipoVenta':producto.TipoVenta});   
     TotalCarrito = TotalCarrito + producto.Precio;
@@ -279,33 +280,25 @@ function VentaExitosa(){
     document.getElementById('btnCobrar').disabled=true;
 }
 function IngresarAlCarrito(codigo) {
-   console.log(1);
-    /* try {
-       let similar = document.querySelector(".c-"+codigo).getAttribute('id');
-       carrito(similar);
-    } catch (error) {
-        notify('inverse'," No se encontró el producto, intente de nuevo",'fas fa-times');
-    }
-    document.getElementById('Codigo').value =null; */
+ 
+   
     let similar = [];
     _ProductosVenta.forEach((p,i)=>{
         if (p.Codigo == codigo) {
-            similar.push(p.Codigo)
-            /* if (similar.length>1) {
-                return;
-            } */
-
+            similar.push({"codigo":p.Codigo,"id":p.id})
         }
-    })
+    });
+
     if (similar.length == 1) {
         document.getElementById('Codigo').value =null;
-
-        carrito(similar);
+       console.log(similar[0].id);
+       
+        carrito(similar[0].id);
        
     }
     if (similar.length>1) {
         document.getElementById('Codigo').value =null;
-        $('#tbl_Productos').DataTable().search(similar[0]).draw();
+        $('#tbl_Productos').DataTable().search(similar[0].Codigo).draw();
             $("#Modal_Productos").modal('show')
            
     }
