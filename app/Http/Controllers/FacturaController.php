@@ -334,7 +334,7 @@ class FacturaController extends Controller
         return $Otra;
     }
     public function Asignacion(FacturaProducto $Producto,Factura $Factura, Request $request){
-      dd($request);
+      
       $Hoy=date('Y/m/d');
         DB::beginTransaction();
         try {
