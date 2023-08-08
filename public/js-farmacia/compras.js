@@ -127,7 +127,7 @@ function CreateRowFactura(tbl,codigo,producto,costo,pz, sub,caducidad,pz_caja) {
     "</div>";
 
     tbl.insertCell(2).innerHTML = "<div class='form-group'>"+
-        "<input type='number' class='form-control' id='costo"+codigo+"' name='costo"+codigo+"' placeholder='0.00' value='"+costo+"' oninput=calculo(1,"+codigo+",this.value) min='0.1' step='0.1000'>"+
+        "<input type='number' class='form-control' id='costo"+codigo+"' name='costo"+codigo+"' placeholder='0.00' value='"+costo+"' oninput=calculo(1,"+codigo+",this.value) min='0.1' step='0.100'>"+
     "</div>";
 
     tbl.insertCell(3).innerHTML = "<div class='form-group'>"+
