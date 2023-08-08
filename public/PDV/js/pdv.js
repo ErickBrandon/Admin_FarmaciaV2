@@ -8,6 +8,10 @@ $(document).bind('keydown',function(e){
      CloseScanner();
     };
 });
+
+$("#Modal_Productos").on("hidden.bs.modal", function () {
+    $('#tbl_Productos').DataTable().search("").draw();   
+});
 //--- variable globales---
 
 var _ProductosVenta = [];
@@ -285,7 +289,7 @@ function IngresarAlCarrito(codigo) {
     let similar = [];
     _ProductosVenta.forEach((p,i)=>{
         if (p.Codigo == codigo) {
-            similar.push({"codigo":p.Codigo,"id":p.id})
+            similar.push({"Codigo":p.Codigo,"id":p.id})
         }
     });
 
