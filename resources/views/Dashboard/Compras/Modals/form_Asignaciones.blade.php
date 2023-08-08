@@ -101,13 +101,13 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text text-primary"> <span class="fas fa-box"></span></span>
                                 </div>
-                                <input id="Cajas" type="number" class="form-control" placeholder="Cajas para venta por caja" name="Cajas" requried min='0' disabled>
+                                <input id="Cajas" type="number" class="form-control" placeholder="Cajas para venta por caja" name="Cajas" requried min='' max='' disabled>
                             </div><br>
                             <div class="input-group input-group-md">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text text-success"> <span class="fas fa-dollar-sign"></span></span>
                                 </div>
-                                <input id="Venta_caja" type="number" class="form-control" placeholder="Precio venta" name="Venta_caja" requried min='1' disabled>
+                                <input id="Venta_caja" type="number" class="form-control" placeholder="Precio venta" name="Venta_caja" requried min='' disabled>
                             </div>
                             <br><hr>
                             <div class="input-group input-group-md">
@@ -115,7 +115,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text text-info"><span class="fas fa-boxes"></span></span>
                                 </div>
-                                <input id="Piezas" type="number" class="form-control" placeholder="Cajas para venta por piezas" name="Piezas" requried min='0' disabled>
+                                <input id="Piezas" type="number" class="form-control" placeholder="Cajas para venta por piezas" name="Piezas" requried  min='' max='' disabled>
                             </div>
                             <br>
                             <div class="input-group input-group-md">

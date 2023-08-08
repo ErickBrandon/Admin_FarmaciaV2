@@ -66,6 +66,7 @@
 @include('Dashboard.Compras.Modals.form_Asignaciones')
 @endsection
 @section('extras_footer')
+{{-- <script src="{{asset('assets/plugins/data-tables/js/datatables.min.js?'.date('d'))}}"></script> --}}
 <script src="{{asset('assets/plugins/data-tables/js/datatables.min.js')}}"></script>
 <script src="{{asset('PDV/Datatable/constructorDatatable_compras.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-validation/js/jquery.validate.min.js')}}"></script>

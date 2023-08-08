@@ -466,12 +466,18 @@ $(Slt_ProductoAsignacion).on('change', function(e){
         Tbl_showAsignaciones.rows[0].cells[1].innerText =_ProductoEnJuego.Codigo;
         Tbl_showAsignaciones.rows[1].cells[1].innerText =_ProductoEnJuego.Caducidad;
         Tbl_showAsignaciones.rows[2].cells[1].innerText =_ProductoEnJuego.Unidades;
+        document.getElementById('Cajas').setAttribute('min',1);
+        document.getElementById('Cajas').setAttribute('max',_ProductoEnJuego.Unidades);
+        document.getElementById('Piezas').setAttribute('min',1);
+        document.getElementById('Piezas').setAttribute('max',_ProductoEnJuego.Unidades);
 
         let piezasUnidad = "";
         //document.getElementById('PrecioPz').setAttribute('min',1);
 
         if (_ProductoEnJuego.Piezas_unidad != null) {
             piezasUnidad =_ProductoEnJuego.Piezas_unidad
+
+           
             //document.getElementById('PiezasUnidad').value = piezasUnidad;
             let min = parseFloat(_ProductoEnJuego.Costo_Unidad / piezasUnidad).toFixed(2);
            // document.getElementById('PrecioPz').setAttribute('min',min);
@@ -495,7 +501,7 @@ $(Slt_ProductoAsignacion).on('change', function(e){
 
         
         Tbl_showAsignaciones.rows[5].cells[1].innerText ="$ "+parseFloat(_ProductoEnJuego.Costo_Unidad).toFixed(2);
-        //document.getElementById('PrecioUnidad').setAttribute('min',parseFloat(_ProductoEnJuego.Costo_Unidad).toFixed(2));
+        document.getElementById('Venta_caja').setAttribute('min',parseFloat(_ProductoEnJuego.Costo_Unidad).toFixed(2));
         
         
         let precioUnidad="";
@@ -602,14 +608,22 @@ function Reinicio_FromAsignaciones() {
 }
 $("#Cajas").on("input",function(e) {
     
-    if (e.target.value == 0) {
+    if (e.target.value == 0 || e.target.value =='' ) {
         document.getElementById('Venta_caja').value = "";
         document.getElementById('Venta_caja').disabled = true;
+        document.getElementById('Piezas').setAttribute('max',_ProductoEnJuego.Unidades); 
+        document.getElementById('Piezas').setAttribute('min',1); 
         return;
     }
     document.getElementById('Venta_caja').disabled = false;
-    console.log(1);
 
+    document.getElementById('Piezas').setAttribute('max',(_ProductoEnJuego.Unidades -e.target.value));
+    if ((_ProductoEnJuego.Unidades -e.target.value) == 0) {
+        document.getElementById('Piezas').setAttribute('min',(_ProductoEnJuego.Unidades -e.target.value));
+    }else{
+        document.getElementById('Piezas').setAttribute('min',1);
+    }
+     
 })
 $("#Piezas").on("input",function(e) {
     if (e.target.value == 0) {
@@ -618,5 +632,5 @@ $("#Piezas").on("input",function(e) {
         return;
     }
     document.getElementById('Venta_pz').disabled = false;
-    console.log(1);
+
 })
