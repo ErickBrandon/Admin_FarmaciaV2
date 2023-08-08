@@ -130,7 +130,7 @@
                       <tr>
                         <td>{{$Farmacia ->Farmacia}}</td>
                         <td><a href="{{route('PuntoVenta',$Farmacia->id)}}" class="btn btn-dark"><span class="fas fa-door-open"></span></a></td>
-                        <td><a href="{{route('PuntoVenta',$Farmacia->id)}}" class="btn btn-primary"><span class="fas fa-boxes"></span></a></td>
+                        <td><a href="{{route('Almacen',$Farmacia->id)}}" class="btn btn-primary"><span class="fas fa-boxes"></span></a></td>
                       </tr>
                     @endforeach
                   @endif

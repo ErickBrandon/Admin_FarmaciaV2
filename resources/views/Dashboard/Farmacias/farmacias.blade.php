@@ -55,6 +55,9 @@
                             </div>
                             <input id='Llave' type='password' class='form-control' placeholder='Llave de la farmacia' name='Llave' requried>
                         </div>
+                        <div class="alert alert-info col-12" role="alert">
+                            No es necesario seleccionar un vendedor para registrar una farmacia, SE PUEDE ASIGNAR DESPUES
+                         </div>
                         <div class='input-group input-group-md mb-3'>
                             <div class='input-group-prepend'>
                                 <label class='input-group-text' for='select_farmacias'><span class='fas fa-users text-warning'></span>&nbsp;Vendedores</label>
