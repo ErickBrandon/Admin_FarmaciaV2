@@ -4,7 +4,7 @@ $(document).ready(function() {
     });
 });
 // --------- Variables Globales
-const GlobalToken = {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')};
+
 const GlobalErrorCRUD ="Soluciones:\n"
 +"1) Intente de nuevo Guardar el registro\n"
 +"2) Recargue la página e intente de nuevo guardar el registro\n"

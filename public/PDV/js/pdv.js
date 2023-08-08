@@ -9,7 +9,7 @@ $(document).bind('keydown',function(e){
     };
 });
 //--- variable globales---
-GlobalToken = {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')};
+
 var _ProductosVenta = [];
 var ContCarrito = [];
 var TotalCarrito = parseInt(0);

@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
     <link rel="stylesheet" href="{{asset('assets/fonts/fontawesome/css/fontawesome-all.min.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
     <title>Inicio de sesión</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
 </head>
 <body>
     <div class="auth-wrapper">
@@ -47,6 +48,8 @@
 
     <!-- Required Js -->
     <script src="{{asset('assets/js/vendor-all.min.js')}}"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script>let GlobalToken = {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')};</script>
     <script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
     <script src="{{asset('assets/js/pcoded.min.js')}}"></script>
     <script src="{{asset('js-farmacia/login.js')}}"></script>

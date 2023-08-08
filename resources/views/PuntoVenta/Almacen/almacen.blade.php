@@ -2,7 +2,7 @@
 @section('head_extra')
 <link rel="stylesheet" href="{{asset('PDV/css/almacen.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/notification/css/notification.min.css')}}">
-<meta name="csrf-token" content="{{ csrf_token() }}">
+
 @endsection
 @section('cont_PDV')
 <br>

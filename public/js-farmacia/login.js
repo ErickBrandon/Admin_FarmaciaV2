@@ -1,5 +1,5 @@
 var _typeUser = 0;
-const GlobalToken = {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')};
+
 const GlobalErrorCRUD ="Soluciones:\n"
 +"1) Intente de nuevo Guardar el registro\n"
 +"2) Recargue la página e intente de nuevo guardar el registro\n"
@@ -52,26 +52,30 @@ $(document).on("click","#btn_login", function () {
 });
 
 function login(data,url){
+    console.log({'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')});
     $.ajax({
         url:url,
         type: "POST",
         headers:GlobalToken,
         data: data,
         success:  function(data){
-           if (!data.status) {
+
+            if (data.success) {
+                $(location).attr('href',data.redirect);
+                return;
+            }
+
             swal({
                 title:"Error",
-                text: data.menssage,
+                text: data.message,
                 icon: "error",
             })
-            return
-           }
-            $(location).attr('href',data.data);
+            loadingHide(data.btn);
+        GlobalToken = {'X-CSRF-TOKEN':data.token}
         },
-        error: function(jqXHR, textStatus, errorThrown){
-            alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
-            document.getElementById('btn_form_farmacias').disabled = false;
-            window.location.reload();
+        error: function(){
+            
+            
         }
      });
 }
@@ -93,7 +97,7 @@ $(document).on("click","#btn_loginVendedor", function () {
     loadingShow("btn_loginVendedor");
     let hora = new Date();
     console.log(hora.getHours());
-    if (hora.getHours() >= 8 && hora.getHours() <= 21) {
+    if (hora.getHours() >= 8 && hora.getHours() <= 24) {
         let data = $("#from_login").serialize();
         data=data+"&_typeUser="+_typeUser;
         login(data,"/AuthVendedor");

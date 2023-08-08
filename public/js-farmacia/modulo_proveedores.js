@@ -108,7 +108,7 @@ function notify(color,mnsj,icono) {
 
 // ---------------------------- Lógica ------------------------------------
     // --------- Variables Globales
-    GlobalToken = {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')};
+    
     GlobalErrorCRUD ="Soluciones:\n"
     +"1) Intente de nuevo Guardar el registro\n"
     +"2) Recargue la página e intente de nuevo guardar el registro\n"

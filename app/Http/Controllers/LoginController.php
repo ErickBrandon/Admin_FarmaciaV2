@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -11,27 +12,34 @@ class LoginController extends Controller
 {
     public function AuthAdmin(Request $request)
     {
-        
-        $credenciales = $request ->only('email','password');
-       
-        if (Auth::attempt($credenciales)) {
-            request()->session()->regenerate();
-            if (auth()->user()->rol == 'Administrador' ) {
-                return '/HomeAdmin';
+        try {
+            $credenciales = $request ->only('email','password');
+            if (Auth::attempt($credenciales)) {
+                request()->session()->regenerate();
+                if (auth()->user()->rol == 'Administrador' ) {
+                    return [
+                        "success"=>true,
+                        "redirect"=>'/HomeAdmin'
+                    ];
+                }
+                throw new Exception("El usuario no tiene el rol de Administrador");
             }
+            throw new Exception("El usuario o contraseña son incorrectas");
+        } catch (Exception $e) {
             Auth::logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
-            return [
-                'status'=>false,
-                'menssage'=>"Error: Tu rol no es Administrador"
-            ];       
-        }else{
-            return [
-                'status'=>false,
-                'menssage'=>"El usuario o contraseña son incorecctos"
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            
+            return[
+                "success"=>false,
+                'message'=>$e->getMessage(),
+                'btn'=>'btn_login',
+                'token' => csrf_token()
+
             ];
-         }
+        }
+        
+       
     }
     public function AuthVendedor(Request $request){
        
@@ -39,10 +47,37 @@ class LoginController extends Controller
 
             $now = Carbon::now()->subHour();
             $hora = (int)$now->format('H');
+            if ($hora>= 8 && $hora <= 24) {
+                $credenciales = $request ->only('email','password');
+                if (Auth::attempt($credenciales)) {
+                    request()->session()->regenerate();
+                    if (auth()->user()->rol == 'Vendedor') {
+                        if (auth()->user()->farmacia != null) {
+                            $Faracia = auth()->user()->farmacia->id;
+                            return [
+                                "success"=>true,
+                                "redirect"=>'/PuntoDeVenta/'.$Faracia
+                            ];
+                        }
+                        throw new Exception("El usuario vendedor aun no tiene alguna farmacia asignada");
+                    }
+                    throw new Exception("El usuario no tiene el rol de vendedor");
+                }
+                throw new Exception("El usuario o contraseña son incorrectas");
+            }else{
+                throw new Exception("Lo sentimos, no puedes iniciar sesión fuera de horario laboral");
+            }
 
-
-        } catch (\Throwable $th) {
-           
+        } catch (Exception $e) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return[
+                "success"=>false,
+                'message'=>$e->getMessage(),
+                'btn'=>'btn_loginVendedor',
+                'token'=> csrf_token()
+            ];
         }
 
 /* 
@@ -51,7 +86,7 @@ class LoginController extends Controller
 
         if ($hora>= 8 && $hora <= 21) {
 
-            $credenciales = $request ->only('email','password');
+            
             if (Auth::attempt($credenciales)) {
 
                 if (auth()->user()->rol == 'Vendedor') {
@@ -96,7 +131,9 @@ class LoginController extends Controller
     }
 
     public function logout(Request $request){
-       
+        Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
         return "/Inicio";
     }
 }

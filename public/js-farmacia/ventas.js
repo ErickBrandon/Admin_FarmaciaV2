@@ -8,7 +8,7 @@ $(document).ready(function() {
     hoy = (hoy.getDate())+"/"+(hoy.getMonth()+1) +"/"+hoy.getFullYear()
     document.getElementById("FechaHoy").innerText = hoy
 });
-GlobalToken = {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')};
+
 GFlag=0;
 function VerDetalle(id){
     $.ajax({

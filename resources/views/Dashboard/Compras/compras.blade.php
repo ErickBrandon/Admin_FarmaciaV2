@@ -2,7 +2,7 @@
 @section('extras_header')
 <link rel="stylesheet" href="{{asset('PDV/css/compras.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/data-tables/css/datatables.min.css')}}">
-<meta name="csrf-token" content="{{ csrf_token() }}">
+
 <script>
     const _Farmacias=@json($Farmacias
     );

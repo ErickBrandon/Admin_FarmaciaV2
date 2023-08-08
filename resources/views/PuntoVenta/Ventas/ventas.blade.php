@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{{asset('PDV/css/venta.css')}}">
 <link rel="stylesheet" href="{{asset('assets/fonts/fontawesome/css/fontawesome-all.min.css')}}">
 
-<meta name="csrf-token" content="{{ csrf_token() }}">
+
 @endsection
 @section('cont_PDV')
     <div class="container">

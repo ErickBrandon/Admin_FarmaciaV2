@@ -2,7 +2,7 @@
 @section('extras_header')
 <link rel="stylesheet" href="{{asset('assets/fonts/fontawesome/css/fontawesome-all.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/data-tables/css/datatables.min.css')}}">
-<meta name="csrf-token" content="{{ csrf_token() }}">
+
 @endsection
 @section('body-content')
 <div class="row">

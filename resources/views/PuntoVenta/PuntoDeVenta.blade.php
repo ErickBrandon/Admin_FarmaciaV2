@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="{{asset('PDV/css/principal.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/notification/css/notification.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/animation/css/animate.min.css')}}">
-<meta name="csrf-token" content="{{ csrf_token() }}">
+
 @endsection
 @section('cont_PDV')
 <main>
