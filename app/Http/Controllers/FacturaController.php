@@ -37,22 +37,51 @@ class FacturaController extends Controller
             $Factura->TotalCompra = $request->TotalFactura;
             $Factura->Fecha_registro = $Hoy;
             $Factura->Total_productos = $request->TotalProductos;
+            $Factura->Total_asignados = $request->TotalProductos;
             $Factura->Proveedor()->associate($request->Proveedor);
             $Factura->farmacia()->associate($request->Farmacia);
             $Factura->save();
 
             $Productos = $request->Factura;
             foreach ($Productos as $key => $ProductoTEMP) {
-                $producto = new FacturaProducto();
-                $producto->Codigo = $ProductoTEMP['Codigo'];
-                $producto->Producto = $ProductoTEMP['Producto'];
-                $producto->Costo_Unidad = $ProductoTEMP['Costo_Unidad'];
-                $producto->Unidades = $ProductoTEMP['Unidades'];
-                $producto->SubTotal = $ProductoTEMP['SubTotal'];
-                $producto->Caducidad = $ProductoTEMP['Caducidad'];
-                $producto->Piezas_unidad = $ProductoTEMP['Piezas_unidad'];
-                $producto->Factura()->associate($Factura->id);
-                $producto->save();
+                $fp = new FacturaProducto();
+                $fp->Codigo = $ProductoTEMP['Codigo'];
+                $fp->Producto = $ProductoTEMP['Producto'];
+                $fp->Costo_Unidad = $ProductoTEMP['Costo_Unidad'];
+                $fp->Unidades = $ProductoTEMP['Unidades'];
+                $fp->SubTotal = $ProductoTEMP['SubTotal'];
+                $fp->Caducidad = $ProductoTEMP['Caducidad'];
+                $fp->Piezas_unidad = $ProductoTEMP['Piezas_unidad'];
+                $fp->Precio_Unidad = $ProductoTEMP['Precio_Unidad'];
+                $fp->Factura()->associate($Factura->id);
+                $fp->save();
+
+                $producto_almacen = Producto::where('Codigo',$fp->Codigo)
+                ->where('Caducidad',$fp->Caducidad)
+                ->where('TipoVenta',"CAJA")
+                ->where('farmacia_id',$request->Farmacia)
+                ->first();
+
+                if ($producto_almacen != null) {
+                    $producto_almacen->Existencias = $fp->Unidades + $producto_almacen->Existencias;
+                    $producto_almacen->Costo = $fp->Costo_Unidad;
+                    $producto_almacen->Precio = $fp->Precio_Unidad;
+                    $producto_almacen->Ultima_asignacion = $Hoy;
+                    $producto_almacen->save();
+                }else{
+                    $p = new Producto();
+                    $p->Codigo = $fp->Codigo;
+                    $p->Producto =  $fp->Producto;
+                    $p->Precio = $fp->Precio_Unidad;
+                    $p->Existencias = $fp->Unidades;
+                    $p->TipoVenta = "CAJA";
+                    $p->Caducidad =   $fp->Caducidad;
+                    $p->Costo = $fp->Costo_Unidad;
+                    $p->Ultima_asignacion = $Hoy;
+                    $p->farmacia()->associate($request->Farmacia);
+                    $p->save();
+                }
+    
            
 
             }

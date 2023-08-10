@@ -52,7 +52,6 @@
                                 <th>Detalles</th>
                                 <th>No. Productos</th>
                                 <th>No. Asignados</th>
-                                <th>Asignaciones</th>
                                 <th>Elimnar</th>
                             </tr>
                         </thead>

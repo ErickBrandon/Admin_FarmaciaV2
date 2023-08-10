@@ -70,9 +70,10 @@
                                     <tr>
                                         <th>Código</th>
                                         <th>Producto</th>
-                                        <th>Costo</th>
                                         <th>Cajas</th>
-                                        <th>Subtotal</th>
+                                        <th>Costo</th>
+                                        <th>Precio venta</th>
+                                        <th>Subtotal de compra</th>
                                         <th>Piezas X Caja</th>
                                         <th>Caducidad</th>
                                         <th>Quitar</th>

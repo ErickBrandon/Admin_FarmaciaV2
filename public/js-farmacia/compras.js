@@ -99,6 +99,9 @@ function Reinicio_Factura(){
     document.getElementById('Factura_farmacia').value = "";
     document.getElementById('Proveedor').disabled = false;
     document.getElementById('Factura_farmacia').disabled = false;
+    document.getElementById('Codigo_nuevo').disabled = false;
+    document.getElementById('btn_agregarProducto').disabled = false;
+    document.getElementById('btn_RFactura').disabled = false;
     _FacturaEnJuego=[];
     _factura = [];
     _ProductosEliminados = []
@@ -109,49 +112,57 @@ function Reinicio_Factura(){
 
 }
 
-function CreateRowFactura(tbl,codigo,producto,costo,pz, sub,caducidad,pz_caja) {
+function CreateRowFactura(tbl,codigo,producto,costo,pz, sub,caducidad,pz_caja,precio, disabled) {
    
-    if (!producto && !costo && !pz && !sub && !caducidad && !pz_caja) {
+    if (!producto && !costo && !pz && !sub && !caducidad && !pz_caja && !precio && !disabled) {
        producto = "";
        costo = "";
        pz = 1;
        pz_caja= 1;
        sub = parseFloat(0).toFixed(2);
        caducidad = "";
+       precio = ""
+       disabled = ""
     }
 
     tbl.setAttribute('id',"row_"+codigo);
     tbl.insertCell(0).innerText = codigo;
     tbl.insertCell(1).innerHTML = "<div class='form-group'>"+
-        "<input type='text' class='form-control' id='producto"+codigo+"' name='producto"+codigo+"' placeholder='Producto' value='"+producto+"' onchange=Nombre_Producto("+codigo+",this.value)>"+
+        "<input type='text' class='form-control' id='producto"+codigo+"' name='producto"+codigo+"' placeholder='Producto' value='"+producto+"' onchange=Nombre_Producto("+codigo+",this.value) "+disabled+">"+
     "</div>";
-
     tbl.insertCell(2).innerHTML = "<div class='form-group'>"+
-        "<input type='number' class='form-control' id='costo"+codigo+"' name='costo"+codigo+"' placeholder='0.00' value='"+costo+"' oninput=calculo(1,"+codigo+",this.value) min='0.1' >"+
+        "<input type='number' class='form-control' id='pz"+codigo+"' name='pz"+codigo+"' value='"+pz+"' oninput=calculo(2,"+codigo+",this.value) min='1' "+disabled+">"+
     "</div>";
 
     tbl.insertCell(3).innerHTML = "<div class='form-group'>"+
-        "<input type='number' class='form-control' id='pz"+codigo+"' name='pz"+codigo+"' value='"+pz+"' oninput=calculo(2,"+codigo+",this.value) min='1'>"+
+        "<input type='number' class='form-control' id='costo"+codigo+"' name='costo"+codigo+"' placeholder='0.00' value='"+costo+"' oninput=calculo(1,"+codigo+",this.value) min='0.01' step='0.01' "+disabled+">"+
     "</div>";
-    tbl.insertCell(4).innerText = sub;
-    tbl.insertCell(5).innerHTML = "<div class='form-group'>"+
-        "<input type='number' class='form-control' id='pz_Caja"+codigo+"' name='pz_Caja"+codigo+"' value='"+pz_caja+"' min='1' onchange='P_pz("+codigo+",this.value)'>"+
+    tbl.insertCell(4).innerHTML = "<div class='form-group'>"+
+        "<input type='number' class='form-control' id='precio"+codigo+"' name='precio"+codigo+"' placeholder='0.00' value='"+precio+"' oninput=precioVenta("+codigo+",this.value) min='' step='0.01' "+disabled+">"+
     "</div>";
+
+    
+    tbl.insertCell(5).innerText = sub;
     tbl.insertCell(6).innerHTML = "<div class='form-group'>"+
-        "<input type='date' class='form-control' id='caducidad"+codigo+"' name='caducidad"+codigo+"' value='"+caducidad+"' onchange='P_caducidad("+codigo+",this.value)'>"+
+        "<input type='number' class='form-control' id='pz_Caja"+codigo+"' name='pz_Caja"+codigo+"' value='"+pz_caja+"' min='1' onchange='P_pz("+codigo+",this.value)' "+disabled+">"+
+    "</div>";
+    tbl.insertCell(7).innerHTML = "<div class='form-group'>"+
+        "<input type='date' class='form-control' id='caducidad"+codigo+"' name='caducidad"+codigo+"' value='"+caducidad+"' onblur='P_caducidad("+codigo+",this.value)' "+disabled+">"+
     "</div>";
 
 
-    tbl.insertCell(7).innerHTML = "<button type='button' class='btn btn-danger btn-icon' onclick=eliminarRow("+codigo+")><i class='fas fa-trash'><i></button>";
+    tbl.insertCell(8).innerHTML = "<button type='button' class='btn btn-danger btn-icon' onclick=eliminarRow("+codigo+")><i class='fas fa-trash'><i></button "+disabled+">";
 
     
   
     $("#producto"+codigo).rules('add',{required:true});
     $("#costo"+codigo).rules('add',{required:true});
+    $("#precio"+codigo).rules('add',{required:true});
     $("#pz"+codigo).rules('add',{required:true});
     $("#caducidad"+codigo).rules('add',{required:true});
     $("#pz_Caja"+codigo).rules('add',{required:true});
 }
+
 $('#btn_agregarProducto').on('click', function () {
     let validate = $("#form_ProductoNuevo").valid()
     if (validate) {
@@ -161,7 +172,7 @@ $('#btn_agregarProducto').on('click', function () {
             let tbl = document.getElementById('tbodyCompras').insertRow(_factura.length);
             CreateRowFactura(tbl,codigo)
             _totalProdutos = _totalProdutos+1;
-            _factura.push({Codigo:codigo,Producto:'',Costo_Unidad:0.00, Unidades:1,SubTotal:0,Caducidad:'',Piezas_unidad:1});
+            _factura.push({Codigo:codigo,Producto:'',Costo_Unidad:0.00, Unidades:1,SubTotal:0,Caducidad:'',Piezas_unidad:1,Precio_Unidad:0.00});
             document.getElementById('Codigo_nuevo').value =null
         }else{
             notify();   
@@ -181,10 +192,15 @@ function calculo (op,codigo,valor){
     let costo = document.getElementById('costo'+codigo).value;
 
     // condicion    true     :           false
-   (op == 1) ? costo = valor : unidades = parseInt(valor);
+   if (op == 1) {
+    costo = valor;
+    document.getElementById('precio'+codigo).setAttribute('min',costo);
+   }else{
+    unidades = parseInt(valor);
+   }
 
    nuevo_sub = costo * unidades;
-   rowFactura.cells[4].innerText = nuevo_sub;
+   rowFactura.cells[5].innerText = parseFloat(nuevo_sub).toFixed(2);
 
    _factura.map(producto =>{
         if (producto.Codigo == codigo) {
@@ -214,7 +230,31 @@ function Nombre_Producto(codigo,value){
         }
     }
 }
+function precioVenta(codigo,value){
+    for (let i = 0; i < _factura.length; i++) {
+        if (_factura[i].Codigo == codigo) {
+            _factura[i].Precio_Unidad = parseFloat(value).toFixed(2);
+            break;
+        }
+    }
+}
 function P_caducidad (codigo,value){
+    let fecha = new Date(value);
+    let year = new Date();
+
+
+    if (String(fecha.getFullYear()).length != 4) {
+        document.getElementById('caducidad'+codigo).value = null;
+        return;
+    }
+    console.log(year.getFullYear());
+    console.log(fecha.getFullYear());
+    if ( parseInt(fecha.getFullYear()) <= parseInt(year.getFullYear()) ) {
+        console.log("entra");
+        document.getElementById('caducidad'+codigo).value = null;
+        return;
+    }
+
     for (let i = 0; i < _factura.length; i++) {
         if (_factura[i].Codigo == codigo) {
             _factura[i].Caducidad = value;
@@ -255,6 +295,7 @@ function eliminarRow(codigo) {
 }
 
 $('#btn_RFactura').on('click', function(){
+    
     let title;
     let text;
     let mensaje;
@@ -340,12 +381,17 @@ function detalleFactura(id){
         _factura =_Facturas.find(f=>f.ID == id);
       
         document.getElementById('Proveedor').value= _factura.proveedor_id;
+        document.getElementById('Proveedor').disabled = true;
         document.getElementById('Factura_farmacia').value = _factura.farmacia_id;
+        document.getElementById('Factura_farmacia').disabled = true;
       
 
         document.getElementById('Title_From_Factura').innerText ="Factura - Id: "+id;
         document.getElementById('btn_RFactura').innerText ="Actualizar factura";
+        document.getElementById('btn_RFactura').disabled = true;
 
+        document.getElementById('Codigo_nuevo').disabled = true;
+    document.getElementById('btn_agregarProducto').disabled = true;
 
         $.ajax({
             url:'DetalleFactura',
@@ -357,7 +403,7 @@ function detalleFactura(id){
                 console.log(_factura);
                 payload.forEach((producto,i) => {
                     let tbl = document.getElementById('tbodyCompras').insertRow(i);
-
+                    console.log(producto.Precio_Unidad);
                     CreateRowFactura(
                         tbl, 
                         producto.Codigo, 
@@ -366,7 +412,9 @@ function detalleFactura(id){
                         producto.Unidades, 
                         producto.SubTotal,
                         producto.Caducidad,
-                        producto.Piezas_unidad
+                        producto.Piezas_unidad,
+                        producto.Precio_Unidad,
+                        "disabled"
                     );
                     _totalFactura = _totalFactura + producto.SubTotal;
                     _totalProdutos = _totalProdutos + producto.Unidades;
@@ -410,7 +458,7 @@ function EliminarFactura(id) {
     });
 }
 /* ////////////////////////////////////////   Asignaciones /////////////////////////////////////////////////////// */
-function asignaciones(id) {
+/* function asignaciones(id) {
     console.log(_ClikAsignaciones);
     if (_ClikAsignaciones == 0) {
         _ClikAsignaciones = id;
@@ -457,10 +505,7 @@ $(Slt_ProductoAsignacion).on('change', function(e){
             }  
         }
    
-        
-        /* document.getElementById('btn_PrecioUnidad').disabled = false;
-        document.getElementById('btn_PrecioPz').disabled = false; */
-
+      
         
 
         Tbl_showAsignaciones.rows[0].cells[1].innerText =_ProductoEnJuego.Codigo;
@@ -633,4 +678,4 @@ $("#Piezas").on("input",function(e) {
     }
     document.getElementById('Venta_pz').disabled = false;
 
-})
+}) */

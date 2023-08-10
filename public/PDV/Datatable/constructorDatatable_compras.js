@@ -54,12 +54,12 @@ $(document).ready(function() {
             },
             {data:'Total_productos'},
             {data:'Total_asignados'},
-            {data:'ID',
+            /* {data:'ID',
                 "render": function (data) {
                     return "<button class='btn btn-dark btn-icon' onclick=asignaciones("+data+")>"+
                                 "<i class='fas fa-dolly'></i>"+
                            "</button>"
-            }},
+            }}, */
             {render:function (a,b,row) {
                         return btn_eliminar(row);
                     }
@@ -71,16 +71,10 @@ $(document).ready(function() {
 
 function btn_detalles(data) {
     let btn = "";
-    if (data.Total_asignados == 0) {
-        btn = "<button class='btn btn-info btn-icon' onclick=detalleFactura("+data.ID+")>"+
+    btn = "<button class='btn btn-info btn-icon' onclick=detalleFactura("+data.ID+")>"+
                 "<i class='fas fa-clipboard-list'></i>"+
               "</button>"
-    }else{
-      btn = "<button class='btn btn-info btn-icon' disabled>"+
-                "<i class='fas fa-clipboard-list'></i>"+
-            "</button>"
-    }
-    
+   
     return btn;
 }
 
