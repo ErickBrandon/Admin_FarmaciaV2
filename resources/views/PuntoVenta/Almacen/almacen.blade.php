@@ -52,6 +52,7 @@
                         <th>Caducidad</th>
                         <th>Costo</th>
                         <th>Última asignación</th>
+                        <th>Cambio venta X piezas</th>
                         <th>Traslado</th>
                     </tr>
                 </thead>
@@ -104,6 +105,56 @@
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary col-12" form='from_body' id="btn_formTraslado">Traspasar producto</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal_CambioTipoVenta" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tituloModal">Tipo de venta por piezas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" ><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>Codigo</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Producto</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Precio venta</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Existencias</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Tipo de venta</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Costo de compra</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <form>
+
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary col-12" form='from_body' id="btn_formTraslado">Asignar tipo de venta</button>
             </div>
         </div>
     </div>

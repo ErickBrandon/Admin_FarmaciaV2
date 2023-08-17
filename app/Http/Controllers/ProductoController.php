@@ -123,7 +123,7 @@ class ProductoController extends Controller
                  'TipoVenta','Caducidad','Costo','Ultima_asignacion')->get();
         return dataTables()->of($productos)
         ->addColumn('btn',function($productos){
-            if ($productos->TipoVenta == "Caja") {
+            if ($productos->TipoVenta == "CAJA") {
                 return "<button class='btn btn-primary btn-icon' onclick='traslado(".$productos->ID.")'><i class='fas fa-ambulance'></i></button>";
             }
         }

@@ -94,3 +94,7 @@ function Reinicio_Traslados() {
     document.getElementById('N_cajas').value="";
 
 }
+
+function CambioTipoVenta(id) {
+    $('#modal_CambioTipoVenta').modal('show');
+}

@@ -63,6 +63,17 @@ $(document).ready(function() {
                 }
             },
             {data:"Ultima_asignacion"},
+            {data:"ID",
+                render:function (data,a,b,) {
+                    if (b.TipoVenta == "CAJA") {
+                        return `<button id='btn_modalCambioTV' class='btn btn-info btn-icon' onclick=CambioTipoVenta(${data})>
+                            <i class='fas fa-capsules'></i>
+                        </button>`
+                    }
+                    return "";
+                
+                }
+            },
             {data:"btn"}
 
         ],

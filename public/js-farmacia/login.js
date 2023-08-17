@@ -20,7 +20,7 @@ $("#btn_PDV").on("click", function () {
         <div class='input-group-prepend'>
             <span class='input-group-text'><span class="fas fa-barcode text-primary"></span>&nbsp;</span>
         </div>
-        <input id='Password-scan' type='password' class='form-control' placeholder='Escanea la llave' name='password' requried style="color: transparent">
+        <input id='Password-scan' type='password' class='form-control' placeholder='Escanea la llave' name='password' requried >
     </div>
     <button id='btn_loginVendedor' type='button' class="btn btn-primary mb-4 shadow-2">Ingresar</button>`
     
