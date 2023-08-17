@@ -136,8 +136,8 @@
             </div>
             <div class="modal-body">
                 <div id="PntVenta" farmID={{$Farmacia->id}}></div>
-                <div class="tab-pane fade show active" id="pills-pdv" role="tabpanel" aria-labelledby="pills-pdv-tab">
-                    <table id="tbl_Productos" class="display responsive nowrap" style="width:100%">
+                <div class="tab-pane fade show active table-responsive" id="pills-pdv" role="tabpanel" aria-labelledby="pills-pdv-tab">
+                    <table id="tbl_Productos" class="display  nowrap" style="width:100%">
                         <thead>
                             <tr> 
                                 <th></th>

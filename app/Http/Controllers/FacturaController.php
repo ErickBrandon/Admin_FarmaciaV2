@@ -213,12 +213,12 @@ class FacturaController extends Controller
 
             if ($producto_almacen != null) {
                
-                if ($request->select_TV == "Unidad") {
+                if ($request->select_TV == "CAJA") {
                     $producto_almacen->Existencias = $producto_almacen->Existencias + $request->piezas_asignacion;
                     $producto_almacen->Costo = $producto_factura->Costo_Unidad;
                     $producto_almacen->Precio = $producto_factura->Precio_Unidad;
                 }
-                if ($request->select_TV == "Piezas") {
+                if ($request->select_TV == "PIEZA") {
                     $producto_almacen->Existencias = $producto_almacen->Existencias + ($request->piezas_asignacion *  $producto_factura->Piezas_unidad);      
                     $producto_almacen->Costo = $producto_factura->Costo_Unidad / $producto_factura->Piezas_unidad;
                     $producto_almacen->Precio = $producto_factura->Precio_Piezas;
@@ -238,7 +238,7 @@ class FacturaController extends Controller
             $Asignacion->Producto = $producto_factura->Producto;
             $Asignacion->Tipo_venta = $request->select_TV;
             $Asignacion->Unidades = $request->piezas_asignacion;
-            if ($request->select_TV == "Piezas") {
+            if ($request->select_TV == "PIEZA") {
                 $Asignacion->Piezas_unidad = $producto_factura->Piezas_unidad;
             }
             $Asignacion->Fecha_asignacion =$Hoy;
@@ -265,12 +265,12 @@ class FacturaController extends Controller
         $Producto = new Producto();
         $Producto->Codigo = $producto_factura->Codigo;
         $Producto->Producto = $producto_factura->Producto;
-        if ($request->select_TV == "Caja") {
+        if ($request->select_TV == "CAJA") {
             $Producto->Existencias = $request->piezas_asignacion;
             $Producto->Costo = $producto_factura->Costo_Unidad;
             $Producto->Precio = $producto_factura->Precio_Unidad;
         }
-        if ($request->select_TV == "Piezas") {
+        if ($request->select_TV == "PIEZA") {
             $Producto->Existencias = $request->piezas_asignacion *  $producto_factura->Piezas_unidad;      
             $Producto->Costo = $producto_factura->Costo_Unidad / $producto_factura->Piezas_unidad;
             $Producto->Precio = $producto_factura->Precio_Piezas;
@@ -385,7 +385,7 @@ class FacturaController extends Controller
 
             $similar = Producto::where('Codigo',$Producto->Codigo)
             ->where('Caducidad', $Producto->Caducidad)
-            ->where('TipoVenta','Caja')
+            ->where('TipoVenta','CAJA')
             ->where('farmacia_id',$Producto->farmacia_id)
             ->first();
 
@@ -405,7 +405,7 @@ class FacturaController extends Controller
                 $cj->Existencias = $request->Cajas;
                 $cj->Caducidad = $Producto->Caducidad;
                 $cj->Costo = $Producto->Costo_Unidad;
-                $cj->TipoVenta = "Caja";
+                $cj->TipoVenta = "CAJA";
                 $cj->Ultima_asignacion =$Hoy;
                 $cj->farmacia()->associate($Factura->farmacia_id);
                 $cj->save();
@@ -416,7 +416,7 @@ class FacturaController extends Controller
            if ($request->Piezas!= 0) {
             $similar = Producto::where('Codigo',$Producto->Codigo)
             ->where('Caducidad', $Producto->Caducidad)
-            ->where('TipoVenta','Piezas')
+            ->where('TipoVenta','PIEZA')
             ->where('farmacia_id',$Producto->farmacia_id)
             ->first();
  
@@ -434,7 +434,7 @@ class FacturaController extends Controller
              $pz->Existencias = $request->Piezas;
              $pz->Caducidad = $Producto->Caducidad;
              $pz->Costo = $Producto->Costo_Unidad/$Producto->Piezas_unidad;
-             $pz->TipoVenta = "Piezas";
+             $pz->TipoVenta = "CAJA";
              $pz->Ultima_asignacion =$Hoy;
              $pz->farmacia()->associate($Factura->farmacia_id);
              $pz->save();

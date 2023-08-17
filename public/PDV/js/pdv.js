@@ -97,7 +97,7 @@ function template_producto(producto) {
     tbl.insertCell(2).innerHTML = "<input id='CInput_"+producto.id+"' class='CantidadP' type='number' value='1' oninput=InputPz("+producto.id+",this.value) onblur=vacio("+producto.Existencias+","+producto.id+",this.value) min='1' max='"+producto.Existencias+"' step='1'></td>";
     tbl.insertCell(3).innerText = "$"+parseFloat(producto.Precio).toFixed(2);
     let info;
-    if (producto.TipoVenta == "Caja") {
+    if (producto.TipoVenta == "CAJA") {
         info ="<span class='text-white label bg-c-blue f-12'><b>"+producto.TipoVenta+"</b></span>"
     }else{
         info="<span class='text-white label theme-bg2 f-12'><b>"+producto.TipoVenta+"</b></span>"
@@ -287,9 +287,14 @@ function IngresarAlCarrito(codigo) {
  
    
     let similar = [];
+    console.log(_ProductosVenta[2809]);
+    console.log(_ProductosVenta[1537]);
     _ProductosVenta.forEach((p,i)=>{
+       
         if (p.Codigo == codigo) {
+            console.log(i);
             similar.push({"Codigo":p.Codigo,"id":p.id})
+            console.log("pasó");
         }
     });
 

@@ -165,7 +165,7 @@ class ProductoController extends Controller
                 $traslado->Producto = $Producto->Producto;
                 $traslado->Precio = $Producto->Precio;
                 $traslado->Existencias = $request->N_cajas;
-                $traslado->TipoVenta = "Caja";
+                $traslado->TipoVenta = "CAJA";
                 $traslado->Caducidad = $Producto->Caducidad;
                 $traslado->Costo = $Producto->Costo;
                 $traslado->farmacia()->associate( $request->Traslado_Farmacias);

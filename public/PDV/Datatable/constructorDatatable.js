@@ -74,7 +74,7 @@ $(document).ready(function() {
 
 function formatoTipoVenta(data) {
     let info;
-    if (data == "Caja") {
+    if (data == "CAJA") {
         info ="<span class='text-white label bg-c-blue f-12'><b>"+data+"</b></span>"
     }else{
         info="<span class='text-white label theme-bg2 f-12'><b>"+data+"</b></span>"
