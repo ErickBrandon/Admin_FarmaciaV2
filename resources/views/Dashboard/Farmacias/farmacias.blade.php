@@ -82,9 +82,9 @@
 @endsection
 
 @section('extras_footer')
-<script src="assets/plugins/data-tables/js/datatables.min.js"></script>
-<script src="{{asset('PDV/Datatable/constructorDatatable_farmacias.js')}}"></script>
-<script src="assets/plugins/jquery-validation/js/jquery.validate.min.js"></script>
-<script src="validationJS/form-validation-farmacia.js"></script>
-<script src="js-farmacia/modulo_farmacias.js"></script>
+<script src="{{asset('assets/plugins/data-tables/js/datatables.min.js')}}"></script>
+<script src="{{asset('PDV/Datatable/constructorDatatable_farmacias.js')}}?v={{now()->day}}"></script>
+<script src="{{asset('assets/plugins/jquery-validation/js/jquery.validate.min.js')}}"></script>
+<script src="{{asset('validationJS/form-validation-farmacia.js')}}?v={{now()->day}}"></script>
+<script src="{{asset('js-farmacia/modulo_farmacias.js')}}?v={{now()->day}}"></script>
 @endsection

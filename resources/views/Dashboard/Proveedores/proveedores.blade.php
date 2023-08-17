@@ -52,7 +52,7 @@
 <script src="{{asset('assets/plugins/data-tables/js/datatables.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tbl-datatable-custom.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-validation/js/jquery.validate.min.js')}}"></script>
-<script src="{{asset('validationJS/form-validation-proveedores.js')}}"></script>
-<script src="{{asset('js-farmacia/modulo_proveedores.js')}}"></script>
+<script src="{{asset('validationJS/form-validation-proveedores.js')}}?v={{now()->day}}"></script>
+<script src="{{asset('js-farmacia/modulo_proveedores.js')}}?v={{now()->day}}"></script>
 <script src="{{asset('assets/plugins/notification/js/bootstrap-growl.min.js')}}"></script>
 @endsection

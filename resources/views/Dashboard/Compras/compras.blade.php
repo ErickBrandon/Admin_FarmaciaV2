@@ -1,6 +1,6 @@
 @extends('Dashboard.layout.master')
 @section('extras_header')
-<link rel="stylesheet" href="{{asset('PDV/css/compras.css')}}">
+<link rel="stylesheet" href="{{asset('PDV/css/compras.css')}}?v={{now()->day}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/data-tables/css/datatables.min.css')}}">
 
 <script>
@@ -67,10 +67,10 @@
 @section('extras_footer')
 {{-- <script src="{{asset('assets/plugins/data-tables/js/datatables.min.js?'.date('d'))}}"></script> --}}
 <script src="{{asset('assets/plugins/data-tables/js/datatables.min.js')}}"></script>
-<script src="{{asset('PDV/Datatable/constructorDatatable_compras.js')}}"></script>
+<script src="{{asset('PDV/Datatable/constructorDatatable_compras.js')}}?v={{now()->day}}"></script>
 <script src="{{asset('assets/plugins/jquery-validation/js/jquery.validate.min.js')}}"></script>
-<script src="{{asset('validationJS/form-validation-compras.js')}}"></script>
-<script src="{{asset('js-farmacia/compras.js')}}"></script>
+<script src="{{asset('validationJS/form-validation-compras.js')}}?v={{now()->day}}"></script>
+<script src="{{asset('js-farmacia/compras.js')}}?v={{now()->day}}"></script>
 <script src="{{asset('assets/plugins/notification/js/bootstrap-growl.min.js')}}"></script>
 
 @endsection

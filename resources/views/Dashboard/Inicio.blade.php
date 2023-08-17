@@ -109,6 +109,7 @@
   <div class="card col-12">
     <div class="card-header">
         <h5><span class="fas fa-hospital"></span> Puntos de venta</h5>
+    
     </div><br>
     <div class="card-block table-border-style">
         <div class="table-responsive">
@@ -149,7 +150,7 @@
 <script src="{{asset('assets/js/pages/tbl-datatable-custom.js')}}"></script>
 <!-- form-picker-custom Js -->
 <script src="{{asset('assets/plugins/jquery-validation/js/jquery.validate.min.js')}}"></script>
-<script src="{{asset('assets/js/pages/form-validation.js')}}"></script>
+<script src="{{asset('assets/js/pages/form-validation.js')}}?v={{now()->day}}"></script>
 
 
 @endsection
