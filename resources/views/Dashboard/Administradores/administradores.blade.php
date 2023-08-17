@@ -72,7 +72,7 @@
 
 @section('extras_footer')
 <script src="{{asset('assets/plugins/data-tables/js/datatables.min.js')}}"></script>
-<script src="{{asset('PDV/Datatable/constructorDatatable_usuarios_real.js')}}"></script>
+<script src="{{asset('PDV/Datatable/constructorDatatable_usuarios_real.js')}}?v={{now()->day}}"></script>
 <script src="{{asset('assets/plugins/jquery-validation/js/jquery.validate.min.js')}}"></script>
 <script src="{{asset('validationJS/form-validation-usuarios.js')}}?v={{now()->day}}"></script>
 <script src="{{asset('js-farmacia/modulo_administradores.js')}}?v={{now()->day}}"></script>
