@@ -163,11 +163,11 @@
 @include('PuntoVenta.partials.modal_scanner')
 @endsection
 @section('foot_extras')
-<script src="{{asset('PDV/Datatable/constructorDatatable_almacen.js')}}"></script>
+<script src="{{asset('PDV/Datatable/constructorDatatable_almacen.js')}}?v={{now()->day}}"></script>
 <script src="{{asset('assets/plugins/jquery-validation/js/jquery.validate.min.js')}}"></script>
-<script src="{{asset('validationJS/form-validation-almacen.js')}}"></script>
+<script src="{{asset('validationJS/form-validation-almacen.js')}}?v={{now()->day}}"></script>
 <script src="{{asset('assets/plugins/notification/js/bootstrap-growl.min.js')}}"></script>
-<script src="{{asset('js-farmacia/almacen.js')}}"></script>
+<script src="{{asset('js-farmacia/almacen.js')}}?v={{now()->day}}"></script>
 <script src="{{asset('assets/plugins/sweetalert/js/sweetalert.min.js')}}"></script>
 <script>
     const G_scan = new Audio('{{asset('Scanner/sound/scan.mp3')}}');

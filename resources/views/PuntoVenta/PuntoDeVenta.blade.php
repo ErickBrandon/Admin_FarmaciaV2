@@ -1,6 +1,6 @@
 @extends('PuntoVenta.layout.master')
 @section('head_extra')
-<link rel="stylesheet" href="{{asset('PDV/css/principal.css')}}">
+<link rel="stylesheet" href="{{asset('PDV/css/principal.css')}}?v={{now()->day}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/notification/css/notification.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/animation/css/animate.min.css')}}">
 
@@ -172,10 +172,10 @@
 @include('PuntoVenta.partials.modal_scanner')
 @endsection
 @section('foot_extras')
-<script src="{{asset('PDV/Datatable/constructorDatatable.js')}}"></script>
+<script src="{{asset('PDV/Datatable/constructorDatatable.js')}}?v={{now()->day}}"></script>
 <script src="{{asset('assets/plugins/notification/js/bootstrap-growl.min.js')}}"></script>
-<script src="{{asset('Scanner/quagga.min.js')}}"></script>
-<script src="{{asset('PDV/js/pdv.js')}}"></script>
+<script src="{{asset('Scanner/quagga.min.js')}}?v={{now()->day}}"></script>
+<script src="{{asset('PDV/js/pdv.js')}}?v={{now()->day}}"></script>
 <script>
     const Sound_scan = new Audio('{{asset('Scanner/sound/scan.mp3')}}');
 </script>

@@ -1,7 +1,7 @@
 @extends('PuntoVenta.layout.master')
 @section('head_extra')
-<link rel="stylesheet" href="{{asset('PDV/css/principal.css')}}">
-<link rel="stylesheet" href="{{asset('PDV/css/venta.css')}}">
+<link rel="stylesheet" href="{{asset('PDV/css/principal.css')}}?v={{now()->day}}">
+<link rel="stylesheet" href="{{asset('PDV/css/venta.css')}}?v={{now()->day}}">
 <link rel="stylesheet" href="{{asset('assets/fonts/fontawesome/css/fontawesome-all.min.css')}}">
 
 
@@ -85,6 +85,6 @@
    @include('PuntoVenta.Ventas.Modals.Historico')
 @endsection
 @section('foot_extras')
-<script src="{{asset('PDV/Datatable/constructorDatatable_ventas.js')}}"></script>
-<script src="{{asset('js-farmacia/ventas.js')}}"></script>
+<script src="{{asset('PDV/Datatable/constructorDatatable_ventas.js')}}?v={{now()->day}}"></script>
+<script src="{{asset('js-farmacia/ventas.js')}}?v={{now()->day}}"></script>
 @endsection

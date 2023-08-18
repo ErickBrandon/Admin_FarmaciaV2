@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
    
     <link rel="stylesheet" href="{{asset('assets/fonts/fontawesome/css/fontawesome-all.min.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/css/style.css')}}?v={{now()->day}}">
     <title>Inicio de sesión</title>
     
 </head>
@@ -52,7 +52,7 @@
     <script>let GlobalToken = {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')};</script>
     <script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
     <script src="{{asset('assets/js/pcoded.min.js')}}"></script>
-    <script src="{{asset('js-farmacia/login.js')}}"></script>
+    <script src="{{asset('js-farmacia/login.js')}}?v={{now()->day}}"></script>
     <script src="{{asset('assets/plugins/sweetalert/js/sweetalert.min.js')}}"></script>
 
 
