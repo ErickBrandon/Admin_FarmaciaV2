@@ -65,6 +65,9 @@ $(document).ready(function() {
             {data:"Ultima_asignacion"},
             {data:"ID",
                 render:function (data,a,b,) {
+                    if (b.Codigo == "13117000696") {
+                        console.log(b);
+                    }
                     if (b.TipoVenta == "CAJA") {
                         return `<button id='btn_modalCambioTV' class='btn btn-info btn-icon' onclick=CambioTipoVenta(${data})>
                             <i class='fas fa-capsules'></i>
@@ -96,7 +99,6 @@ function validacionCaducidad(cells,data) {
     btn.className =("btn btn-danger btn-icon fas fa-trash-alt")
     btn.innerText= data;
     cells.appendChild(btn); */
-    console.log(data);
     if (data != '0000-00-00') {
         let caducidad = new Date(data)
         caducidad = (caducidad.getDate()+1)+"/"+(caducidad.getMonth()+1) +"/"+caducidad.getFullYear();
