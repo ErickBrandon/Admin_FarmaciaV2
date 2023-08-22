@@ -96,25 +96,31 @@ function validacionCaducidad(cells,data) {
     btn.className =("btn btn-danger btn-icon fas fa-trash-alt")
     btn.innerText= data;
     cells.appendChild(btn); */
-  let caducidad = new Date(data)
-  caducidad = (caducidad.getDate()+1)+"/"+(caducidad.getMonth()+1) +"/"+caducidad.getFullYear();
-  let hoy = new Date()
-  hoy = hoy.getDate()+"/"+(hoy.getMonth()+1) +"/"+hoy.getFullYear();
+    console.log(data);
+    if (data != '0000-00-00') {
+        let caducidad = new Date(data)
+        caducidad = (caducidad.getDate()+1)+"/"+(caducidad.getMonth()+1) +"/"+caducidad.getFullYear();
+        let hoy = new Date()
+        hoy = hoy.getDate()+"/"+(hoy.getMonth()+1) +"/"+hoy.getFullYear();
 
 
- let aFecha1 = hoy.split('/');
- let aFecha2 = caducidad.split('/');
- let fFecha1 = Date.UTC(aFecha1[2],aFecha1[1]-1,aFecha1[0]);
- let fFecha2 = Date.UTC(aFecha2[2],aFecha2[1]-1,aFecha2[0]);
- let dif = fFecha2 - fFecha1;
- let dias = Math.floor(dif / (1000 * 60 * 60 * 24));
+        let aFecha1 = hoy.split('/');
+        let aFecha2 = caducidad.split('/');
+        let fFecha1 = Date.UTC(aFecha1[2],aFecha1[1]-1,aFecha1[0]);
+        let fFecha2 = Date.UTC(aFecha2[2],aFecha2[1]-1,aFecha2[0]);
+        let dif = fFecha2 - fFecha1;
+        let dias = Math.floor(dif / (1000 * 60 * 60 * 24));
 
- if (dias<0) {
-    $(cells).attr('class',"Caduco");
- }
- if (dias >=0 && dias<=20) {
-    $(cells).attr('class',"ProximoAcudar");
- }
+        if (dias<0) {
+            $(cells).attr('class',"Caduco");
+        }
+        if (dias >=0 && dias<=20) {
+            $(cells).attr('class',"ProximoAcudar");
+        }
+    }else{
+        $(cells).text('Sin fecha');
+    }
+  
 }
 
 function btnRegreso(cells,data) {

@@ -39,6 +39,7 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+            'expires' =>480,
         ],
     ],
 
@@ -90,8 +91,8 @@ return [
         'users' => [
             'provider' => 'users',
             'table' => 'password_resets',
-            'expire' => 60,
-            'throttle' => 60,
+            'expire' => 480,
+            'throttle' => 480,
         ],
     ],
 

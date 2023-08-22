@@ -34,7 +34,9 @@
               </div>
             </li>
           </ul>
-        
+          <span class="navbar-text">
+            <button id="Internet" class="btn btn-rounded"></button>
+          </span>
         </div>
       </nav>
 </header>

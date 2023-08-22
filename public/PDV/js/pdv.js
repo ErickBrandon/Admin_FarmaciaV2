@@ -239,7 +239,9 @@ function PagoVentanilla(){
 }
 $("#btnCobrar").on("click", function () {
     let farmacia = +document.getElementById("PntVenta").getAttribute('farmID');
-   
+   console.log(ContCarrito);
+   console.log(TotalCarrito);
+   console.log(farmacia);
     $.ajax({
         url:"/RegistrarVenta",
         type: "POST",

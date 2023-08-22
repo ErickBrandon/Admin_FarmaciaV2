@@ -20,7 +20,7 @@ class UserController extends Controller
     }
 
     public function Guardarusuario(Request $request){
-       //dd($request);
+       
         $existe  = User::where('email',$request->email)->first();
         DB::beginTransaction();
         try {
@@ -29,7 +29,7 @@ class UserController extends Controller
             $user->rol = $request->Rol;
             $user->email = $request->Email;
             if ($user->rol == "Administrador") {
-                $user->password = $request->PasswordA;
+                $user->password = Hash::make($request->PasswordA);
             }
             $user->save();
 
