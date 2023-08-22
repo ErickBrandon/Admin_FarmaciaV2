@@ -84,6 +84,7 @@ Route::POST('PrecioUnidad/{FacturaProducto}',[FacturaController::class,'PrecioUn
 Route::POST('PrecioPieza/{FacturaProducto}',[FacturaController::class,'PrecioPieza'])->name('PrecioPieza');
 Route::POST('EliminarFactura/{Factura}',[FacturaController::class,'EliminarFactura'])->name('EliminarFactura');
 Route::POST('Asignacion/{Producto}/{Factura}',[FacturaController::class,'Asignacion'])->name('Asignacion');
+Route::POST('BusquedaProducto',[FacturaController::class,'BusquedaProducto'])->name('BusquedaProducto');
 
         /* ALMACEN */
 Route::POST('PuntoDeVenta/{Farmacia}/ProductoEnAlmacen/',[ProductoController::class,'ProductoEnAlmacen'])->name('Productos');

@@ -453,4 +453,25 @@ class FacturaController extends Controller
            dd($th);
         }
     }
+
+    function BusquedaProducto(Request $request){
+       
+        $coincidencia = DB::table('productos')
+        ->where('codigo',$request->Codigo)
+        ->where('farmacia_id',$request->Farmacia)
+        ->first();
+        if ($coincidencia != null) {
+            $data = [
+                "Existencia"=>true,
+                "Producto"=> $coincidencia->Producto,
+                "Precio"=>$coincidencia->Precio,
+                "Costo"=>$coincidencia->Costo
+            ];
+            return $data;
+        }
+        
+        return [
+            "Existencia"=>false
+        ];
+    }
 }

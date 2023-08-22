@@ -151,7 +151,7 @@ function CreateRowFactura(tbl,codigo,producto,costo,pz, sub,caducidad,pz_caja,pr
     "</div>";
 
 
-    tbl.insertCell(8).innerHTML = "<button type='button' class='btn btn-danger btn-icon' onclick=eliminarRow("+codigo+")><i class='fas fa-trash'><i></button "+disabled+">";
+    tbl.insertCell(8).innerHTML = "<button type='button' class='btn btn-danger btn-icon' onclick=eliminarRow('"+codigo+"')><i class='fas fa-trash'><i></button "+disabled+">";
 
     
   
@@ -166,7 +166,61 @@ function CreateRowFactura(tbl,codigo,producto,costo,pz, sub,caducidad,pz_caja,pr
 $('#btn_agregarProducto').on('click', function () {
     let validate = $("#form_ProductoNuevo").valid()
     if (validate) {
-        codigo = document.getElementById('Codigo_nuevo').value;
+        let codigo = document.getElementById('Codigo_nuevo').value;
+        let farmacia = document.getElementById('Factura_farmacia').value;
+        if (farmacia != "") {
+            data = {
+                'Codigo':codigo,
+                'Farmacia':farmacia
+            }
+            $.ajax({
+                url:"BusquedaProducto",
+                type: "POST",
+                headers:GlobalToken,
+                data: data,
+                success:  function(payload){
+                    console.log(payload);
+                    if (payload.Existencia) {
+                        let tbl = document.getElementById('tbodyCompras').insertRow(_factura.length);
+                         CreateRowFactura(tbl,codigo,payload.Producto,payload.Costo,false,false,false,false,payload.Precio)
+                        _totalProdutos = _totalProdutos+1;
+                        _factura.push({
+                            Codigo:codigo,
+                            Producto:payload.Producto,
+                            Costo_Unidad:payload.Codigo,
+                            Unidades:1,
+                            SubTotal:0,
+                            Caducidad:'',
+                            Piezas_unidad:1,
+                            Precio_Unidad:payload.Precio    
+                        });
+                        document.getElementById('Codigo_nuevo').value =null;
+                        return;
+                    }
+                    swal("No se encontraron coincidencias",{icon:"warning",});
+                    let tbl = document.getElementById('tbodyCompras').insertRow(_factura.length);
+                    CreateRowFactura(tbl,codigo)
+                    _totalProdutos = _totalProdutos+1;
+                    _factura.push({Codigo:codigo,Producto:'',Costo_Unidad:0.00, Unidades:1,SubTotal:0,Caducidad:'',Piezas_unidad:1,Precio_Unidad:0.00});
+                    document.getElementById('Codigo_nuevo').value =null
+                    /* 
+                    if (tipo_query == 1) {
+                        $('#From_Factura').modal('hide');
+                    }
+                    $('#tbl_Facturas').DataTable().ajax.reload(); */
+                },
+                error: function(){
+                    swal("Hubo un error en la busqueda de coincidencias, intente de nuevo",{icon:"error",});
+                }
+             });
+        }else{
+            swal("Primero seleccione una farmacia",{icon:"error",});
+        }
+        
+       
+
+        
+       /*  codigo = document.getElementById('Codigo_nuevo').value;
         if (document.getElementById('row_'+codigo) == null) {
            
             let tbl = document.getElementById('tbodyCompras').insertRow(_factura.length);
@@ -176,7 +230,7 @@ $('#btn_agregarProducto').on('click', function () {
             document.getElementById('Codigo_nuevo').value =null
         }else{
             notify();   
-        }
+        } */
     }
 });
 
@@ -272,8 +326,12 @@ function P_pz(codigo,value) {
 }
 
 function eliminarRow(codigo) {
+
     let sub = 0;
     let Nproductos = 0;
+
+   
+ 
     for (let i = 0; i < _factura.length; i++) {
         if (_factura[i].Codigo == codigo) {
             _ProductosEliminados.push(_factura[i].Codigo);
