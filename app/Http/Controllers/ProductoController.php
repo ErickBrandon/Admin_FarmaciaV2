@@ -120,7 +120,7 @@ class ProductoController extends Controller
         $productos =DB::table('productos')
         ->where('farmacia_id',$Farmacia)
         ->select('productos.id AS ID','Codigo','Producto','Precio','Existencias',
-                 'TipoVenta','Caducidad','Costo','Ultima_asignacion')->get();
+                 'TipoVenta','Caducidad','Costo','Ultima_asignacion','farmacia_id','Piezas_unidad')->get();
         return dataTables()->of($productos)
         ->addColumn('btn',function($productos){
             if ($productos->TipoVenta == "CAJA") {
@@ -179,5 +179,48 @@ class ProductoController extends Controller
            DB::rollback();
            return $e;
         }
+    }
+
+    function AsignacionVentaPiezas(Request $request){
+        $Hoy=date('Y/m/d');
+        DB::beginTransaction();
+        try {
+            //dd($request);
+            if ($request->Existente != "false") {
+                $exitente = DB::table('productos')->where('id',$request->idExistente)->first();
+              /*   dd($request->Existente); */
+                $exitente->Existencias = $exitente->Existencias + 10;
+                $exitente->Precio = $request->Precio;
+                $exitente->Ultima_asignacion = $Hoy;
+                
+                $exitente->save();
+             }else{
+                 $referencia = $request->Producto;
+               
+                 $producto = new Producto();
+                 $producto->Codigo =  $referencia["Codigo"];
+                 $producto->Producto =  $referencia["Producto"];
+                 $producto->Existencias = 10;
+                 $producto->Precio = $referencia["Precio"];
+                 $producto->Costo = $referencia["Costo"];
+                 $producto->TipoVenta = "PIEZA";
+                 $producto->Caducidad = $Hoy;
+                 $producto->farmacia()->associate($referencia["farmacia_id"]);
+                 $producto->Ultima_asignacion = $Hoy;
+                 $producto->save();
+                 
+             }
+             DB::commit();
+            return $data=[
+                "success"=>true,
+            ];
+        } catch (Exception $e) {
+            DB::rollback();
+           return $data=[
+            "message"=>$e,
+            "success"=>false,
+        ];
+        }
+        
     }
 }

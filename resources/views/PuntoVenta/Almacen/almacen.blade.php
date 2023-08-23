@@ -51,6 +51,7 @@
                         <th>Tipo de venta</th>
                         <th>Caducidad</th>
                         <th>Costo</th>
+                        <th>Piezas x Caja</th>
                         <th>Última asignación</th>
                         <th>Cambio venta X piezas</th>
                         <th>Traslado</th>
@@ -113,48 +114,71 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="tituloModal">Tipo de venta por piezas</h5>
+                <h5 class="modal-title" id="tituloModal">Asignacion de tipo de venta PIEZA</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" ><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td>Codigo</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Producto</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Precio venta</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Existencias</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Tipo de venta</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Costo de compra</td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <tbody id='tbl_infoProducto'>
+                                    <tr>
+                                        <td>Codigo</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Producto</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Precio venta</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Existencias</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tipo de venta</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Piezas x Caja</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Costo de compra</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                </div><br>
                 <div class="row">
-                    <form>
-
+                    <form id='form_asignacionVentaPiezas' class="col-12">
+                        <div class="col-12">
+                            <div class="input-group input-group-md mb-3 col-12">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><span class="fas fa-boxes text-primary"></span>&nbsp;Cajas</span>
+                                </div>
+                                <input id="cajas_piezas" type="number" class="form-control" name="cajas_piezas" requried="" min ="1" max>
+                            </div>
+                            <span id="cont_pxc"></span>
+                            <div class="input-group input-group-md mb-3 col-12">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><span class="fas fa-dollar-sign text-success"></span>&nbsp;Precio venta</span>
+                                </div>
+                                <input id="precio_ventaPiezas" type="number" class="form-control" name="precio_ventaPiezas" requried=""  min='0.01' step='0.01'>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary col-12" form='from_body' id="btn_formTraslado">Asignar tipo de venta</button>
+                <button type="button" class="btn btn-primary col-12" form='from_body' id="asignacion_venaPiezas">Asignar a tipo de venta</button>
             </div>
         </div>
     </div>

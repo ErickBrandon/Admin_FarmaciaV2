@@ -90,6 +90,7 @@ Route::POST('BusquedaProducto',[FacturaController::class,'BusquedaProducto'])->n
 Route::POST('PuntoDeVenta/{Farmacia}/ProductoEnAlmacen/',[ProductoController::class,'ProductoEnAlmacen'])->name('Productos');
 Route::POST('Traspaso/{Producto}',[ProductoController::class,'Traspaso'])->name('Traspaso');
 Route::GET('PuntoDeVenta/{Farmacia}/Almacen',[ProductoController::class,'almacen'])->name('Almacen');
+Route::POST('AsignacionVentaPiezas',[ProductoController::class,'AsignacionVentaPiezas'])->name('AsignacionVentaPiezas');
 
     /* Control de entradas de personal*/
     Route::GET('CtrlEntradas',[EntradaController::class,'index'])->name('CtrlEntradas');

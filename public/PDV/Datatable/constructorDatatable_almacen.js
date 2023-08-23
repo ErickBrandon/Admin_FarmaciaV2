@@ -62,6 +62,7 @@ $(document).ready(function() {
                     cells.innerText ="$"+parseFloat(data).toFixed(2);
                 }
             },
+            {data:'Piezas_unidad'},
             {data:"Ultima_asignacion"},
             {data:"ID",
                 render:function (data,a,b,) {

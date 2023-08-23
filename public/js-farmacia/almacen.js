@@ -6,7 +6,8 @@ $("#modal_traslado").on("hidden.bs.modal", function () {
 
 var _productosAlmacen = [];
 var _TraspasoEnJuego = [];
-
+var _AsignacionEnJuego={};
+var _ExistentePZ={};
 // ---------- Notificación -------------//
 function notify(color,mnsj,icono) {
     $.growl({
@@ -96,5 +97,70 @@ function Reinicio_Traslados() {
 }
 
 function CambioTipoVenta(id) {
+    let producto = _productosAlmacen.find(p=> p.ID == id);
+  
+    let tbl = document.getElementById('tbl_infoProducto');
+    _AsignacionEnJuego = producto;
+    tbl.rows[0].cells[1].innerText = producto.Codigo
+    tbl.rows[1].cells[1].innerText = producto.Producto
+    tbl.rows[2].cells[1].innerText = "$"+ parseFloat(producto.Precio).toFixed(2)
+    tbl.rows[3].cells[1].innerText = producto.Existencias
+    tbl.rows[4].cells[1].innerText = producto.TipoVenta
+    let piezas = "Sin información";
+    if (producto.Piezas_unidad != null) {
+        piezas =producto.Piezas_unidad;
+    }else{
+        document.getElementById('cont_pxc').innerHTML = `<div class="input-group input-group-md mb-3 col-12">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text"><span class="fas fa-boxes text-primary"></span>&nbsp;Piezas por caja</span>
+                                                            </div>
+                                                            <input id="pzXcaja" type="number" class="form-control" name="pzXcaja" requried="" min ="1" max>
+                                                        </div>`
+    }
+    tbl.rows[5].cells[1].innerText = piezas;
+    tbl.rows[6].cells[1].innerText = "$"+parseFloat(producto.Costo).toFixed(2)
+    document.getElementById('cajas_piezas').setAttribute('max', producto.Existencias);
     $('#modal_CambioTipoVenta').modal('show');
 }
+
+$("#asignacion_venaPiezas").on('click',function(){
+    let valid = $("#form_asignacionVentaPiezas").valid();
+    if (valid) {
+        
+        _ExistentePZ = _productosAlmacen.find(p=> (p.Codigo == _AsignacionEnJuego.Codigo && p.TipoVenta == "PIEZA"));
+        
+        let idExistente = 0;
+        let exist = false;
+    
+        if (_ExistentePZ != undefined) {
+            exist = true;
+            idExistente = _ExistentePZ.ID;
+        }
+        
+        let data ={
+            "Cajas":document.getElementById('cajas_piezas').value,
+            "Precio":document.getElementById('precio_ventaPiezas').value,
+            "Farmacia":_AsignacionEnJuego.farmacia_id,
+            "Existente": exist,
+            "Producto":_AsignacionEnJuego,
+            "idExistente": idExistente
+
+        }
+
+        $.ajax({
+            url:"/AsignacionVentaPiezas",
+            type: "POST",
+            headers:GlobalToken,
+            data: data,
+            success:  function(data){ 
+                if (data.success) {
+                    $('#tbl_almacen').DataTable().ajax.reload();
+                    swal("Asignado con éxito",{icon:"success",});
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
+            }
+         });
+    }
+});

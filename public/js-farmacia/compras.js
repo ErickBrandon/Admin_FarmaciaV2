@@ -128,26 +128,26 @@ function CreateRowFactura(tbl,codigo,producto,costo,pz, sub,caducidad,pz_caja,pr
     tbl.setAttribute('id',"row_"+codigo);
     tbl.insertCell(0).innerText = codigo;
     tbl.insertCell(1).innerHTML = "<div class='form-group'>"+
-        "<input type='text' class='form-control' id='producto"+codigo+"' name='producto"+codigo+"' placeholder='Producto' value='"+producto+"' onchange=Nombre_Producto("+codigo+",this.value) "+disabled+">"+
+        "<input type='text' class='form-control' id='producto"+codigo+"' name='producto"+codigo+"' placeholder='Producto' value='"+producto+"' onchange=Nombre_Producto('"+codigo+"',this.value) "+disabled+">"+
     "</div>";
     tbl.insertCell(2).innerHTML = "<div class='form-group'>"+
-        "<input type='number' class='form-control' id='pz"+codigo+"' name='pz"+codigo+"' value='"+pz+"' oninput=calculo(2,"+codigo+",this.value) min='1' "+disabled+">"+
+        "<input type='number' class='form-control' id='pz"+codigo+"' name='pz"+codigo+"' value='"+pz+"' oninput=calculo(2,'"+codigo+"',this.value) min='1' "+disabled+">"+
     "</div>";
 
     tbl.insertCell(3).innerHTML = "<div class='form-group'>"+
-        "<input type='number' class='form-control' id='costo"+codigo+"' name='costo"+codigo+"' placeholder='0.00' value='"+costo+"' oninput=calculo(1,"+codigo+",this.value) min='0.01' step='0.01' "+disabled+">"+
+        "<input type='number' class='form-control' id='costo"+codigo+"' name='costo"+codigo+"' placeholder='0.00' value='"+costo+"' oninput=calculo(1,'"+codigo+"',this.value) min='0.01' step='0.01' "+disabled+">"+
     "</div>";
     tbl.insertCell(4).innerHTML = "<div class='form-group'>"+
-        "<input type='number' class='form-control' id='precio"+codigo+"' name='precio"+codigo+"' placeholder='0.00' value='"+precio+"' oninput=precioVenta("+codigo+",this.value) min='' step='0.01' "+disabled+">"+
+        "<input type='number' class='form-control' id='precio"+codigo+"' name='precio"+codigo+"' placeholder='0.00' value='"+precio+"' oninput=precioVenta('"+codigo+"',this.value) oninput=calculo(1,'"+codigo+"',this.value)min='' step='0.01' "+disabled+">"+
     "</div>";
 
     
     tbl.insertCell(5).innerText = sub;
     tbl.insertCell(6).innerHTML = "<div class='form-group'>"+
-        "<input type='number' class='form-control' id='pz_Caja"+codigo+"' name='pz_Caja"+codigo+"' value='"+pz_caja+"' min='1' onchange='P_pz("+codigo+",this.value)' "+disabled+">"+
+        "<input type='number' class='form-control' id='pz_Caja"+codigo+"' name='pz_Caja"+codigo+"' value='"+pz_caja+"' min='1' onchange='P_pz('"+codigo+"',this.value)' "+disabled+">"+
     "</div>";
     tbl.insertCell(7).innerHTML = "<div class='form-group'>"+
-        "<input type='date' class='form-control' id='caducidad"+codigo+"' name='caducidad"+codigo+"' value='"+caducidad+"' onblur='P_caducidad("+codigo+",this.value)' "+disabled+">"+
+        "<input type='date' class='form-control' id='caducidad"+codigo+"' name='caducidad"+codigo+"' value='"+caducidad+"' onblur='P_caducidad('"+codigo+"',this.value)' "+disabled+">"+
     "</div>";
 
 
@@ -199,7 +199,7 @@ $('#btn_agregarProducto').on('click', function () {
                     }
                     swal("No se encontraron coincidencias",{icon:"warning",});
                     let tbl = document.getElementById('tbodyCompras').insertRow(_factura.length);
-                    CreateRowFactura(tbl,codigo)
+                    CreateRowFactura(tbl,codigo,0.00,1,0.00,'',1,0.00)
                     _totalProdutos = _totalProdutos+1;
                     _factura.push({Codigo:codigo,Producto:'',Costo_Unidad:0.00, Unidades:1,SubTotal:0,Caducidad:'',Piezas_unidad:1,Precio_Unidad:0.00});
                     document.getElementById('Codigo_nuevo').value =null
