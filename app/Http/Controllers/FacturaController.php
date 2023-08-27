@@ -29,7 +29,7 @@ class FacturaController extends Controller
    
     public function store(Request $request)
     {
-        //  dd($request);
+        //dd($request);
         DB::beginTransaction();
         $Hoy=date('Y/m/d');
         try {
@@ -38,6 +38,7 @@ class FacturaController extends Controller
             $Factura->Fecha_registro = $Hoy;
             $Factura->Total_productos = $request->TotalProductos;
             $Factura->Total_asignados = $request->TotalProductos;
+           
             $Factura->Proveedor()->associate($request->Proveedor);
             $Factura->farmacia()->associate($request->Farmacia);
             $Factura->save();
@@ -66,7 +67,8 @@ class FacturaController extends Controller
                     $producto_almacen->Existencias = $fp->Unidades + $producto_almacen->Existencias;
                     $producto_almacen->Costo = $fp->Costo_Unidad;
                     $producto_almacen->Precio = $fp->Precio_Unidad;
-                    $producto_almacen->Ultima_asignacion = $Hoy;
+                    $producto_almacen->Ultima_asignacion =$Hoy;
+                    $producto_almacen->Piezas_unidad = $fp->Piezas_unidad;
                     $producto_almacen->save();
                 }else{
                     $p = new Producto();
@@ -76,6 +78,7 @@ class FacturaController extends Controller
                     $p->Existencias = $fp->Unidades;
                     $p->TipoVenta = "CAJA";
                     $p->Caducidad =   $fp->Caducidad;
+                    $p->Piezas_unidad = $fp->Piezas_unidad;
                     $p->Costo = $fp->Costo_Unidad;
                     $p->Ultima_asignacion = $Hoy;
                     $p->farmacia()->associate($request->Farmacia);
@@ -86,10 +89,16 @@ class FacturaController extends Controller
 
             }
             DB::commit( );
-            return $Factura->id;
+            return [
+                "success"=>true,
+                "Factura"=> $Factura->id
+            ];
         } catch (\Throwable $th) {
             DB::rollback();
-           return $th;
+           return [
+            "success"=>false,
+            "error"=>$th
+           ];
         }
     }
 
@@ -465,7 +474,8 @@ class FacturaController extends Controller
                 "Existencia"=>true,
                 "Producto"=> $coincidencia->Producto,
                 "Precio"=>$coincidencia->Precio,
-                "Costo"=>$coincidencia->Costo
+                "Costo"=>$coincidencia->Costo,
+                "Piezas_unidad"=>$coincidencia->Piezas_unidad
             ];
             return $data;
         }

@@ -124,18 +124,24 @@ function CambioTipoVenta(id) {
 }
 
 $("#asignacion_venaPiezas").on('click',function(){
+    let idExistente = 0;
+    let exist = false;
+    let infoPz= true
     let valid = $("#form_asignacionVentaPiezas").valid();
     if (valid) {
         
         _ExistentePZ = _productosAlmacen.find(p=> (p.Codigo == _AsignacionEnJuego.Codigo && p.TipoVenta == "PIEZA"));
         
-        let idExistente = 0;
-        let exist = false;
+       
     
         if (_ExistentePZ != undefined) {
             exist = true;
             idExistente = _ExistentePZ.ID;
+            if (_ExistentePZ.Piezas_unidad != null) {
+                infoPz = true;
+            }
         }
+
         
         let data ={
             "Cajas":document.getElementById('cajas_piezas').value,
@@ -146,7 +152,6 @@ $("#asignacion_venaPiezas").on('click',function(){
             "idExistente": idExistente
 
         }
-
         $.ajax({
             url:"/AsignacionVentaPiezas",
             type: "POST",

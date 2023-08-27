@@ -113,7 +113,6 @@ function Reinicio_Factura(){
 }
 
 function CreateRowFactura(tbl,codigo,producto,costo,pz, sub,caducidad,pz_caja,precio, disabled) {
-   
     if (!producto && !costo && !pz && !sub && !caducidad && !pz_caja && !precio && !disabled) {
        producto = "";
        costo = "";
@@ -143,15 +142,16 @@ function CreateRowFactura(tbl,codigo,producto,costo,pz, sub,caducidad,pz_caja,pr
 
     
     tbl.insertCell(5).innerText = sub;
-    tbl.insertCell(6).innerHTML = "<div class='form-group'>"+
-        "<input type='number' class='form-control' id='pz_Caja"+codigo+"' name='pz_Caja"+codigo+"' value='"+pz_caja+"' min='1' onchange='P_pz('"+codigo+"',this.value)' "+disabled+">"+
-    "</div>";
-    tbl.insertCell(7).innerHTML = "<div class='form-group'>"+
-        "<input type='date' class='form-control' id='caducidad"+codigo+"' name='caducidad"+codigo+"' value='"+caducidad+"' onblur='P_caducidad('"+codigo+"',this.value)' "+disabled+">"+
-    "</div>";
+    
+    tbl.insertCell(6).innerHTML = `<div class='form-group'>
+        <input type='number' class='form-control' id='${"pz_Caja"+codigo}' name='${"pz_Caja"+codigo}' value='${pz_caja}' min='1' onchange=P_pz('${codigo}',this.value) ${disabled}>
+    </div>`;
+    
+    tbl.insertCell(7).innerHTML = `<div class='form-group'>
+        <input type='date' class='form-control' id='${"caducidad"+codigo}' name='${"caducidad"+codigo}' value='${caducidad}' onblur=P_caducidad('${codigo}',this.value) ${disabled}>
+    </div>`;
 
-
-    tbl.insertCell(8).innerHTML = "<button type='button' class='btn btn-danger btn-icon' onclick=eliminarRow('"+codigo+"')><i class='fas fa-trash'><i></button "+disabled+">";
+    tbl.insertCell(8).innerHTML = `<button type='button' class='btn btn-danger btn-icon' onclick=eliminarRow('${codigo}')><i class='fas fa-trash'><i></button ${disabled}>`;
 
     
   
@@ -179,27 +179,53 @@ $('#btn_agregarProducto').on('click', function () {
                 headers:GlobalToken,
                 data: data,
                 success:  function(payload){
-                    console.log(payload);
+                    
                     if (payload.Existencia) {
                         let tbl = document.getElementById('tbodyCompras').insertRow(_factura.length);
-                         CreateRowFactura(tbl,codigo,payload.Producto,payload.Costo,false,false,false,false,payload.Precio)
+                         CreateRowFactura(
+                            tbl,
+                            codigo,
+                            payload.Producto,
+                            payload.Costo,
+                            1,
+                            (payload.Costo * 1),
+                            "",
+                            payload.Piezas_unidad,
+                            payload.Precio,
+                            ""
+                        )
                         _totalProdutos = _totalProdutos+1;
                         _factura.push({
                             Codigo:codigo,
                             Producto:payload.Producto,
-                            Costo_Unidad:payload.Codigo,
+                            Costo_Unidad:payload.Costo,
                             Unidades:1,
-                            SubTotal:0,
+                            SubTotal:(payload.Costo * 1),
                             Caducidad:'',
-                            Piezas_unidad:1,
+                            Piezas_unidad:payload.Piezas_unidad,
                             Precio_Unidad:payload.Precio    
                         });
+                        _totalFactura = _totalFactura+ (payload.Costo * 1);
+                        document.getElementById('total_factura').innerText = parseFloat(_totalFactura).toFixed(2);
                         document.getElementById('Codigo_nuevo').value =null;
                         return;
                     }
                     swal("No se encontraron coincidencias",{icon:"warning",});
                     let tbl = document.getElementById('tbodyCompras').insertRow(_factura.length);
-                    CreateRowFactura(tbl,codigo,0.00,1,0.00,'',1,0.00)
+                    
+                    CreateRowFactura(
+                        tbl,
+                        codigo,
+                        "",
+                        parseFloat(0).toFixed(2),
+                        1,
+                        (0*1),
+                        "",
+                        "",
+                        "",
+                        ""
+                    )
+                    
                     _totalProdutos = _totalProdutos+1;
                     _factura.push({Codigo:codigo,Producto:'',Costo_Unidad:0.00, Unidades:1,SubTotal:0,Caducidad:'',Piezas_unidad:1,Precio_Unidad:0.00});
                     document.getElementById('Codigo_nuevo').value =null
@@ -301,10 +327,9 @@ function P_caducidad (codigo,value){
         document.getElementById('caducidad'+codigo).value = null;
         return;
     }
-    console.log(year.getFullYear());
-    console.log(fecha.getFullYear());
-    if ( parseInt(fecha.getFullYear()) <= parseInt(year.getFullYear()) ) {
-        console.log("entra");
+    
+    if ( parseInt(fecha.getFullYear()) < parseInt(year.getFullYear()) ) {
+       
         document.getElementById('caducidad'+codigo).value = null;
         return;
     }
@@ -419,13 +444,19 @@ $('#btn_RFactura').on('click', function(){
         headers:GlobalToken,
         data: data,
         success:  function(payload){
-            swal(mensaje+payload,{icon:"success",});
-            if (tipo_query == 1) {
-                $('#From_Factura').modal('hide');
+            if (payload.success) {
+                swal(mensaje+payload.Factura,{icon:"success",});
+                if (tipo_query == 1) {
+                    $('#From_Factura').modal('hide');
+                }
+                $('#tbl_Facturas').DataTable().ajax.reload();
+                return;
             }
-            $('#tbl_Facturas').DataTable().ajax.reload();
+           
+            swal(payload.error.errorInfo[2],{icon:"error",});
         },
         error: function(){
+           
             alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
         }
      });
@@ -458,10 +489,8 @@ function detalleFactura(id){
             data: {factura_id:id},
             success:  function(payload){
                 _factura = payload;
-                console.log(_factura);
                 payload.forEach((producto,i) => {
                     let tbl = document.getElementById('tbodyCompras').insertRow(i);
-                    console.log(producto.Precio_Unidad);
                     CreateRowFactura(
                         tbl, 
                         producto.Codigo, 
@@ -517,7 +546,7 @@ function EliminarFactura(id) {
 }
 /* ////////////////////////////////////////   Asignaciones /////////////////////////////////////////////////////// */
 /* function asignaciones(id) {
-    console.log(_ClikAsignaciones);
+    
     if (_ClikAsignaciones == 0) {
         _ClikAsignaciones = id;
         document.getElementById('Title_ModalAsigaciones').innerText = "Asignaciones - Factura - Id: "+id;
@@ -639,7 +668,7 @@ $("#btn_formAsignaciones").on('click', function(){
         let unidades_caja= parseInt(document.getElementById('Cajas').value);
         let unidades_pz= parseInt(document.getElementById('Piezas').value);
         let totalCajas = unidades_caja + unidades_pz;
-        console.log(unidades_caja + unidades_pz);
+        
         if (totalCajas == _ProductoEnJuego.Unidades) {
             let data = $("#form_Asignaciones").serialize();
             $.ajax({
@@ -653,7 +682,7 @@ $("#btn_formAsignaciones").on('click', function(){
                         if (p.id == _ProductoEnJuego.id) {
                             p.Precio_Unidad = parseFloat(document.getElementById('Venta_caja').value);
                             p.Precio_Piezas = parseFloat(document.getElementById('Venta_pz').value);
-                            console.log(p.Precio_Piezas);
+                           
                             _ProductoEnJuego.Precio_Unidad = p.Precio_Unidad;
                             _ProductoEnJuego.Precio_Piezas = p.Precio_Piezas;
 
