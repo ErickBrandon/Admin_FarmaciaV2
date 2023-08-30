@@ -178,7 +178,7 @@ $("#asignacion_ventaPiezas").on('click',function(){
             success:  function(data){ 
                 if (data.success) {
                     $('#tbl_almacen').DataTable().ajax.reload();
-                    swal("OK",data.message,{icon:"success",});
+                    swal("Asignacion exitosa",data.message,{icon:"success",});
                     $('#modal_CambioTipoVenta').modal('hide');
                 }else{
                     swal(data.message,{icon:"error",});
@@ -189,6 +189,7 @@ $("#asignacion_ventaPiezas").on('click',function(){
             error: function(jqXHR, textStatus, errorThrown){
                 alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
                 loadingHide("asignacion_ventaPiezas");
+                return
             }
          });  
     }
