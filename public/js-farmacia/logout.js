@@ -30,6 +30,6 @@ function loadingShow(id){
 }
 
 function loadingHide(id){
-    document.getElementById("load_btn").remove();
+    $("#load_btn").remove();
     document.getElementById(id).disabled =false;
 }

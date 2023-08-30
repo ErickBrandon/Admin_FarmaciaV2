@@ -135,6 +135,7 @@ function CambioTipoVenta(id) {
 }
 
 $("#asignacion_ventaPiezas").on('click',function(){
+    loadingShow("asignacion_ventaPiezas")
     data={
         "Similar_id":Number,
         "ProductoEnJuego":Number,
@@ -179,19 +180,19 @@ $("#asignacion_ventaPiezas").on('click',function(){
                     $('#tbl_almacen').DataTable().ajax.reload();
                     swal("OK",data.message,{icon:"success",});
                     $('#modal_CambioTipoVenta').modal('hide');
-                    return;
                 }else{
                     swal(data.message,{icon:"error",});
                 }
-
+                loadingHide("asignacion_ventaPiezas");
+                return;
             },
             error: function(jqXHR, textStatus, errorThrown){
                 alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
+                loadingHide("asignacion_ventaPiezas");
             }
-         });
-        
-       
+         });  
     }
+    loadingHide("asignacion_ventaPiezas");
 });
 $("#precio_ventaPiezas").on('input',function(){
     if ( document.getElementById('pzXcaja').value == '') {
@@ -214,6 +215,7 @@ function reincio_asignacionPZ() {
     document.getElementById('cajas_piezas').value = "";
     document.getElementById('precio_ventaPiezas').value = "";
 
+    let tbl = document.getElementById('tbl_infoProducto');
     tbl.rows[0].cells[1].innerText = '';
     tbl.rows[1].cells[1].innerText = '';
     tbl.rows[2].cells[1].innerText = '';
