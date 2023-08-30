@@ -66,9 +66,7 @@ $(document).ready(function() {
             {data:"Ultima_asignacion"},
             {data:"ID",
                 render:function (data,a,b,) {
-                    if (b.Codigo == "13117000696") {
-                        console.log(b);
-                    }
+                
                     if (b.TipoVenta == "CAJA") {
                         return `<button id='btn_modalCambioTV' class='btn btn-info btn-icon' onclick=CambioTipoVenta(${data})>
                             <i class='fas fa-capsules'></i>

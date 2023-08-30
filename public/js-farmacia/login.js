@@ -80,18 +80,7 @@ function login(data,url){
      });
 }
 
-function loadingShow(id){
-    document.getElementById(id).disabled =true;
-    let loading =document.createElement('span')
-    $(loading).attr('class', "spinner-border spinner-border-sm");
-    $(loading).attr('id', "load_btn");
-    document.getElementById(id).appendChild(loading)
-}
 
-function loadingHide(id){
-    document.getElementById("load_btn").remove();
-    document.getElementById(id).disabled =false;
-}
 
 $(document).on("click","#btn_loginVendedor", function () {
     loadingShow("btn_loginVendedor");
@@ -111,3 +100,15 @@ $(document).on("click","#btn_loginVendedor", function () {
     }
     
 });
+function loadingShow(id){
+    document.getElementById(id).disabled =true;
+    let loading =document.createElement('span')
+    $(loading).attr('class', "spinner-border spinner-border-sm");
+    $(loading).attr('id', "load_btn");
+    document.getElementById(id).appendChild(loading)
+}
+
+function loadingHide(id){
+    document.getElementById("load_btn").remove();
+    document.getElementById(id).disabled =false;
+}

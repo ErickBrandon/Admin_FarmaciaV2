@@ -51,7 +51,11 @@ GlobalErrorCRUD ="Soluciones:\n"
 +"3) Compruebe su conexión a Internet e intente de nuevo - si no hay conexión, comuniquese con el Administrador y con el Proveedor del servicio\n"
 +"4) ¡Si hay conexión a internet! y los problemas persisten comuniquese con el Administrador y con el Desarrollador del sistema";
     // --------- -----------------
-
+$("#modal_CambioTipoVenta").on("hidden.bs.modal", function () {
+    /* El evento detecta cuando se cierra el modal del formulario Asignacion PZ*/
+    $('input, select').removeClass('is-invalid')
+    reincio_asignacionPZ();       
+});
 function traslado(id){
     _TraspasoEnJuego = _productosAlmacen.find(p => p.ID == id);
     document.getElementById('txt_codigo').innerText = _TraspasoEnJuego.Codigo;
@@ -98,60 +102,73 @@ function Reinicio_Traslados() {
 
 function CambioTipoVenta(id) {
     let producto = _productosAlmacen.find(p=> p.ID == id);
-  
+    if (producto.Existencias <= 0) {
+        swal(
+            "¡Existencias en 0!",
+            "Ya no hay exitencias para cambiar del tipo de venta CAjA a PIEZA del producto "+producto.Producto,
+            {icon:"error",
+        });
+        return;
+    }
+
     let tbl = document.getElementById('tbl_infoProducto');
     _AsignacionEnJuego = producto;
-    tbl.rows[0].cells[1].innerText = producto.Codigo
-    tbl.rows[1].cells[1].innerText = producto.Producto
-    tbl.rows[2].cells[1].innerText = "$"+ parseFloat(producto.Precio).toFixed(2)
-    tbl.rows[3].cells[1].innerText = producto.Existencias
-    tbl.rows[4].cells[1].innerText = producto.TipoVenta
+
+    tbl.rows[0].cells[1].innerText = _AsignacionEnJuego.Codigo
+    document.getElementById('NombreProducto_pz').innerText=_AsignacionEnJuego.Producto
+    tbl.rows[1].cells[1].innerText = "$"+ parseFloat(_AsignacionEnJuego.Precio).toFixed(2)
+    tbl.rows[2].cells[1].innerText = _AsignacionEnJuego.Existencias
+    tbl.rows[3].cells[1].innerText = _AsignacionEnJuego.TipoVenta
     let piezas = "Sin información";
-    if (producto.Piezas_unidad != null) {
+    if (_AsignacionEnJuego.Piezas_unidad != null) {
         piezas =producto.Piezas_unidad;
+        document.getElementById('pzXcaja').value= producto.Piezas_unidad;
+        document.getElementById('pzXcaja').disabled = true;
+        document.getElementById('precio_ventaPiezas').setAttribute('min',(parseFloat(_AsignacionEnJuego.Costo /_AsignacionEnJuego.Piezas_unidad )).toFixed(2));
     }else{
-        document.getElementById('cont_pxc').innerHTML = `<div class="input-group input-group-md mb-3 col-12">
-                                                            <div class="input-group-prepend">
-                                                                <span class="input-group-text"><span class="fas fa-boxes text-primary"></span>&nbsp;Piezas por caja</span>
-                                                            </div>
-                                                            <input id="pzXcaja" type="number" class="form-control" name="pzXcaja" requried="" min ="1" max>
-                                                        </div>`
+        document.getElementById('pzXcaja').setAttribute('min',1)
     }
-    tbl.rows[5].cells[1].innerText = piezas;
-    tbl.rows[6].cells[1].innerText = "$"+parseFloat(producto.Costo).toFixed(2)
-    document.getElementById('cajas_piezas').setAttribute('max', producto.Existencias);
+    tbl.rows[4].cells[1].innerText = piezas;
+    tbl.rows[5].cells[1].innerText = "$"+parseFloat(producto.Costo).toFixed(2)
+    document.getElementById('cajas_piezas').setAttribute('max', _AsignacionEnJuego.Existencias);
     $('#modal_CambioTipoVenta').modal('show');
 }
 
-$("#asignacion_venaPiezas").on('click',function(){
-    let idExistente = 0;
-    let exist = false;
-    let infoPz= true
+$("#asignacion_ventaPiezas").on('click',function(){
+    data={
+        "Similar_id":Number,
+        "ProductoEnJuego":Number,
+        "Farmacia":Number,
+        "CajasAsignacion":Number,
+        "Precio_pz":Number,
+        "Pz_exisitentes":Boolean,
+        "Piezas":Number,
+    }
+
     let valid = $("#form_asignacionVentaPiezas").valid();
     if (valid) {
+
+        let similar = _productosAlmacen.find( p=> (
+            p.Codigo == _AsignacionEnJuego.Codigo && 
+            p.TipoVenta == "PIEZA"
+        ));
         
-        _ExistentePZ = _productosAlmacen.find(p=> (p.Codigo == _AsignacionEnJuego.Codigo && p.TipoVenta == "PIEZA"));
-        
-       
-    
-        if (_ExistentePZ != undefined) {
-            exist = true;
-            idExistente = _ExistentePZ.ID;
-            if (_ExistentePZ.Piezas_unidad != null) {
-                infoPz = true;
-            }
+        if (similar != undefined) {
+            data.Similar_id = similar.ID;
         }
 
-        
-        let data ={
-            "Cajas":document.getElementById('cajas_piezas').value,
-            "Precio":document.getElementById('precio_ventaPiezas').value,
-            "Farmacia":_AsignacionEnJuego.farmacia_id,
-            "Existente": exist,
-            "Producto":_AsignacionEnJuego,
-            "idExistente": idExistente
-
+        if (_AsignacionEnJuego.Piezas_unidad == null) {
+            data.Piezas = document.getElementById('pzXcaja').value;
+        }else{
+            data.Pz_exisitentes = true;
+            data.Piezas = _AsignacionEnJuego.Piezas_unidad;
         }
+
+        data.ProductoEnJuego = _AsignacionEnJuego.ID;
+        data.Farmacia = _AsignacionEnJuego.farmacia_id;
+        data.CajasAsignacion = document.getElementById('cajas_piezas').value;
+        data.Precio_pz = document.getElementById('precio_ventaPiezas').value;
+
         $.ajax({
             url:"/AsignacionVentaPiezas",
             type: "POST",
@@ -160,12 +177,49 @@ $("#asignacion_venaPiezas").on('click',function(){
             success:  function(data){ 
                 if (data.success) {
                     $('#tbl_almacen').DataTable().ajax.reload();
-                    swal("Asignado con éxito",{icon:"success",});
+                    swal("OK",data.message,{icon:"success",});
+                    $('#modal_CambioTipoVenta').modal('hide');
+                    return;
+                }else{
+                    swal(data.message,{icon:"error",});
                 }
+
             },
             error: function(jqXHR, textStatus, errorThrown){
                 alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
             }
          });
+        
+       
     }
 });
+$("#precio_ventaPiezas").on('input',function(){
+    if ( document.getElementById('pzXcaja').value == '') {
+        swal("Favor de asignar primero el número de PIEZAS que contiene la caja del producto",{icon:"warning",});
+        document.getElementById('cajas_piezas').value = "";
+    }
+});
+$("#pzXcaja").on('blur',function(){
+    document.getElementById('precio_ventaPiezas').setAttribute('min',
+    parseFloat(_AsignacionEnJuego.Costo / document.getElementById('pzXcaja').value).toFixed(2));
+});
+
+function reincio_asignacionPZ() {
+    document.getElementById('cajas_piezas').setAttribute('max',null);
+    document.getElementById('precio_ventaPiezas').setAttribute('min',null);
+    document.getElementById('pzXcaja').setAttribute('min',null);
+    document.getElementById('pzXcaja').disabled = false;
+    document.getElementById('pzXcaja').value = "";
+    document.getElementById('cajas_piezas').value = "";
+    document.getElementById('cajas_piezas').value = "";
+    document.getElementById('precio_ventaPiezas').value = "";
+
+    tbl.rows[0].cells[1].innerText = '';
+    tbl.rows[1].cells[1].innerText = '';
+    tbl.rows[2].cells[1].innerText = '';
+    tbl.rows[3].cells[1].innerText = '';
+    tbl.rows[4].cells[1].innerText = '';
+    tbl.rows[5].cells[1].innerText = '';
+
+    _AsignacionEnJuego = {};
+}

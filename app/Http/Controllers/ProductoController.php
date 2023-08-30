@@ -183,36 +183,54 @@ class ProductoController extends Controller
 
     function AsignacionVentaPiezas(Request $request){
         $Hoy=date('Y/m/d');
+        $message = '';
         DB::beginTransaction();
+       
         try {
-            //dd($request);
-            if ($request->Existente != "false") {
-                $exitente = DB::table('productos')->where('id',$request->idExistente)->first();
-              /*   dd($request->Existente); */
-                $exitente->Existencias = $exitente->Existencias + 10;
-                $exitente->Precio = $request->Precio;
-                $exitente->Ultima_asignacion = $Hoy;
-                
-                $exitente->save();
-             }else{
-                 $referencia = $request->Producto;
-               
-                 $producto = new Producto();
-                 $producto->Codigo =  $referencia["Codigo"];
-                 $producto->Producto =  $referencia["Producto"];
-                 $producto->Existencias = 10;
-                 $producto->Precio = $referencia["Precio"];
-                 $producto->Costo = $referencia["Costo"];
-                 $producto->TipoVenta = "PIEZA";
-                 $producto->Caducidad = $Hoy;
-                 $producto->farmacia()->associate($referencia["farmacia_id"]);
-                 $producto->Ultima_asignacion = $Hoy;
-                 $producto->save();
-                 
-             }
+            $EnJuego = Producto::where('id',$request->ProductoEnJuego)->first();
+           
+            $EnJuego->Existencias = $EnJuego->Existencias - $request->CajasAsignacion;
+
+            if ($request->Pz_exisitentes == "false") {
+                $EnJuego->Piezas_unidad = $request->Piezas;
+            }
+            $EnJuego->save();
+           
+            if ($request->Similar_id != 0) {
+               $similar = Producto::where('id',$request->Similar_id)
+               ->where('TipoVenta','PIEZA')
+               ->where('farmacia_id',$request->Farmacia)
+               ->first();
+
+               $similar->Existencias =  $similar->Existencias + ($request->CajasAsignacion * $EnJuego->Piezas_unidad);
+               $similar->Precio = $request->Precio_pz;
+               $similar->Costo = $EnJuego->Costo / $EnJuego->Piezas_unidad;
+               $similar->Caducidad = $EnJuego->Caducidad;
+               $similar->Ultima_asignacion = $Hoy;
+               $similar->save();
+
+               $message = "Se agregaron existencias al registro existente con Código: $similar->Codigo y tipo de venta: PIEZA";
+            }else{
+                $nuevo = new Producto();
+            
+                $nuevo->Codigo = $EnJuego->Codigo;
+                $nuevo->Producto = $EnJuego->Producto;
+                $nuevo->Existencias = $request->CajasAsignacion * $EnJuego->Piezas_unidad;
+                $nuevo->Precio = $request->Precio_pz;
+                $nuevo->Costo = $EnJuego->Costo / $EnJuego->Piezas_unidad;
+                $nuevo->TipoVenta = "PIEZA";
+                $nuevo->Caducidad = $EnJuego->Caducidad;
+                $nuevo->Ultima_asignacion = $Hoy;
+                $nuevo->Piezas_unidad = null;
+                $nuevo->farmacia()->associate($request->Farmacia);
+                $nuevo->save();
+                $message = "Se ha creado un nuevo registro para el tiepo de venta: PIEZA del Código: $nuevo->Codigo";
+            }
+           
              DB::commit();
             return $data=[
                 "success"=>true,
+                "message"=>$message
             ];
         } catch (Exception $e) {
             DB::rollback();

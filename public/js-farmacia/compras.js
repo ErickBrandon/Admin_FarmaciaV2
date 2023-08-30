@@ -163,7 +163,8 @@ function CreateRowFactura(tbl,codigo,producto,costo,pz, sub,caducidad,pz_caja,pr
     $("#pz_Caja"+codigo).rules('add',{required:true});
 }
 
-$('#btn_agregarProducto').on('click', function () {
+$('#btn_agregarProducto').on('click', async function () {
+    loadingShow("btn_agregarProducto")
     let validate = $("#form_ProductoNuevo").valid()
     if (validate) {
         let codigo = document.getElementById('Codigo_nuevo').value;
@@ -173,7 +174,7 @@ $('#btn_agregarProducto').on('click', function () {
                 'Codigo':codigo,
                 'Farmacia':farmacia
             }
-            $.ajax({
+           await $.ajax({
                 url:"BusquedaProducto",
                 type: "POST",
                 headers:GlobalToken,
@@ -242,22 +243,8 @@ $('#btn_agregarProducto').on('click', function () {
         }else{
             swal("Primero seleccione una farmacia",{icon:"error",});
         }
-        
-       
-
-        
-       /*  codigo = document.getElementById('Codigo_nuevo').value;
-        if (document.getElementById('row_'+codigo) == null) {
-           
-            let tbl = document.getElementById('tbodyCompras').insertRow(_factura.length);
-            CreateRowFactura(tbl,codigo)
-            _totalProdutos = _totalProdutos+1;
-            _factura.push({Codigo:codigo,Producto:'',Costo_Unidad:0.00, Unidades:1,SubTotal:0,Caducidad:'',Piezas_unidad:1,Precio_Unidad:0.00});
-            document.getElementById('Codigo_nuevo').value =null
-        }else{
-            notify();   
-        } */
     }
+    loadingHide("btn_agregarProducto");
 });
 
 function calculo (op,codigo,valor){

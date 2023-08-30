@@ -119,6 +119,12 @@
             </div>
             <div class="modal-body">
                 <div class="row">
+                    <div  class="col-12">
+                        <div class="alert alert-primary" role="alert">
+                            Producto seleccionado: <br>
+                            <b id='NombreProducto_pz'></b>
+                        </div>
+                    </div>
                     <div class="col-12">
                         <div class="table-responsive">
                             <table class="table table-striped">
@@ -128,11 +134,7 @@
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>Producto</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Precio venta</td>
+                                        <td>Precio venta X Caja</td>
                                         <td></td>
                                     </tr>
                                     <tr>
@@ -162,23 +164,29 @@
                         <div class="col-12">
                             <div class="input-group input-group-md mb-3 col-12">
                                 <div class="input-group-prepend">
+                                    <span class="input-group-text"><span class="fas fa-boxes text-primary"></span>&nbsp;Piezas X caja</span>
+                                </div>
+                                <input id="pzXcaja" type="number" class="form-control" name="pzXcaja" requried="" min ="1">
+                            </div>
+                            <div class="input-group input-group-md mb-3 col-12">
+                                <div class="input-group-prepend">
                                     <span class="input-group-text"><span class="fas fa-boxes text-primary"></span>&nbsp;Cajas</span>
                                 </div>
                                 <input id="cajas_piezas" type="number" class="form-control" name="cajas_piezas" requried="" min ="1" max>
                             </div>
-                            <span id="cont_pxc"></span>
+                            
                             <div class="input-group input-group-md mb-3 col-12">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><span class="fas fa-dollar-sign text-success"></span>&nbsp;Precio venta</span>
                                 </div>
-                                <input id="precio_ventaPiezas" type="number" class="form-control" name="precio_ventaPiezas" requried=""  min='0.01' step='0.01'>
+                                <input id="precio_ventaPiezas" type="number" class="form-control" name="precio_ventaPiezas" requried=""  min step='0.01'>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary col-12" form='from_body' id="asignacion_venaPiezas">Asignar a tipo de venta</button>
+                <button type="button" class="btn btn-primary col-12" form='from_body' id="asignacion_ventaPiezas">Asignar a tipo de venta</button>
             </div>
         </div>
     </div>
