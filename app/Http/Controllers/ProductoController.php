@@ -178,11 +178,12 @@ class ProductoController extends Controller
 
             $historial = new HistorialTraspaso();
             $historial->Codigo = $Producto->Codigo;
-            $historial->Produco = $Producto->Prodco;
+            $historial->Producto = $Producto->Producto;
             $historial->Cajas = $request->N_cajas;
             $historial->farmacia_origen = $Producto->farmacia_id;
             $historial->farmacia_destino = $request->Traslado_Farmacias;
             $historial->Fecha_traspaso = $Hoy;
+            $historial->save();
 
             DB::commit();
             return true;
