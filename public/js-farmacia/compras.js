@@ -169,6 +169,13 @@ $('#btn_agregarProducto').on('click', async function () {
     if (validate) {
         let codigo = document.getElementById('Codigo_nuevo').value;
         let farmacia = document.getElementById('Factura_farmacia').value;
+        
+        let contieneEspacios = /\s/.test(codigo);
+        if (contieneEspacios) {
+            swal("Error en el código de barras","No se aceptan codigos de barras con ESPACIOS",{icon:"error"});
+            loadingHide("btn_agregarProducto");
+            return;
+        }
         if (farmacia != "") {
             data = {
                 'Codigo':codigo,
@@ -180,9 +187,15 @@ $('#btn_agregarProducto').on('click', async function () {
                 headers:GlobalToken,
                 data: data,
                 success:  function(payload){
-                    
+                    let itemRow = 0;
+                    if (_factura.length != 0 && _factura.length > 1) {
+                        itemRow = _factura.length - _factura.length
+                    }
+
+               
                     if (payload.Existencia) {
-                        let tbl = document.getElementById('tbodyCompras').insertRow(_factura.length);
+                       
+                        let tbl = document.getElementById('tbodyCompras').insertRow(itemRow);
                          CreateRowFactura(
                             tbl,
                             codigo,
@@ -212,7 +225,7 @@ $('#btn_agregarProducto').on('click', async function () {
                         return;
                     }
                     swal("No se encontraron coincidencias",{icon:"warning",});
-                    let tbl = document.getElementById('tbodyCompras').insertRow(_factura.length);
+                    let tbl = document.getElementById('tbodyCompras').insertRow(itemRow);
                     
                     CreateRowFactura(
                         tbl,
