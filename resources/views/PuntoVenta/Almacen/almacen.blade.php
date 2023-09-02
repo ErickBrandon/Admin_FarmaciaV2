@@ -54,7 +54,7 @@
                         <th>Piezas x Caja</th>
                         <th>Última asignación</th>
                         <th>Cambio venta X piezas</th>
-                        <th>Traslado</th>
+                        <th>Traspaso</th>
                     </tr>
                 </thead>
             

@@ -6,6 +6,7 @@ use App\Models\Farmacia;
 use App\Models\Producto;
 use App\Models\Proveedor;
 use Illuminate\Http\Request;
+use App\Models\HistorialTraspaso;
 use Illuminate\Support\Facades\DB;
 
 class ProductoController extends Controller
@@ -151,6 +152,7 @@ class ProductoController extends Controller
             
             $similar =Producto::where('farmacia_id',$request->Traslado_Farmacias)
             ->where('Codigo',$Producto->Codigo)
+            ->where('TipoVenta','CAJA')
             ->where('Caducidad',$Producto->Caducidad)->first();
 
             if ($similar != null) {
@@ -168,11 +170,20 @@ class ProductoController extends Controller
                 $traslado->TipoVenta = "CAJA";
                 $traslado->Caducidad = $Producto->Caducidad;
                 $traslado->Costo = $Producto->Costo;
-                $traslado->farmacia()->associate( $request->Traslado_Farmacias);
+                $traslado->farmacia()->associate($request->Traslado_Farmacias);
                 $traslado->Ultima_asignacion = $Hoy;
                 $traslado->save();
 
             }
+
+            $historial = new HistorialTraspaso();
+            $historial->Codigo = $Producto->Codigo;
+            $historial->Produco = $Producto->Prodco;
+            $historial->Cajas = $request->N_cajas;
+            $historial->farmacia_origen = $Producto->farmacia_id;
+            $historial->farmacia_destino = $request->Traslado_Farmacias;
+            $historial->Fecha_traspaso = $Hoy;
+
             DB::commit();
             return true;
         } catch (Exception $e) {
