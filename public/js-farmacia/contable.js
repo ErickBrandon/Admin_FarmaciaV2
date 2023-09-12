@@ -393,7 +393,7 @@ function Consultar_HV() {
 
 function detalle_venta(id) {
     $.ajax({
-        url:'HistorialVD/',
+        url:'/HistorialVD',
         type: "POST",
         headers:GlobalToken,
         data: {'Venta':id},
