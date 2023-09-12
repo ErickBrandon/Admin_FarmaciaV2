@@ -36,6 +36,20 @@
             </div>
         </div>
     </div>
+    <div class="col-md-6 col-xl-4">
+        <div class="card table-card">
+            <div class="row-table">
+                <div class="col-auto bg-primary text-white">
+                    <i class="fas fa-history f-30"></i>
+                </div>
+                <div class="col text-center">
+                    <span class="text-uppercase d-block m-b-10">Historial de traspaso</span>
+                    <button type="button" id="btn_modalHT" class="btn btn-info" value="1">Recibidos</button>
+                    <button type="button" id="btn_modalHT2" class="btn btn-primary" value="2">Enviados</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
     
 <div class="cont_almacen">
@@ -62,135 +76,10 @@
         </div>
     </div>
 </div>
-<div id="modal_traslado" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalPopoversLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="tituloModal">Traslado de productos</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" ><span aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-12">
-                        <p><b>Código:</b> <span id="txt_codigo"></span></p>
-                    </div>
-                    <div class="col-12">
-                        <p><b>Producto:</b> <span id="txt_producto"></span>
-                        </div></p>
-                    <div class="col-12">
-                        <p><b>Existencias:</b> <span id="txt_existencias"></span></p>
-                    </div>
-                </div>
-                <form id='form_traslados'>
-                    <div class="row">
-                        <div class="input-group input-group-md mb-3 col-12">
-                            <label class="col-12">Farmacia de destino del traslado</label>
-                            <div class="input-group-prepend">
-                                <label class="input-group-text" for="Proveedor"><i class="fas fa-hospital text-info"></i>&nbsp;Farmacias</label>
-                            </div>
-                            <select class="custom-select" id="Traslado_Farmacias" name="Traslado_Farmacias" requried>
-                                <option value="">- Selecciona una farmacia -</option>
-                                @foreach ($Farmacias as $f)
-                                    <option value="{{$f->id}}">{{$f->Farmacia}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="input-group input-group-md mb-3 col-12">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text "><span class="fas fa-box text-primary"></span>&nbsp;Cajas</span>
-                            </div>
-                            <input id="N_cajas" type="number" class="form-control" placeholder="Número de cajas" name="N_cajas" requried min=1 max="">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary col-12" form='from_body' id="btn_formTraslado">Traspasar producto</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div id="modal_CambioTipoVenta" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="tituloModal">Asignacion de tipo de venta PIEZA</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" ><span aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div  class="col-12">
-                        <div class="alert alert-primary" role="alert">
-                            Producto seleccionado: <br>
-                            <b id='NombreProducto_pz'></b>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <tbody id='tbl_infoProducto'>
-                                    <tr>
-                                        <td>Codigo</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Precio venta X Caja</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Existencias</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tipo de venta</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Piezas x Caja</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Costo de compra</td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    
-                </div><br>
-                <div class="row">
-                    <form id='form_asignacionVentaPiezas' class="col-12">
-                        <div class="col-12">
-                            <div class="input-group input-group-md mb-3 col-12">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><span class="fas fa-boxes text-primary"></span>&nbsp;Piezas X caja</span>
-                                </div>
-                                <input id="pzXcaja" type="number" class="form-control" name="pzXcaja" requried="" min ="1">
-                            </div>
-                            <div class="input-group input-group-md mb-3 col-12">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><span class="fas fa-boxes text-primary"></span>&nbsp;Cajas</span>
-                                </div>
-                                <input id="cajas_piezas" type="number" class="form-control" name="cajas_piezas" requried="" min ="1" max>
-                            </div>
-                            
-                            <div class="input-group input-group-md mb-3 col-12">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><span class="fas fa-dollar-sign text-success"></span>&nbsp;Precio venta</span>
-                                </div>
-                                <input id="precio_ventaPiezas" type="number" class="form-control" name="precio_ventaPiezas" requried=""  min step='0.01'>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary col-12" form='from_body' id="asignacion_ventaPiezas">Asignar a tipo de venta</button>
-            </div>
-        </div>
-    </div>
-</div>
+
+@include('PuntoVenta.Almacen.modals.cambioTipoVenta')
+@include('PuntoVenta.Almacen.modals.traslado')
+@include('PuntoVenta.Almacen.modals.historialTraslado')
 
 @include('PuntoVenta.partials.modal_scanner')
 @endsection

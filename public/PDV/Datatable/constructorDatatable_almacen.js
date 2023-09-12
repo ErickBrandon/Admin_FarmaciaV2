@@ -1,3 +1,25 @@
+const lenguaje ={
+    "decimal": "",
+    "emptyTable": "No hay información",
+    "info": "_END_ de _TOTAL_ Productos",
+    "infoEmpty": "No existe el producto",
+    "infoFiltered": "",
+    "infoPostFix": "",
+    "thousands": ",",
+    "lengthMenu": "Mostrar _MENU_ Entradas",
+    "loadingRecords": "Cargando...",
+    "processing": "Procesando...",
+    "search": "<span class='feather icon-search'></span>",
+    "zeroRecords": "No hay concidencias",
+    "paginate": {
+    "first": "Primero",
+    "last": "Ultimo",
+    "next": "<span class='feather icon-chevron-right'>",
+    "previous": "<span class='feather icon-chevron-left'>",
+    "searchPlaceholder": "Search records"
+    
+    }
+}
 $(document).ready(function() {
     $.ajaxSetup({
         headers: {
@@ -5,28 +27,7 @@ $(document).ready(function() {
         }
     });
     $('#tbl_almacen').DataTable({
-        language: {
-            "decimal": "",
-            "emptyTable": "No hay información",
-            "info": "_END_ de _TOTAL_ Productos",
-            "infoEmpty": "No existe el producto",
-            "infoFiltered": "",
-            "infoPostFix": "",
-            "thousands": ",",
-            "lengthMenu": "Mostrar _MENU_ Entradas",
-            "loadingRecords": "Cargando...",
-            "processing": "Procesando...",
-            "search": "<span class='feather icon-search'></span>",
-            "zeroRecords": "No hay concidencias",
-            "paginate": {
-            "first": "Primero",
-            "last": "Ultimo",
-            "next": "<span class='feather icon-chevron-right'>",
-            "previous": "<span class='feather icon-chevron-left'>",
-            "searchPlaceholder": "Search records"
-            
-            }
-        },
+        language:lenguaje ,
         lengthMenu: [30],
         bLengthChange : false,
         'ajax':{
@@ -129,4 +130,40 @@ function btnRegreso(cells,data) {
     btn.className = 'btn btn-info btn-icon fas fa-cloud-upload-alt'
     cells.appendChild(btn);
     cells.innerHTML = "<button class='btn btn-info btn-icon fas fa-cloud-upload-alt'></button>"
+}
+
+function Tbl_historialTraspaso(data){
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $('#Tbl_historialTraspaso').DataTable({
+        language:lenguaje ,
+        lengthMenu: [15],
+        bLengthChange : false,
+        'ajax':{
+            'url':'Tbl_historialTraspaso',
+            'type': 'POST',
+            'data':data
+        },
+        'columns':[
+            {data:'Farmacia'},
+            {data:'Codigo'},
+            {data:'Producto'},
+            {data:'Cajas'},
+            {data:'Fecha_traspaso'}
+        ],
+        'columnDefs':[
+    
+           /*  {"orderable":false, "targets":0},
+            {"orderable":false, "targets":3},
+            {"orderable":false, "targets":5},
+            {"orderable":false, "targets":8}, */
+           // {"orderable":false, "targets":10, "visible":false,"searchable":false},
+           /*  {"orderable":false, "targets":10},
+ */
+        ]
+    },
+   );
 }

@@ -91,6 +91,7 @@ Route::POST('PuntoDeVenta/{Farmacia}/ProductoEnAlmacen/',[ProductoController::cl
 Route::POST('Traspaso/{Producto}',[ProductoController::class,'Traspaso'])->name('Traspaso');
 Route::GET('PuntoDeVenta/{Farmacia}/Almacen',[ProductoController::class,'almacen'])->name('Almacen');
 Route::POST('AsignacionVentaPiezas',[ProductoController::class,'AsignacionVentaPiezas'])->name('AsignacionVentaPiezas');
+Route::POST('PuntoDeVenta/{Farmacia}/Tbl_historialTraspaso',[ProductoController::class,'Tbl_historialTraspaso'])->name('Tbl_historialTraspaso');
 
     /* Control de entradas de personal*/
     Route::GET('CtrlEntradas',[EntradaController::class,'index'])->name('CtrlEntradas');

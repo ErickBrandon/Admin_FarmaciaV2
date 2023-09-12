@@ -253,4 +253,27 @@ class ProductoController extends Controller
         }
         
     }
+
+    function Tbl_historialTraspaso(Request $request, $Farmacia){
+        $request->Busqueda = (int)$request->Busqueda;
+       
+      
+        if ($request->Busqueda == 1) {
+            $data = DB::table('historial_traspaso')->leftJoin('farmacias','farmacias.id','=','historial_traspaso.farmacia_origen')
+            ->where('historial_traspaso.farmacia_destino',$Farmacia)
+            ->select('Producto','Cajas','Codigo','Fecha_traspaso','Farmacia')
+            ->get();
+
+            return dataTables()->of($data)->toJson();
+        }
+        if ($request->Busqueda == 2) {
+            $data = DB::table('historial_traspaso')->leftJoin('farmacias','farmacias.id','=','historial_traspaso.farmacia_destino')
+            ->where('historial_traspaso.farmacia_origen',$Farmacia)
+            ->select('Producto','Cajas','Codigo','Fecha_traspaso','Farmacia')
+            ->get();
+
+            return dataTables()->of($data)->toJson();
+        }
+
+    }
 }
