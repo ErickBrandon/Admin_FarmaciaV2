@@ -409,7 +409,7 @@ function mostrar_impresoras(){
 
 
 async function imprimir(){
-    let nombreImpresora = "EC-PM-5890X";
+    let nombreImpresora = "EC-PM-5890X (Copiar 1)";
     let api_key = "12345"
     
    
