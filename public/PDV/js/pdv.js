@@ -410,7 +410,7 @@ function mostrar_impresoras(){
 
 async function imprimir(){
     let nombreImpresora = "EC-PM-5890X";
-    let api_key = "12345"
+    let api_key = 123456;
     
    
     const conector = new connetor_plugin()
