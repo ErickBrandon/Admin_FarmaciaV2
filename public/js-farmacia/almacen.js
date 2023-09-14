@@ -77,7 +77,6 @@ $("#btn_formTraslado").on("click",function(){
             headers:GlobalToken,
             data: data,
             success:  function(data){ 
-                console.log(data);      
                 if (data) {
                     swal("El traspaso del producto se realizó con éxito",{icon:"success",});
                     $('#modal_traslado').modal('hide');
@@ -231,7 +230,7 @@ function reincio_asignacionPZ() {
 }
 
 $('#btn_modalHT').on('click', function(e){
-    console.log(111);
+   
     $('#modal_historialTraslado').modal('show');
     document.getElementById('tipoTespaso').innerText= "Historial de productos recibidos";
     document.getElementById('th_farmaciaTraspaso').innerText= "Farmacia origen";
@@ -243,7 +242,7 @@ $('#btn_modalHT').on('click', function(e){
 })
 
 $('#btn_modalHT2').on('click', function(e){
-    console.log(111);
+    
     $('#modal_historialTraslado').modal('show');
     document.getElementById('tipoTespaso').innerText= "Historial de productos enviados";
     document.getElementById('th_farmaciaTraspaso').innerText= "Farmacia destino";

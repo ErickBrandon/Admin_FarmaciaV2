@@ -19,7 +19,6 @@ var Fecha_Hoy =function(){
 
     Fecha = hoy.getDate()+"/"+(hoy.getMonth()+1)+"/"+hoy.getFullYear()+"  "+hora+":"+minutos+sufijo;
     document.getElementById('Fecha_hoy').innerText = Fecha;
-    console.log("se ejecutó");
 }
 
 // --------- Variables Globales
@@ -38,7 +37,6 @@ function Corte_General() {
         headers:GlobalToken,
         data: true,
         success:  function(data){       
-           console.log(data);
            document.getElementById('No_PV').innerText =data.Farmacias+" P.V.";
            document.getElementById('Corte_General').innerText ="$"+parseFloat(data.Total).toFixed(2);
            document.getElementById('Inversion_general').innerText ="$"+parseFloat(data.Inversion).toFixed(2);
@@ -72,7 +70,7 @@ function Cortes_Individuales() {
 function search_CG() {
     document.getElementById('borrar_HCG').innerHTML= null
     let op = document.getElementById("switch-1").checked
-    console.log(op);
+    
     if (op == true) {
         document.getElementById('cont_personalizada_CG').innerHTML ="<div class='input-group input-group-md mb-3'>"+
         "<div class='input-group-prepend'>"+
@@ -98,7 +96,7 @@ function ConsutlarHistorialCG() {
         $('#tbl_HCG').DataTable().destroy();  
        
     let op = document.getElementById("switch-1").checked;
-    console.log(op);
+   
     let tipo_busqueda;
     if (op == false) {
         tipo_busqueda={'op':1}
@@ -285,9 +283,7 @@ function Eliminar_CF() {
     let nombre =farmacia.options[farmacia.selectedIndex].text;
     
     let consulta = document.getElementById('tipo_registro_CF').value;
-    console.log(farmacia);
-    console.log(farmacia.value);
-    console.log(document.getElementById('Farmacias_CF').value);
+   
     let mensaje;
     let datos;
     if (consulta == 0) {

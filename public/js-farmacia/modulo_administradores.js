@@ -35,11 +35,11 @@ $('#btn_guardarUsuario').on('click', function() {
     let url;
     let text
     if (_usuarioEnJuego.length ==0) {
-        console.log("entró");
+    
         url = 'Guardarusuario';
         text="Se ha registrado el nuevo usuario"
     }else{
-        console.log(2);
+  
         url = 'ActualizarUsuario/'+_usuarioEnJuego.id;
         text = 'Se ha actualizado la información del usuario'
     }
@@ -57,7 +57,7 @@ $('#btn_guardarUsuario').on('click', function() {
         if (document.getElementById('Rol').value == "Administrador") {
             email = email+"_admin@farmaplus"
             data.Email =email;
-            data.Password = document.getElementById('PasswordA').value;
+            data.password = document.getElementById('password').value;
         }else{
             data.Email= email+"@farmaplus";
         }
@@ -139,12 +139,12 @@ $('#Rol').on('change', function(e) {
     <div class='input-group-prepend'>
         <span class='input-group-text'><span class="fas fa-unlock text-info"></span></span>
     </div>
-    <input id='PasswordA' type='password' class='form-control' placeholder='Contraseña' name='PasswordA' requried>
+    <input id='password' type='password' class='form-control' placeholder='Contraseña' name='password' requried>
 </div>
 <div class='input-group input-group-md mb-3'>
     <div class='input-group-prepend'>
         <span class='input-group-text'><span class="fas fa-unlock-alt text-info"></span></span>
     </div>
-    <input id='PasswordA_confirmacion' type='password' class='form-control' placeholder='Confirmar contraseña' name='PasswordA_confirmacion' requried>
+    <input id='password_confirm' type='password' class='form-control' placeholder='Confirmar contraseña' name='password_confirm' requried>
 </div>`;
  }

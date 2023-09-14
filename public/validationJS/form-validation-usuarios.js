@@ -10,12 +10,12 @@ $('#form_usuarios_nuevos').validate({
         'Rol': {
             required: true,
         },
-        'PasswordA': {
+        'password': {
             required: true,
         },
-        'PasswordA_confirmacion': {
+        'password_confirm': {
             required: true,
-            equalTo: 'input[name="PasswordA"]'
+            equalTo: 'input[name="password"]'
         },
     },
 

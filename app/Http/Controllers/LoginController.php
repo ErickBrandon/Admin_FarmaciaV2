@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\Models\Entrada;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -14,6 +16,7 @@ class LoginController extends Controller
     {
         try {
             $credenciales = $request ->only('email','password');
+            
             if (Auth::attempt($credenciales)) {
                 request()->session()->regenerate();
                 if (auth()->user()->rol == 'Administrador' ) {
@@ -47,6 +50,7 @@ class LoginController extends Controller
 
             $now = Carbon::now()->subHour();
             $hora = (int)$now->format('H');
+            $horaEntrada = $now->format('H:i:s');
             if ($hora>= 8 && $hora <= 24) {
                 $credenciales = $request ->only('email','password');
                 if (Auth::attempt($credenciales)) {
@@ -54,6 +58,7 @@ class LoginController extends Controller
                     if (auth()->user()->rol == 'Vendedor') {
                         if (auth()->user()->farmacia != null) {
                             $Faracia = auth()->user()->farmacia->id;
+                            $this->HoraEntrada($Faracia,$horaEntrada);
                             return [
                                 "success"=>true,
                                 "redirect"=>'/PuntoDeVenta/'.$Faracia
@@ -80,54 +85,6 @@ class LoginController extends Controller
             ];
         }
 
-/* 
-        $now = Carbon::now()->subHour();
-        $hora = (int)$now->format('H');
-
-        if ($hora>= 8 && $hora <= 21) {
-
-            
-            if (Auth::attempt($credenciales)) {
-
-                if (auth()->user()->rol == 'Vendedor') {
-
-                    if (auth()->user()->farmacia != null) {
-                        request()->session()->regenerate();
-                        $Faracia = auth()->user()->farmacia->id;
-                        return '/PuntoDeVenta/'.$Faracia;
-                    }
-                    Auth::logout();
-                    $request->session()->invalidate();
-                    $request->session()->regenerateToken();
-                    return [
-                        'status'=>false,
-                        'menssage'=>"Error: Tu usuario aun no esta asignado a una farmacia, favor de contactarte con el Administrador"
-                    ];
-                   
-                }
-
-                Auth::logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
-                return [
-                    'status'=>false,
-                    'menssage'=>"Error: Tu rol no es Vendedor"
-                ];
-            }
-            Auth::logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-
-            return [
-                'status'=>false,
-                'menssage'=>"El usuario o contraseña son incorecctos"
-            ];
-        }
-
-        return [
-            'status'=>false,
-            'menssage'=>"Lo sentimos, no se puede iniciar sesión fuera del horario laboral"
-        ]; */
     }
 
     public function logout(Request $request){
@@ -135,5 +92,19 @@ class LoginController extends Controller
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
         return "/Inicio";
+    }
+
+    public function HoraEntrada($farmacia_id,$hora){
+        $Hoy=date('Y/m/d');
+        $historial = DB::table('entradas')->where('farmacia_id',$farmacia_id)->where('Fecha_entrada',$Hoy)->first();
+       
+        if ($historial == null) {
+          $entrada = new Entrada();
+          $entrada->Fecha_entrada = $Hoy;
+          $entrada->farmacia_id = $farmacia_id;
+          $entrada->Hora_entrada = $hora;
+         $entrada->save();
+        }
+       
     }
 }

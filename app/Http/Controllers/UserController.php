@@ -28,8 +28,10 @@ class UserController extends Controller
             $user->name = $request->Nombre;
             $user->rol = $request->Rol;
             $user->email = $request->Email;
+           
             if ($user->rol == "Administrador") {
-                $user->password = Hash::make($request->PasswordA);
+                $user->password = Hash::make($request->password);
+                //dd( $user->password);
             }
             $user->save();
 
@@ -39,7 +41,8 @@ class UserController extends Controller
                 $user->rol = $request->Rol;
                 if ($user->rol == "Administrador") {
 
-                    $user->password = $request->PasswordA;
+                    $user->password = Hash::make($request->password);
+                    
                 }
                 $user->save();
             }
@@ -51,6 +54,7 @@ class UserController extends Controller
            return $e;
         }
     }
+
     public function ActualizarUsuario(User $usuario, Request $request){
         //dd($request);
         $existe  = User::where('email',$request->email)
@@ -77,7 +81,7 @@ class UserController extends Controller
 
             if ($usuario->rol == "Administrador") {
                
-                $usuario->password =  Hash::make($request->PasswordA);
+                $usuario->password =  Hash::make($request->password);
                 if ($usuario->farmacia != null) {
                     $usuario->farmacia->user_id = null;
                     $usuario->farmacia->save();
