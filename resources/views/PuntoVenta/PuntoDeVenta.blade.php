@@ -174,6 +174,7 @@
 @section('foot_extras')
 <script src="{{asset('PDV/Datatable/constructorDatatable.js')}}?v={{now()->day}}"></script>
 <script src="{{asset('assets/plugins/notification/js/bootstrap-growl.min.js')}}"></script>
+<script src="{{asset('Impresoras/plugin_impresora_termica.js')}}"></script>
 <script src="{{asset('Scanner/quagga.min.js')}}?v={{now()->day}}"></script>
 <script src="{{asset('PDV/js/pdv.js')}}?v={{now()->day}}"></script>
 <script>

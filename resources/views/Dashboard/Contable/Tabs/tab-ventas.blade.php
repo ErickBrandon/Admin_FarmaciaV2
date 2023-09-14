@@ -35,7 +35,9 @@
     <div id="borrar_HCG" class="col-12">
         <br><br>
     </div>
-    
+    <div id="corteAtrasado" class="col-12">
+
+    </div>
 </div>
 <div class="row">
     <span id='Descripcion_tblCG' class="d-block m-t-5"></span>
