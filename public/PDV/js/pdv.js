@@ -242,6 +242,11 @@ $("#btnCobrar").on("click", function () {
    console.log(ContCarrito);
    console.log(TotalCarrito);
    console.log(farmacia);
+   let info = {
+    'carrito':ContCarrito,
+    'TotalVenta':TotalCarrito,
+    'Farmacia':farmacia
+}
     $.ajax({
         url:"/RegistrarVenta",
         type: "POST",
@@ -255,8 +260,7 @@ $("#btnCobrar").on("click", function () {
             console.log(data);
             if (data == 1) {
                 VentaExitosa();
-                mostrar_impresoras();
-                imprimir();
+                imprSelec(info)
             }else{
                 $('#tbl_Productos').DataTable().ajax.reload();
                 let mensaje =data.length+" de los productos que se encuentran en el carrito "+
@@ -398,8 +402,33 @@ function CloseScanner() {
     Quagga.offDetected();
     $('#modal_Scanner').modal('hide');
 }
+function imprSelec(data) {
+   
+    console.log(data);
+    console.log(data.TotalVenta);
+    console.log(data['TotalVenta']);
 
+    let cont_ticket = data.carrito;
+    
+    cont_ticket.forEach((p,i) =>{
+        let tbl = document.getElementById('cont_ticket').insertRow(i);
+        tbl.insertCell(0).innerText = p.Producto;
+        tbl.insertCell(1).innerText = " | Pz:"+p.UnidadesVenta;
+        tbl.insertCell(2).innerText = " | sub:"+p.SubTotal;
+    })
 
+    //$("#modal_ticket").modal('show');
+
+    var ficha = document.getElementById('modal_ticket');
+    var ventimp = window.open(' ', 'popimpr');
+    ventimp.document.write( ficha.innerHTML );
+    ventimp.document.close();
+    ventimp.print( );
+    ventimp.close();
+  }
+
+  document.getElementById('total_ticket').innerText="TOTAL:         $"//+parseFloat(data.TotalVenta)
+/* 
 function mostrar_impresoras(){
     connetor_plugin.obtenerImpresoras()
                 .then(impresoras => {                    
@@ -442,4 +471,4 @@ async function imprimir(){
                  console.log("Problema al imprimir: "+resp)                    
             
             }
-}
+} */

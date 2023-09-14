@@ -169,6 +169,18 @@
         </div>
     </div>
 </div>
+
+<div id="modal_ticket" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div>FARMAPLUS | TICKET DE COMPRA</div><hr><br><br>
+            <table id='cont_ticket'>
+                
+            </table><br><br><hr>
+            <div id="total_ticket"></div>
+        </div>
+    </div>
+</div>
 @include('PuntoVenta.partials.modal_scanner')
 @endsection
 @section('foot_extras')
