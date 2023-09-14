@@ -256,7 +256,7 @@ $("#btnCobrar").on("click", function () {
             if (data == 1) {
                 VentaExitosa();
                 mostrar_impresoras();
-                //imprimir();
+                imprimir();
             }else{
                 $('#tbl_Productos').DataTable().ajax.reload();
                 let mensaje =data.length+" de los productos que se encuentran en el carrito "+
