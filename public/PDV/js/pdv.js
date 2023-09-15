@@ -418,7 +418,7 @@ function imprSelec(data) {
         let tbl = document.getElementById('cont_ticket').insertRow(i+1);
         let cell = tbl.insertCell(0);
         cell.innerText = p.Producto;
-        cell.style.width = "40px";
+        cell.style.width = "10px";
         cell.style.textOverflow = "ellipsis";
         tbl.insertCell(1).innerText = " | "+p.UnidadesVenta;
         tbl.insertCell(2).innerText = " | $"+parseFloat(p.SubTotal).toFixed(2);
