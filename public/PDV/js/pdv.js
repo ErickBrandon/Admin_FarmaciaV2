@@ -403,31 +403,37 @@ function CloseScanner() {
     $('#modal_Scanner').modal('hide');
 }
 function imprSelec(data) {
+   console.log(data.TotalVenta);
    
-    console.log(data);
-    console.log(data.TotalVenta);
-    console.log(data['TotalVenta']);
 
     let cont_ticket = data.carrito;
-    
+   
+    let tbl_header = document.getElementById('cont_ticket').insertRow(0);
+    tbl_header.insertCell(0).innerText ="PRODUCTO ";
+    tbl_header.insertCell(1).innerText = " | PZ";
+    tbl_header.insertCell(2).innerText = " | SUB";
     cont_ticket.forEach((p,i) =>{
-        let tbl = document.getElementById('cont_ticket').insertRow(i);
+        let tbl = document.getElementById('cont_ticket').insertRow(i+1);
         tbl.insertCell(0).innerText = p.Producto;
-        tbl.insertCell(1).innerText = " | Pz:"+p.UnidadesVenta;
-        tbl.insertCell(2).innerText = " | sub:"+p.SubTotal;
+        tbl.insertCell(1).innerText = " | "+p.UnidadesVenta;
+        tbl.insertCell(2).innerText = " | $"+parseFloat(p.SubTotal).toFixed(2);
     })
 
-    //$("#modal_ticket").modal('show');
-
+ 
+    let total= parseFloat(data.TotalVenta).toFixed(2)
+    document.getElementById('total_ticket').innerText="TOTAL:         $"+total;
+    
     var ficha = document.getElementById('modal_ticket');
     var ventimp = window.open(' ', 'popimpr');
     ventimp.document.write( ficha.innerHTML );
     ventimp.document.close();
     ventimp.print( );
     ventimp.close();
-  }
-
-  document.getElementById('total_ticket').innerText="TOTAL:         $"//+parseFloat(data.TotalVenta)
+    
+    
+  
+}
+  
 /* 
 function mostrar_impresoras(){
     connetor_plugin.obtenerImpresoras()
