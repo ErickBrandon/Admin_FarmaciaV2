@@ -259,8 +259,9 @@ $("#btnCobrar").on("click", function () {
         success:  function(data){
             console.log(data);
             if (data == 1) {
+                imprSelec(info);
                 VentaExitosa();
-                imprSelec(info)
+                
             }else{
                 $('#tbl_Productos').DataTable().ajax.reload();
                 let mensaje =data.length+" de los productos que se encuentran en el carrito "+
@@ -290,6 +291,7 @@ function VentaExitosa(){
     document.getElementById('PagoModal').value="";
     document.getElementById('txt_cambio').innerText="";
     document.getElementById('btnCobrar').disabled=true;
+    document.getElementById('cont_ticket').innerHTML=null
 }
 function IngresarAlCarrito(codigo) {
  
@@ -422,7 +424,7 @@ function imprSelec(data) {
  
     let total= parseFloat(data.TotalVenta).toFixed(2)
     document.getElementById('total_ticket').innerText="TOTAL:         $"+total;
-    
+
     var ficha = document.getElementById('modal_ticket');
     var ventimp = window.open(' ', 'popimpr');
     ventimp.document.write( ficha.innerHTML );
