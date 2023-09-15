@@ -416,7 +416,10 @@ function imprSelec(data) {
     tbl_header.insertCell(2).innerText = " | SUB";
     cont_ticket.forEach((p,i) =>{
         let tbl = document.getElementById('cont_ticket').insertRow(i+1);
-        tbl.insertCell(0).innerText = p.Producto;
+        let cell = tbl.insertCell(0);
+        cell.innerText = p.Producto;
+        cell.style.width = "40px";
+        cell.style.textOverflow = "ellipsis";
         tbl.insertCell(1).innerText = " | "+p.UnidadesVenta;
         tbl.insertCell(2).innerText = " | $"+parseFloat(p.SubTotal).toFixed(2);
     })
