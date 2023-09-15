@@ -410,23 +410,22 @@ function imprSelec(data) {
 
     let cont_ticket = data.carrito;
    
-    let tbl_header = document.getElementById('cont_ticket').insertRow(0);
-    tbl_header.insertCell(0).innerText ="PRODUCTO ";
-    tbl_header.insertCell(1).innerText = " | PZ";
-    tbl_header.insertCell(2).innerText = " | SUB";
+    console.log(cont_ticket);
     cont_ticket.forEach((p,i) =>{
-        let tbl = document.getElementById('cont_ticket').insertRow(i+1);
-        let cell = tbl.insertCell(0);
-        cell.innerText = p.Producto;
-        cell.style.width = "10px";
-        cell.style.textOverflow = "ellipsis";
-        tbl.insertCell(1).innerText = " | "+p.UnidadesVenta;
+        let tbl = document.getElementById('cont_ticket').insertRow(i);
+        let texto;
+        
+      
+        tbl.insertCell(0).innerText = p.Producto+"\n"+p.UnidadesVenta+"Pz ............"+parseFloat(p.Precio).toFixed(2)+"..........."+ parseFloat(p.SubTotal).toFixed(2);
+       /*  tbl.insertCell(1).innerText = " | "+p.UnidadesVenta;
         tbl.insertCell(2).innerText = " | $"+parseFloat(p.SubTotal).toFixed(2);
+        tbl.insertCell(3).innerText = "------";
+        document.getElementById('cont_ticket').insertRow(i+2); */
     })
 
  
     let total= parseFloat(data.TotalVenta).toFixed(2)
-    document.getElementById('total_ticket').innerText="TOTAL:         $"+total;
+    document.getElementById('precio_total').innerText="TOTAL:         $"+total;
 
     var ficha = document.getElementById('modal_ticket');
     var ventimp = window.open(' ', 'popimpr');
