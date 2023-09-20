@@ -53,7 +53,7 @@ class LoginController extends Controller
             $hora = (int)$now->format('H');
            
             $horaEntrada = $now->format('H:i:s');
-            if ($hora>= 8 && $hora <= 24) {
+            if ($hora>= 8 && $hora <= 21) {
                 $credenciales = $request ->only('email','password');
                 if (Auth::attempt($credenciales)) {
                     request()->session()->regenerate();
