@@ -237,13 +237,14 @@ function PagoVentanilla(){
     
 }
 $("#btnCobrar").on("click", function () {
+    loadingShow("btnCobrar");
     let farmacia = +document.getElementById("PntVenta").getAttribute('farmID');
  
    let info = {
     'carrito':ContCarrito,
     'TotalVenta':TotalCarrito,
     'Farmacia':farmacia
-}
+    }
     $.ajax({
         url:"/RegistrarVenta",
         type: "POST",
@@ -256,10 +257,12 @@ $("#btnCobrar").on("click", function () {
         success:  function(data){
            
             if (data == 1) {
+                loadingHide("btnCobrar")
                 imprSelec(info);
                 VentaExitosa();
                 
             }else{
+                loadingHide("btnCobrar")
                 $('#tbl_Productos').DataTable().ajax.reload();
                 let mensaje =data.length+" de los productos que se encuentran en el carrito "+
                 "se encuentran agotados o no se cuenta con las unidades suficientes."+
@@ -273,7 +276,7 @@ $("#btnCobrar").on("click", function () {
             }
         },
         error: function(jqXHR, textStatus, errorThrown){
-          
+            loadingHide("btnCobrar")
         }
      });
 });
