@@ -49,9 +49,11 @@ class LoginController extends Controller
         try {
 
             $now = Carbon::now()->subHour();
+            $now->modify('+1 hour');
             $hora = (int)$now->format('H');
-            dd($hora);
+           
             $horaEntrada = $now->format('H:i:s');
+            dd($horaEntrada);
             if ($hora>= 8 && $hora <= 24) {
                 $credenciales = $request ->only('email','password');
                 if (Auth::attempt($credenciales)) {
