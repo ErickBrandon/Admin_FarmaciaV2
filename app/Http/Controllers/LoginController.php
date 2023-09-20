@@ -53,7 +53,6 @@ class LoginController extends Controller
             $hora = (int)$now->format('H');
            
             $horaEntrada = $now->format('H:i:s');
-            dd($horaEntrada);
             if ($hora>= 8 && $hora <= 24) {
                 $credenciales = $request ->only('email','password');
                 if (Auth::attempt($credenciales)) {
