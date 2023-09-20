@@ -173,18 +173,19 @@
 <div id="modal_ticket" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-
-            <div style="text-align: center">FARMAPLUS</div><br>
+            <br>
+            <div style="text-align: center; font-size: 25px">FARMAPLUS</div><br><br><br>
             <div style="text-align: center">AV. VALERIO TRUJANO NO.9</div><br>
             <div style="text-align: center">TEPANCO DE LOPEZ, PUEBLA</div><br>
-            <div style="text-align: center">14 DE SEPTIEMBRE 2023</div><br><hr><br><br>
+            <div id='fecha_de_compra' style="text-align: center">14 DE SEPTIEMBRE 2023</div><br><hr><br><br>
             <div style="text-align: left">PRODUCTOS VENDIDOS</div><hr><br><br>
             <table id='cont_ticket'>
                 
             </table><br><hr><br>
             <div id="total_ticket" style="text-align: right; font-size: 25px">
                 <div id="precio_total"></div>
-            </div>
+            </div><br><br>
+            <div style="text-align: center; font-size: 25px">¡GRACIAS!</div><br><br>
         </div>
     </div>
 </div>
