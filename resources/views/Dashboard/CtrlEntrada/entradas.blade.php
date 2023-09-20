@@ -5,11 +5,6 @@
 @endsection
 @section('body-content')
     <div class="row">
-        <div class="alert alert-primary col-12">
-            <p>Para eliminar el historial de entrada de los vendedores, solo se eliminarán todos los registros excepto los de la semana laboral actual considerada de Lunes - Domingo. </p>
-        </div>
-    </div>
-    <div class="row">
         <div class="col-sm-12 col-md-4">
             <div class="card rides-bar">
                 <div class="card-block">
@@ -35,9 +30,8 @@
                 <thead>
                     <tr>
                         <th>Farmacia</th>
-                        <th>Día</th>
-                        <th>Hora de entrada</th>
                         <th>Fecha</th>
+                        <th>Hora de entrada</th>
                     </tr>
                 </thead>
             </table>
@@ -48,6 +42,7 @@
 @section('extras_footer')
 <script src="{{asset('assets/plugins/data-tables/js/datatables.min.js')}}"></script>
 <script src="{{asset('PDV/Datatable/constructorDatatable_entradas.js')}}"></script>
+<script src="{{asset('js-farmacia/entradas.js')}}?v={{now()->day}}"></script>
 {{-- 
 <script src="assets/plugins/jquery-validation/js/jquery.validate.min.js"></script>
 <script src="validationJS/form-validation-farmacia.js"></script>

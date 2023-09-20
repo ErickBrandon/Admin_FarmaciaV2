@@ -43,7 +43,6 @@ $(document).ready(function() {
         'columns':[
             {data:'Farmacia'},
             {data:'Fecha_entrada'},
-            {data:'Fecha_entrada'},
             {data:'Hora_entrada'},
         ],
     });

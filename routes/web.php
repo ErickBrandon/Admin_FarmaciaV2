@@ -96,6 +96,7 @@ Route::POST('PuntoDeVenta/{Farmacia}/Tbl_historialTraspaso',[ProductoController:
     /* Control de entradas de personal*/
     Route::GET('CtrlEntradas',[EntradaController::class,'index'])->name('CtrlEntradas');
     Route::POST('tbl_entradas',[EntradaController::class,'tbl_entradas'])->name('tbl_entradas');
+    Route::POST('EliminarHistorialEntradas',[EntradaController::class,'EliminarHistorialEntradas'])->name('EliminarHistorialEntradas');
 });
 
 Route::middleware(["General"])->group(function () {
