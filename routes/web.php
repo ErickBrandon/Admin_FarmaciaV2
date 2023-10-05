@@ -71,6 +71,8 @@ Route::POST('HistorialCF',[ContableController::class,'HistorialCF'])->name('Hist
 Route::POST('EliminarCF',[ContableController::class,'EliminarCF'])->name('EliminarCF');
 Route::POST('HistorialV',[ContableController::class,'HistorialV'])->name('HistorialV');
 Route::POST('HistorialVD',[ContableController::class,'HistorialVD'])->name('HistorialVD');
+Route::POST('CorteHistorialFarmacia',[ContableController::class,'CorteHistorialFarmacia'])->name('CorteHistorialFarmacia');
+
 
 Route::GET('Compras',[FacturaController::class,'index'])->name('Compras');
 Route::POST('GuardarFactura',[FacturaController::class,'store'])->name('GuardarFactura');

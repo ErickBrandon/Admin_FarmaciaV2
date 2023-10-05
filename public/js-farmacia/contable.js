@@ -349,14 +349,29 @@ function Eliminar_CF() {
 }
 /* Evento */
 $('#switch-2').on('click', function() {
+    ReinicioTBLVentas()
+
     let Consulta = document.getElementById('switch-2').checked;
     if (Consulta) {
-        document.getElementById('cont_personalizada_CV').innerHTML = "<div class='input-group input-group-md mb-3'>"+
-        "<div class='input-group-prepend'>"+
-            "<span class='input-group-text' id='inputGroup-sizing-sm'><span class='fas fa-calendar-alt icon_r text-warning'></span> Día</span>"+
-        "</div>"+
-        "<input type='date' class='form-control' id='día_CV' name='día_CV'>"+
-    "</div>";
+        let hoy = new Date();
+        hoy.setDate(hoy.getDate() - 1)
+        hoy = hoy.toISOString().split("T")[0];
+   
+        document.getElementById('cont_personalizada_CV').innerHTML = `
+        <div class='input-group input-group-md mb-3'>
+            <div class='input-group-prepend'>
+                <span class='input-group-text' id='inputGroup-sizing-sm'>
+                    <span class='fas fa-calendar-alt icon_r text-warning'></span>
+                    Día
+                </span>
+            </div>
+            <input type='date' class='form-control' id='día_CV' name='día_CV'>
+        </div>`;
+        
+        
+        
+     
+        document.getElementById("día_CV").setAttribute("max", hoy);
     }else{
         document.getElementById('cont_personalizada_CV').innerHTML = null;
     }
@@ -415,3 +430,55 @@ function DesglosarVenta(Productos,Codigo_venta) {
     
     $("#modal_detalles_venta").modal('show');
 }
+$('#Farmacias_ventas, #cont_personalizada_CV').on('change', function () {
+    ReinicioTBLVentas()
+});
+function ReinicioTBLVentas() {
+    document.getElementById('cont_btnCorte').innerHTML = null;
+    if ($.fn.DataTable.isDataTable('#Tbl_HV')) {
+        $('#Tbl_HV').DataTable().clear().draw();
+    }
+}   
+
+$(document).on('click','#btnCorte',function(){
+    loadingShow('btnCorte')
+    let farmacia = $("#Farmacias_ventas option:selected").text();
+    let fecha = $("#día_CV").val();
+    let farmacia_id = document.getElementById('Farmacias_ventas').value;
+    let datos={
+        'Farmacia':farmacia_id,
+        'Fecha': fecha
+    }
+
+    swal({
+        title: farmacia,
+        text: "Desea generar el corte del día "+fecha+" ?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((GoCorte) => {
+        if (GoCorte) {
+            $.ajax({
+                url:"/CorteHistorialFarmacia",
+                type: "POST",
+                headers:GlobalToken,
+                data: datos,
+                success:  function(data){
+                    if (data.success) {
+                        swal(data.message, {
+                            icon: "success",
+                        });
+                    }
+                    loadingHide('btnCorte');
+                    return;
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
+                    loadingHide('btnCorte');
+                }
+             });
+        }
+        loadingHide('btnCorte');
+    });
+});

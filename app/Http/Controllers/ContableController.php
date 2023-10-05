@@ -283,4 +283,66 @@ class ContableController extends Controller
        
        return $detalle;
     }
+
+    public function CorteHistorialFarmacia(Request $request){
+        DB::beginTransaction();
+        try{
+            /* Se empieza haciendo el corte por farmacia*/
+            $corteNuevo = $this->CorteNuevo($request->Fecha, $request->Farmacia);
+
+            $Corte = Corte::where('farmacia_id', $request->Farmacia)
+                    ->where('Fecha',$request->Fecha)->first();
+            if ($Corte == null) {
+                $Corte = new Corte();
+                $Corte->TotalCorte = $corteNuevo['Corte'];
+                $Corte->InversionXcorte = $corteNuevo['Inversion'];
+                $Corte->Fecha = $request->Fecha;
+                $Corte->Farmacia()->associate($request->Farmacia);
+            } else {
+                $Corte->TotalCorte = $corteNuevo['Corte'];
+                $Corte->InversionXcorte = $corteNuevo['Inversion'];
+                $Corte->Fecha = $request->Fecha;
+            }
+            $Corte->save();
+
+            $NuevoGeneral = $this->Generador_CorteGeneral($request->Fecha);
+            $corte_g = CorteGeneral::where('Fecha',$request->Fecha)->first();
+
+            
+            if ($corte_g == null) { 
+            /* Se genera un corte general nuevo*/
+          
+            
+                $corte_g = new CorteGeneral();
+
+                $corte_g->Total =$NuevoGeneral['Total'];
+                $corte_g->Inversion = $NuevoGeneral['Inversion'];
+                $corte_g->Farmacias = $NuevoGeneral['Farmacias'];
+                $corte_g->Fecha = $request->Fecha;                
+            }else{
+            /* Se actualiza el corte gneral*/
+                $corte_g->Total =$NuevoGeneral['Total'];
+                $corte_g->Inversion = $NuevoGeneral['Inversion'];
+                $corte_g->Farmacias = $NuevoGeneral['Farmacias'];
+            }
+
+            
+            $corte_g->save();
+           
+            DB::commit();
+
+            return [
+                'success' => true,
+                'message'=>"Corte individual y corte general, generado existosamente",
+                'Corte'=>$Corte->TotalCorte,
+                'Corte'=>$corte_g->Total
+            ];
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return $th;
+        }
+
+        
+        
+    }
 }

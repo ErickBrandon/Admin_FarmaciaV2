@@ -13,11 +13,11 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
 
-    Public function CorteNuevo($Hoy, $Farmacia)
+    Public function CorteNuevo($fecha, $Farmacia)
     {
         $Ventas = DB::table('venta')
         ->where('farmacia_id',$Farmacia)
-        ->where('Fecha',$Hoy)->get();
+        ->where('Fecha',$fecha)->get();
         
         $TotalDeVentas = 0;
         $Inversion = 0;
@@ -27,7 +27,7 @@ class Controller extends BaseController
         }
         $CorteNuevo =[
             'Corte'=>$TotalDeVentas,
-            'Fecha'=>$Hoy,
+            'Fecha'=>$fecha,
             'Inversion'=>$Inversion
         ];
 

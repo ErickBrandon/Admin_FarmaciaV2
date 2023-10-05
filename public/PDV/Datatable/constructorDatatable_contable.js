@@ -239,7 +239,20 @@ function Tbl_HV(datos) {
         'ajax':{
             'url':'/HistorialV',
            'type': 'POST',
-           'data':datos
+           'data':datos,
+           'dataSrc':function (data) {
+                if (datos.Consulta) {
+                    document.getElementById('cont_btnCorte').innerHTML = `
+                    <div class="alert alert-info" role="alert">
+                        <p>
+                            Con esta funcionalidad cuando generes o actualices un corte  de caja a la farmacia con fecha anterior.<br>
+                            Automáticamente se <b>actualizará el resultado del corte general de la fecha seleccionada</b>, según con la variación del corte de la farmacia seleccionada.
+                        </p>
+                    </div>
+                    <button id ='btnCorte' class="btn btn-info btn-sm col-12">Generar corte de este día</button>`
+                }
+                return data.data;
+            }
         },
         "createdRow": function( row, data) {
             $(row).attr('id', "CHF-"+data['id'] );

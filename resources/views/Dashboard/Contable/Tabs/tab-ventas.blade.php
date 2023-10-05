@@ -30,10 +30,12 @@
         </div>
     </form>
    
-    <button class="btn btn-primary btn-sm col-12" onclick="Consultar_HV()">Consultar</button>
+    <button class="btn btn-primary btn-sm col-12" onclick="Consultar_HV()">Consultar</button><br>
 
     <div id="borrar_HCG" class="col-12">
-        <br><br>
+    </div>
+    <div id="cont_btnCorte" class="col-12">
+        
     </div>
     <div id="corteAtrasado" class="col-12">
 
