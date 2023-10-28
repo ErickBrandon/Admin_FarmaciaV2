@@ -109,7 +109,7 @@
     </div>
 
 @include('Dashboard.Contable.Tabs.tabs')
-    
+@include('Dashboard.Contable.Modals.grafica')
 
 
 
@@ -122,5 +122,7 @@
 
 <script src="{{asset('assets/plugins/jquery-validation/js/jquery.validate.min.js')}}"></script>
 <script src="{{asset('validationJS/form-validation-contable.js')}}?v={{now()->day}}"></script>
+<script src="{{asset('Chart/Chart.min.js')}}"></script>
+
 <script src="{{asset('js-farmacia/contable.js')}}?v={{now()->day}}"></script>
 @endsection

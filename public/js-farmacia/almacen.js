@@ -7,6 +7,7 @@ $("#modal_traslado").on("hidden.bs.modal", function () {
 var _productosAlmacen = [];
 var _TraspasoEnJuego = [];
 var _AsignacionEnJuego={};
+var _ProductoEnJuego=[];
 var _ExistentePZ={};
 // ---------- Notificación -------------//
 function notify(color,mnsj,icono) {
@@ -59,6 +60,7 @@ $("#modal_CambioTipoVenta").on("hidden.bs.modal", function () {
 $("#modal_historialTraslado").on("hidden.bs.modal", function () {
     $('#Tbl_historialTraspaso').DataTable().destroy();    
 });
+
 function traslado(id){
     _TraspasoEnJuego = _productosAlmacen.find(p => p.ID == id);
     document.getElementById('txt_codigo').innerText = _TraspasoEnJuego.Codigo;
@@ -252,3 +254,69 @@ $('#btn_modalHT2').on('click', function(e){
     }
     Tbl_historialTraspaso(data);
 })
+function perdidasProductos(id) {
+    _ProductoEnJuego = _productosAlmacen.find(p => p.ID == id)
+    document.getElementById('lbl_productoBaja').innerText = _ProductoEnJuego.Producto
+    tbl = document.getElementById('tbl_infoProductoPerdida');
+    tbl.rows[0].cells[1].innerText = _ProductoEnJuego.Codigo
+    tbl.rows[1].cells[1].innerText = _ProductoEnJuego.Existencias
+    document.getElementById('txt_existenciasPerdidas').setAttribute('max', _ProductoEnJuego.Existencias);
+    tbl.rows[2].cells[1].innerText = "$ "+parseFloat(_ProductoEnJuego.Costo).toFixed(2)  
+    tbl.rows[3].cells[1].innerText = _ProductoEnJuego.TipoVenta
+
+  
+
+    tbl.rows[4].cells[1].innerText = _ProductoEnJuego.Caducidad 
+   
+    $('#modal_perdidasProductos').modal('show');
+}
+$('#form_perdidas').on('submit',function(e){
+    loadingShow("guardarPerdidas");
+    e.preventDefault();
+    let validate=$("#form_perdidas").valid();
+    
+    if (validate) {
+        let perdida = e.target[0].value;
+        if (perdida<= _ProductoEnJuego.Existencias) {
+            console.log(_ProductoEnJuego);
+            $.ajax({
+                url:"/Perdida/"+_ProductoEnJuego.ID,
+                type: "POST",
+                headers:GlobalToken,
+                data: {'Perdida':perdida},
+                success:  function(data){
+                    loadingHide('guardarPerdidas');
+                    if (data.success) {
+                        console.log(1);
+                        $('#tbl_almacen').DataTable().ajax.reload();
+                        $('#modal_perdidasProductos').modal('hide');
+                        swal('Pérdida',data.message, {
+                            icon: "success",
+                        });
+                        return;
+                    }
+                    swal(data.message,{
+                        icon: "error",
+                    });
+                    
+                  
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
+                    loadingHide('guardarPerdidas');
+                }
+             });
+        }
+    }
+    loadingHide('guardarPerdidas');
+});
+$("#modal_perdidasProductos").on("hidden.bs.modal", function () {
+    _ProductoEnJuego = [];
+    document.getElementById('lbl_productoBaja').innerText = ""
+    tbl = document.getElementById('tbl_infoProductoPerdida');
+    tbl.rows[0].cells[1].innerText = ""
+    tbl.rows[1].cells[1].innerText =""
+    document.getElementById('txt_existenciasPerdidas').setAttribute('max', 0);
+    tbl.rows[2].cells[1].innerText = ""
+    tbl.rows[3].cells[1].innerText = ""
+});

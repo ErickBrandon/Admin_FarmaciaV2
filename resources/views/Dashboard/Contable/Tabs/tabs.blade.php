@@ -9,19 +9,25 @@
         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="tab-cortes-generales" data-toggle="pill" href="#pills-cortes-generales" role="tab" aria-controls="pills-cortes-generales" aria-selected="true">
-                    <span class="fas fa-donate f-20"></span> 
+                    <span class="fas fa-donate f-20 mr-2"></span> 
                     <span> Cortes Generales</span>
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" id="tab-perdidas" data-toggle="pill" href="#pills-perdidas" role="tab" aria-controls="pills-perdidas" aria-selected="false">
+                    <span class="fas fa-window-close f-20 mr-2"></span> 
+                    <span>Pérdidas</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" id="tab-cortes-farmacias" data-toggle="pill" href="#pills-cortes-farmacias" role="tab" aria-controls="pills-cortes-farmacias" aria-selected="false">
-                    <span class="fas fa-piggy-bank f-20"></span>
+                    <span class="fas fa-piggy-bank f-20 mr-2"></span>
                     <span>Cortes por farmacia</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="tab-ventas" data-toggle="pill" href="#pills-ventas" role="tab" aria-controls="pills-ventas" aria-selected="false">
-                    <span class="fas fa-shopping-cart f-20"></span>
+                    <span class="fas fa-shopping-cart f-20 mr-2"></span>
                     <span>Ventas</span>
                 </a>
             </li>
@@ -29,6 +35,9 @@
         <div class="tab-content" id="pills-tabContent">
             <div class="tab-pane fade show active" id="pills-cortes-generales" role="tabpanel" aria-labelledby="tab-cortes-generales">
                 @include('Dashboard.Contable.Tabs.tab-cortes-generales')
+            </div>
+            <div class="tab-pane fade show " id="pills-perdidas" role="tabpanel" aria-labelledby="tab-perdidas">
+                @include('Dashboard.Contable.Tabs.tab-perdidas-producto')
             </div>
             <div class="tab-pane fade" id="pills-cortes-farmacias" role="tabpanel" aria-labelledby="tab-cortes-farmacias">
                 @include('Dashboard.Contable.Tabs.tab-cortes-farmacia')

@@ -35,9 +35,6 @@
         </form>
         
         <button class="btn btn-primary btn-sm col-12" onclick="HistorialCF()">Consultar</button>
-        <div id="cont_btn_borrarCF" class="col-12">
-            
-        </div>
     </div>
 
 <div class="row">

@@ -4,6 +4,7 @@ $(document).ready(function() {
 });
 
 function CheckInternet() {
+  
     if (navigator.onLine) {
         document.getElementById('Internet').innerText = "En linea";
         $("#Internet").removeClass("btn-danger");

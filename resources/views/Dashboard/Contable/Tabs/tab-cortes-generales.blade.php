@@ -1,4 +1,27 @@
 <div class="card-header">
+    <h5>Generar corte general</h5>
+    <span class="d-block m-t-5">Puedes generar o actualizar un corte general de una fecha anterior</span>
+</div><br>
+<div class="row">
+    <div class="alert alert-secondary col-12" role="alert">
+        <form id="form_NCG">
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <div class='input-group input-group-md bg-white mb-3'>
+                        <div class='input-group-prepend'>
+                            <span class='input-group-text' id='inputGroup-sizing-sm'><span class='fas fa-calendar-alt icon_r text-warning'></span> Día</span>
+                        </div>
+                        <input type='date' class='form-control' id='txt_fechaNCG' name='txt_fechaNCG' max="{{$FechaMaxima}}">
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-12">
+                    <button id="btn_NCG" type="submit" class="btn btn-primary col-12 mb-3"><span></span> Generar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="card-header">
     <h5>Tipo de consulta</h5>
     <span class="d-block m-t-5">Seleccione una opción para consultar su información</span>
 </div><br>
@@ -26,6 +49,20 @@
         <br><br>
     </div>
     
+</div><br>
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-primary bitcoin-wallet">
+            <div class="card-block">
+                <h2 class="text-white mb-2 f-w-300">Gráfica</h2>
+                <h6 class="text-white mb-2">Muestra el corte total histórico considerando las pérdidas</h6>
+                <button id='btn_graficar' class="btn btn-sm btn-light col-sm-12 col-md-4">Graficar...</button>
+                <i class="fas fa-chart-pie f-70 text-white"></i>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card-block">
 </div>
 <div class="row">
     <span id='Descripcion_tblCG' class="d-block m-t-5"></span>

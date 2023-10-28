@@ -72,6 +72,9 @@ Route::POST('EliminarCF',[ContableController::class,'EliminarCF'])->name('Elimin
 Route::POST('HistorialV',[ContableController::class,'HistorialV'])->name('HistorialV');
 Route::POST('HistorialVD',[ContableController::class,'HistorialVD'])->name('HistorialVD');
 Route::POST('CorteHistorialFarmacia',[ContableController::class,'CorteHistorialFarmacia'])->name('CorteHistorialFarmacia');
+Route::POST('NuevoCorteGeneral',[ContableController::class,'NuevoCorteGeneral'])->name('NuevoCorteGeneral');
+Route::POST('HistorialPerdidas',[ContableController::class,'HistorialPerdidas'])->name('HistorialPerdidas');
+Route::POST('ConsultaPerdidas',[ContableController::class,'ConsultaPerdidas'])->name('ConsultaPerdidas');
 
 
 Route::GET('Compras',[FacturaController::class,'index'])->name('Compras');
@@ -94,6 +97,7 @@ Route::POST('Traspaso/{Producto}',[ProductoController::class,'Traspaso'])->name(
 Route::GET('PuntoDeVenta/{Farmacia}/Almacen',[ProductoController::class,'almacen'])->name('Almacen');
 Route::POST('AsignacionVentaPiezas',[ProductoController::class,'AsignacionVentaPiezas'])->name('AsignacionVentaPiezas');
 Route::POST('PuntoDeVenta/{Farmacia}/Tbl_historialTraspaso',[ProductoController::class,'Tbl_historialTraspaso'])->name('Tbl_historialTraspaso');
+Route::POST('Perdida/{Producto}',[ProductoController::class,'Perdida'])->name('Perdida');
 
     /* Control de entradas de personal*/
     Route::GET('CtrlEntradas',[EntradaController::class,'index'])->name('CtrlEntradas');
@@ -101,7 +105,7 @@ Route::POST('PuntoDeVenta/{Farmacia}/Tbl_historialTraspaso',[ProductoController:
     Route::POST('EliminarHistorialEntradas',[EntradaController::class,'EliminarHistorialEntradas'])->name('EliminarHistorialEntradas');
 });
 
-Route::middleware(["General"])->group(function () {
+Route::middleware(["General"])->group(function () { 
     /* Punto de venta */
     Route::POST('/ProductosVenta/{Farmacia}',[CajaController::class,'tbl']);
     Route::GET('PuntoDeVenta/{Farmacia}',[CajaController::class,'show'])->name('PuntoVenta');

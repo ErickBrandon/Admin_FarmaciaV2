@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Corte;
 use App\Models\Venta;
 use App\Models\Detalle;
+use App\Models\Perdida;
 use App\Models\Farmacia;
 use App\Models\CorteGeneral;
 use Illuminate\Http\Request;
@@ -17,10 +19,13 @@ class ContableController extends Controller
         $Hoy=date('Y/m/d');
         $corte_g =CorteGeneral::where('Fecha',$Hoy)->first();
         $Farmacias = Farmacia::select('id','Farmacia')->get();
+        $fechaMaxima =Carbon::now()->subDays(1);
+        $fechaMaxima =$fechaMaxima->format('Y-m-d');
         return view('Dashboard.Contable.contable')
         ->with([
             "corte_g"=>$corte_g,
-            "Farmacias"=>$Farmacias
+            "Farmacias"=>$Farmacias,
+            "FechaMaxima"=>$fechaMaxima
         ]);
         
     }
@@ -86,7 +91,6 @@ class ContableController extends Controller
             "Inversion"=>$inversion,
             "Farmacias"=>$farmacias
         ];
-        
         return $General;
     }
 
@@ -136,6 +140,7 @@ class ContableController extends Controller
 
     public function HistorialCG(Request $request)
     {
+        //dd('f');
         $Hoy=date('Y/m/d');
 
         if ($request->op ==1) {
@@ -162,16 +167,66 @@ class ContableController extends Controller
     public function EliminarTodosCG(Request $request)
     {
         $Hoy=date('Y/m/d');
-        if ($request->op == 1) {
-            DB::table('cortes_generales')
-            ->where('Fecha','!=',$Hoy)
-            ->delete();
-        }else{
-            DB::table('cortes_generales')
-            ->where('Fecha','!=',$Hoy)
-            ->whereBetween('Fecha',[$request->inicio,$request->fin])
-            ->delete();
+        DB::beginTransaction();
+        try {
+            if ($request->op == 1) {
+                /* Elimina corte generales */
+                DB::table('cortes_generales')
+                ->where('Fecha','!=',$Hoy)
+                ->delete();
+    
+                /* Eliminar Cortes por farmacia */
+                DB::table('cortes')
+                ->where('Fecha','!=',$Hoy)
+                ->delete();
+                
+                /* Eliminar Ventas */
+                DB::table('venta')
+                ->where('Fecha','!=',$Hoy)
+                ->delete();
+    
+                /* Eliminar Perdidas */
+                DB::table('perdidas')
+                ->where('Fecha','!=',$Hoy)
+                ->delete();
+    
+            }else{
+                DB::table('cortes_generales')
+                ->where('Fecha','!=',$Hoy)
+                ->whereBetween('Fecha',[$request->inicio,$request->fin])
+                ->delete();
+    
+                /* Eliminar Cortes por farmacia */
+                DB::table('cortes')
+                ->where('Fecha','!=',$Hoy)
+                ->whereBetween('Fecha',[$request->inicio,$request->fin])
+                ->delete();
+    
+                 /* Eliminar Ventas */
+                 DB::table('venta')
+                 ->where('Fecha','!=',$Hoy)
+                 ->whereBetween('Fecha',[$request->inicio,$request->fin])
+                 ->delete();
+    
+                 /* Eliminar Perdidas */
+                 DB::table('Perdidas')
+                 ->where('Fecha','!=',$Hoy)
+                 ->whereBetween('Fecha',[$request->inicio,$request->fin])
+                 ->delete();
+            }
+            DB::commit();
+            return [
+                'success'=> true,
+                'message'=> "Se ha eliminado la información"
+            ];
+        } catch (Exception $e) {
+            DB::rollback();
+            return [
+                'success'=>false,
+                'message'=>$e
+            ];
         }
+        
       
     }
 
@@ -345,4 +400,85 @@ class ContableController extends Controller
         
         
     }
+
+    public function NuevoCorteGeneral(Request $request){
+ 
+        $NuevoGeneral = $this->Generador_CorteGeneral($request->txt_fechaNCG);
+        $corte_g = CorteGeneral::where('Fecha',$request->txt_fechaNCG)->first();
+        $message;
+        if ($NuevoGeneral['Farmacias'] != 0) {
+            DB::beginTransaction();
+            try {
+                if ($corte_g == null) { 
+                    $corte_g = new CorteGeneral();
+    
+                    $corte_g->Total =$NuevoGeneral['Total'];
+                    $corte_g->Inversion = $NuevoGeneral['Inversion'];
+                    $corte_g->Farmacias = $NuevoGeneral['Farmacias'];
+                    $corte_g->Fecha = $request->txt_fechaNCG;
+                    $message = 'Corte general creado exitosamente';
+                }else{
+                    /* Se actualiza el corte gneral de hoy */
+                        $corte_g->Total =$NuevoGeneral['Total'];
+                        $corte_g->Inversion = $NuevoGeneral['Inversion'];
+                        $corte_g->Farmacias = $NuevoGeneral['Farmacias'];
+    
+                        $message = 'Corte general actualizado exitosamente';
+                }
+    
+    
+                $corte_g->save();
+                DB::commit();
+    
+                return [
+                    'success'=>true,
+                    'message'=>$message
+                ];
+            } catch (\Throwable $th) {
+                DB::rollback();
+                return $th;
+            }
+        }
+            $message = "No hay cortes por farmacia para generar el corte general";
+            return [
+                'success'=>false,
+                'message'=>$message
+            ];
+
+        
+
+    }
+
+    function HistorialPerdidas(){
+        $Hoy=date('Y/m/d');
+
+        $data =Perdida::leftJoin('farmacias','farmacias.id','=','perdidas.farmacia_id')
+        ->where('Fecha','!=',$Hoy)
+            ->get();
+      
+        return datatables()->of($data)->toJson();
+    }
+
+    public function ConsultaPerdidas(Request $request){
+        $Hoy=date('Y/m/d');
+        $success = false;
+        if ($request->Busqueda == "true") {
+            $perdidas = Perdida::select('perdida_total')
+            ->where('Fecha','!=',$Hoy)
+            ->whereBetween('Fecha',[$request->Fecha_inicio,$request->fecha_fin])
+            ->get();
+            $success = true;
+        }else{
+            $perdidas = Perdida::select('perdida_total')
+            ->where('Fecha','!=',$Hoy)
+            ->get();
+            $success = true;
+        }
+
+        return [
+            'success'=> $success,
+            'Perdidas'=>$perdidas
+        ];
+    }
+
 }

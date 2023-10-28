@@ -1,3 +1,4 @@
+let _dataCorteGeneral;
 $(document).ready(function() {
     $.ajaxSetup({
         headers: {
@@ -105,7 +106,11 @@ function Tbl_HCG(op) {
         'ajax':{
             'url':'/HistorialCG',
            'type': 'POST',
-           'data':op
+           'data':op,
+           'dataSrc':function (data) {
+            _dataCorteGeneral=data.data
+            return _dataCorteGeneral;
+            } 
         },
         "createdRow": function( row, data) {
             $(row).attr('class', "cg-"+data['id'] );
@@ -279,6 +284,77 @@ function Tbl_HV(datos) {
                 return "<button class='btn btn-primary btn-icon fas fa-eye' onclick='detalle_venta("+data+")'></button>";
              }
             }
+        ],
+    },
+   );
+}
+function Tbl_perdidas() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $('#HistorialPerdidas').DataTable({
+        language: {
+            "decimal": "",
+            "emptyTable": "No hay información",
+            "info": "_END_ de _TOTAL_ Registros",
+            "infoEmpty": "No existe información",
+            "infoFiltered": "",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ Entradas",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "<span class='feather icon-search'></span>",
+            "zeroRecords": "No hay concidencias",
+            "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "<span class='feather icon-chevron-right'>",
+            "previous": "<span class='feather icon-chevron-left'>",
+            "searchPlaceholder": "Search records"
+            
+            }
+        },
+        "order": [[ 0, "desc" ]],
+        lengthMenu: [30],
+        bLengthChange : false,
+        'ajax':{
+            'url':'/HistorialPerdidas',
+           'type': 'POST',
+           'dataSrc':function (data) {
+            if (data.error) {
+                loadingHide('btn_consultarPerdida');
+            }
+                let productos = 0;
+                let total = 0;
+                data.data.forEach(p => {
+                    productos = productos+ p.No_productos;
+                    total = total+ p.perdida_total;
+                });
+                document.getElementById('lbl_tpt').innerText = productos
+                document.getElementById('lbl_totalPerdida').innerText = "$ "+parseFloat(total).toFixed(2);
+                loadingHide('btn_consultarPerdida');
+                return data.data;
+            }
+        },
+        'columns':[
+            {data:'Farmacia'},
+            {data:'Producto'},
+            {data:'Costo_producto',
+             render: function(data){
+                return Format(data);
+             }
+            },
+            {data:'No_productos'},
+            {data:'Tipo_venta'},
+            {data:'perdida_total',
+             render: function(data){
+                return Format(data);
+             }
+            },
+            {data:'fecha'}
         ],
     },
    );

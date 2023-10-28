@@ -66,9 +66,10 @@ $(document).ready(function() {
             {data:'Piezas_unidad'},
             {data:"Ultima_asignacion"},
             {data:"ID",
+               
                 render:function (data,a,b,) {
                 
-                    if (b.TipoVenta == "CAJA") {
+                    if (b.TipoVenta == "CAJA" && b.Existencias > 0) {
                         return `<button id='btn_modalCambioTV' class='btn btn-info btn-icon' onclick=CambioTipoVenta(${data})>
                             <i class='fas fa-capsules'></i>
                         </button>`
@@ -77,7 +78,20 @@ $(document).ready(function() {
                 
                 }
             },
-            {data:"btn"}
+            {data:"btn"},
+            {data:"ID",
+            
+                render:function(data,a,b){
+                    if(b.Existencias > 0){
+                        return `<button id='btn_modalPerdidas' class='btn btn-danger btn-icon' onclick=perdidasProductos(${data})>
+                                    <i class='fas fa-window-close'></i>
+                                </button>`;
+                    }
+                    return "";
+                    
+                }
+
+            }
 
         ],
         'columnDefs':[
@@ -95,10 +109,7 @@ $(document).ready(function() {
 } );
 
 function validacionCaducidad(cells,data) {
-   /*  let btn = document.createElement('button') ////////// posible solución de evitar la renderizacion varias veces por fila
-    btn.className =("btn btn-danger btn-icon fas fa-trash-alt")
-    btn.innerText= data;
-    cells.appendChild(btn); */
+   
     if (data != '0000-00-00') {
         let caducidad = new Date(data)
         caducidad = (caducidad.getDate()+1)+"/"+(caducidad.getMonth()+1) +"/"+caducidad.getFullYear();

@@ -69,6 +69,7 @@
                         <th>Última asignación</th>
                         <th>Cambio venta X piezas</th>
                         <th>Traspaso</th>
+                        <th>Pérdidas</th>
                     </tr>
                 </thead>
             
@@ -80,6 +81,7 @@
 @include('PuntoVenta.Almacen.modals.cambioTipoVenta')
 @include('PuntoVenta.Almacen.modals.traslado')
 @include('PuntoVenta.Almacen.modals.historialTraslado')
+@include('PuntoVenta.Almacen.modals.perdidasProductos')
 
 @include('PuntoVenta.partials.modal_scanner')
 @endsection

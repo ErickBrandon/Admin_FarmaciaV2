@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Perdida;
 use App\Models\Farmacia;
 use App\Models\Producto;
 use App\Models\Proveedor;
@@ -21,12 +22,6 @@ class ProductoController extends Controller
             'Farmacia'=>$Farmacia,
             'Farmacias'=>$Farmacias
         ]);
-    }
-
-    
-    public function create()
-    {
-        //
     }
 
     
@@ -58,35 +53,6 @@ class ProductoController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Producto  $producto
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Producto $producto)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Producto  $producto
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Producto $producto)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Producto  $producto
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Producto $Producto)
     {
         $Producto->codigo = $request->Codigo;
@@ -124,7 +90,7 @@ class ProductoController extends Controller
                  'TipoVenta','Caducidad','Costo','Ultima_asignacion','farmacia_id','Piezas_unidad')->get();
         return dataTables()->of($productos)
         ->addColumn('btn',function($productos){
-            if ($productos->TipoVenta == "CAJA") {
+            if ($productos->TipoVenta == "CAJA" && $productos->Existencias >0) {
                 return "<button class='btn btn-primary btn-icon' onclick='traslado(".$productos->ID.")'><i class='fas fa-ambulance'></i></button>";
             }
         }
@@ -275,5 +241,36 @@ class ProductoController extends Controller
             return dataTables()->of($data)->toJson();
         }
 
+    }
+
+    function Perdida(Producto $Producto, Request $request){
+        DB::beginTransaction();
+        try {
+            $Producto->Existencias = $Producto->Existencias - $request->Perdida;
+            $Producto->save();
+
+            $Perdida = new Perdida;
+
+            $Perdida->Producto = $Producto->Producto;
+            $Perdida->Costo_producto = $Producto->Costo;
+            $Perdida->No_productos =$request->Perdida;
+            $Perdida->Tipo_venta = $Producto->TipoVenta;
+            $Perdida->perdida_total = $Producto->Costo * $request->Perdida;
+            $Perdida->farmacia_id = $Producto->farmacia_id;
+            $Perdida->fecha = date('Y/m/d');
+            $Perdida->save();
+
+            DB::commit();
+            return [
+                'success'=>true,
+                'message'=>'El producto se agregó a pérdidas exitosamente'
+            ];
+        } catch (Exception $e) {
+            DB::rollback();
+            return [
+                'success'=>false,
+                'message'=>$e
+            ];
+        }
     }
 }

@@ -28,8 +28,17 @@ var Fecha_Hoy =function(){
     +"2) Recargue la página e intente de nuevo guardar el registro\n"
     +"3) Compruebe su conexión a Internet e intente de nuevo - si no hay conexión, comuniquese con el Administrador y con el Proveedor del servicio\n"
     +"4) ¡Si hay conexión a internet! y los problemas persisten comuniquese con el Administrador y con el Desarrollador del sistema";
-// ---------------------------
-    
+let myPieChart;
+let _CorteTotal = 0;
+let _UtilidadTotal = 0;
+let _PerdidaTotal = 0;
+let _InversionTotal = 0;
+
+let _Porcentaje_inversion = 0;
+let _Procentaje_utilidad = 0;
+let _Porcentaje_perdida = 0;
+    // ---------------------------
+
 function Corte_General() {
     $.ajax({
         url:"/CorteGeneral",
@@ -67,7 +76,18 @@ function Cortes_Individuales() {
         }
      });
 }
+
+
+$(document).on('change','#Fecha_inicio_CG, #Fecha_fin_CG',function(){
+    $('#tbl_HCG').DataTable().clear().draw();
+    $('#tbl_HCG').DataTable().destroy();  
+    
+    document.getElementById('borrar_HCG').innerHTML = null;  
+})
 function search_CG() {
+    $('#tbl_HCG').DataTable().clear().draw(); 
+    $('#tbl_HCG').DataTable().destroy();
+     
     document.getElementById('borrar_HCG').innerHTML= null
     let op = document.getElementById("switch-1").checked
     
@@ -76,14 +96,16 @@ function search_CG() {
         "<div class='input-group-prepend'>"+
             "<span class='input-group-text' id='inputGroup-sizing-sm'><span class='fas fa-calendar-alt icon_r text-success'></span> Inicio</span>"+
         "</div>"+
-        "<input type='date' class='form-control' id='Fecha_inicio_CG' name='Fecha_inicio_CG'  onchange='cambio_rango()'>"+
+        "<input type='date' class='form-control' id='Fecha_inicio_CG' name='Fecha_inicio_CG'>"+
     "</div>"+
     "<div class='input-group input-group-md mb-3'>"+
         "<div class='input-group-prepend'>"+
             "<span class='input-group-text' id='inputGroup-sizing-sm'><span class='fas fa-calendar-alt icon_r text-warning'></span> Fin</span>"+
         "</div>"+
-        "<input type='date' class='form-control' id='Fecha_fin_CG' name='Fecha_fin_CG'  onchange='cambio_rango()'>"+
+        "<input type='date' class='form-control' id='Fecha_fin_CG' name='Fecha_fin_CG'>"+
     "</div>";
+        DelimitacionFechaHistorial('Fecha_inicio_CG');
+        DelimitacionFechaHistorial('Fecha_fin_CG');
     }else{
         document.getElementById('cont_personalizada_CG').innerHTML = "";
     }
@@ -101,7 +123,9 @@ function ConsutlarHistorialCG() {
     if (op == false) {
         tipo_busqueda={'op':1}
         Tbl_HCG(tipo_busqueda);
-        document.getElementById('borrar_HCG').innerHTML = "<button class='btn btn-danger btn-sm col-12' onclick='Eliminar_cortes_Generales(1)'>Eliminar todo el histórico</button>"
+        document.getElementById('borrar_HCG').innerHTML = `<br><button id='btn_eliminarHI' class='btn btn-danger btn-sm col-12' onclick='Eliminar_cortes_Generales(1)'>
+        Eliminar todo el histórico <br>(Corte general, Corte por farmacia, Pérdidas, ventas y detalles)
+        </button>`
     }else{
         let inicio = document.getElementById('Fecha_inicio_CG').value;
         let fin = document.getElementById('Fecha_fin_CG').value;
@@ -112,14 +136,17 @@ function ConsutlarHistorialCG() {
             'fin':fin
         }
         Tbl_HCG(tipo_busqueda);
-        document.getElementById('borrar_HCG').innerHTML = "<button class='btn btn-danger btn-sm col-12' onclick='Eliminar_cortes_Generales(2)'>Eliminar todo entre <br>"+inicio+" y "+fin+"</button>"
+        document.getElementById('borrar_HCG').innerHTML = `<br><button id='btn_eliminarHI' class='btn btn-danger btn-sm col-12' onclick='Eliminar_cortes_Generales(2)'>
+            Eliminar todo entre <br>${inicio} y ${fin}<br>
+            (Corte general, Corte por farmacia, Pérdidas, ventas y detalles)
+        </button>`
 
     }
     }
     
      
 }
-function EliminarCG(id) {
+/* function EliminarCG(id) {
     let corte = document.querySelector(".cg-"+id);
     let fecha_CG = corte.cells[0].innerText
     swal({
@@ -150,12 +177,10 @@ function EliminarCG(id) {
         }
     });
    
-}
-function cambio_rango() {
-    document.getElementById('borrar_HCG').innerHTML = null;
-}
+} */
 
 function Eliminar_cortes_Generales(op) {
+    loadingShow("btn_eliminarHI");
     let datos;
     let texto;
     if (op == 1) {
@@ -187,24 +212,31 @@ function Eliminar_cortes_Generales(op) {
                 headers:GlobalToken,
                 data: datos,
                 success:  function(data){
-                    $('#tbl_HCG').DataTable().ajax.reload();
-                    swal("Se ha eliminado los cortes generales", {
-                        icon: "success",
-                    });       
-                 
+                    if (data.success) {
+                        $('#tbl_HCG').DataTable().ajax.reload();
+                        swal("Se ha eliminado los cortes generales", {
+                            icon: "success",
+                        }); 
+                    }
+                    loadingHide('btn_eliminarHI')
                 },
                 error: function(jqXHR, textStatus, errorThrown){
+                    loadingHide('btn_eliminarHI')
                     alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
                 }
              });
+        }else{
+            loadingHide('btn_eliminarHI')
         }
     });
 }
 
-/* Evento */
-$('#Farmacias_CF, #tipo_registro_CF').on('change', function() {
-    document.getElementById("cont_btn_borrarCF").innerHTML = null
-});
+function DelimitacionFechaHistorial(id) {
+    let hoy = new Date();
+    hoy.setDate(hoy.getDate() - 1)
+    hoy = hoy.toISOString().split("T")[0];
+    document.getElementById(id).setAttribute("max", hoy);
+}
 
 function consulta_fechasCF(op) {
     if (op == 0) {
@@ -217,6 +249,7 @@ function consulta_fechasCF(op) {
         "</div>"+
         "<input type='date' class='form-control' id='día_CF' name='día_CF'>"+
     "</div>";
+        DelimitacionFechaHistorial('día_CF')
     }
     if (op == 2) {
         document.getElementById("cont_fechasCF").innerHTML ="<div class='input-group input-group-md mb-3'>"+
@@ -231,6 +264,8 @@ function consulta_fechasCF(op) {
         "</div>"+
         "<input type='date' class='form-control' id='Fecha_fin_CF' name='Fecha_fin_CF'>"+
     "</div>";
+        DelimitacionFechaHistorial('Fecha_inicio_CF')
+        DelimitacionFechaHistorial('Fecha_fin_CF')
     }
 }
 
@@ -269,11 +304,6 @@ function HistorialCF() {
             }
         }
         Tbl_HCF(datos);
-
-        if (Farmacias != 0) {
-            document.getElementById("cont_btn_borrarCF").innerHTML = "<button class='btn btn-danger btn-sm col-12' onclick='Eliminar_CF()'>Eliminar registros consultados</button>"
-        }
-
     }
     
 }
@@ -353,10 +383,7 @@ $('#switch-2').on('click', function() {
 
     let Consulta = document.getElementById('switch-2').checked;
     if (Consulta) {
-        let hoy = new Date();
-        hoy.setDate(hoy.getDate() - 1)
-        hoy = hoy.toISOString().split("T")[0];
-   
+    
         document.getElementById('cont_personalizada_CV').innerHTML = `
         <div class='input-group input-group-md mb-3'>
             <div class='input-group-prepend'>
@@ -367,11 +394,7 @@ $('#switch-2').on('click', function() {
             </div>
             <input type='date' class='form-control' id='día_CV' name='día_CV'>
         </div>`;
-        
-        
-        
-     
-        document.getElementById("día_CV").setAttribute("max", hoy);
+        DelimitacionFechaHistorial('día_CV');
     }else{
         document.getElementById('cont_personalizada_CV').innerHTML = null;
     }
@@ -481,4 +504,220 @@ $(document).on('click','#btnCorte',function(){
         }
         loadingHide('btnCorte');
     });
+});
+$('#form_NCG').on('submit',function(e) {
+  
+    e.preventDefault();
+    let validate=$("#form_NCG").valid();
+    if (validate) {
+        loadingShow("btn_NCG");
+        let datos = $("#form_NCG").serialize();
+        $.ajax({
+            url:"/NuevoCorteGeneral",
+            type: "POST",
+            headers:GlobalToken,
+            data: datos,
+            success:  function(data){
+                if (data.success) {
+                    swal(data.message, {
+                        icon: "success",
+                    });
+                    return
+                }
+                swal(data.message,{
+                    icon: "error",
+                });
+                document.getElementById('txt_fechaNCG').value = null;
+                loadingHide('btn_NCG');
+                return;
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
+                loadingHide('btn_NCG');
+            }
+         });
+    } 
+})
+
+$('#btn_consultarPerdida').on('click',function(){
+    loadingShow("btn_consultarPerdida");
+    $('#HistorialPerdidas').DataTable().destroy();  
+    Tbl_perdidas();
+});
+function CalculoGrafica(PerdidasData) {
+    let corteTotal = 0;
+    let utilidadTotal = 0;
+    let inversionTotal = 0;
+    let perdidas = 0;
+
+    _dataCorteGeneral.forEach(c => {
+        corteTotal = corteTotal + c.Total;
+        inversionTotal = inversionTotal + c.Inversion;
+    });
+
+    utilidadTotal = corteTotal - inversionTotal;
+  
+    PerdidasData.forEach(p => {
+        perdidas = perdidas + p.perdida_total;
+    });
+    if (perdidas > utilidadTotal) {
+        utilidadTotal = 0;
+    }else{
+        utilidadTotal = utilidadTotal - perdidas;
+    }
+    
+
+    _Porcentaje_inversion =  parseFloat((inversionTotal * 100) / corteTotal).toFixed(2)
+    _Procentaje_utilidad = parseFloat((utilidadTotal * 100) / corteTotal).toFixed(2)
+    _Porcentaje_perdida = parseFloat((perdidas * 100) / corteTotal).toFixed(2)
+
+    _CorteTotal = parseFloat(corteTotal).toFixed(2)
+    _UtilidadTotal = parseFloat(utilidadTotal).toFixed(2)
+    _PerdidaTotal = parseFloat(perdidas).toFixed(2)
+    _InversionTotal = parseFloat(inversionTotal).toFixed(2)
+
+    $('#modal_grafica').modal('show');
+    loadingHide("btn_graficar");
+}
+
+$('#btn_graficar').on('click',function(){
+    
+    if ($.fn.dataTable.isDataTable('#tbl_HCG')) {
+        loadingShow("btn_graficar")
+        let op = document.getElementById("switch-1").checked
+        let fecha_inicio;
+        let fecha_fin;
+        if (op) {
+            fecha_inicio = document.getElementById('Fecha_inicio_CG').value;
+            fecha_fin = document.getElementById('Fecha_fin_CG').value;
+        }
+
+        datos = {
+            Busqueda : op,
+            Fecha_inicio : fecha_inicio,
+            fecha_fin : fecha_fin
+        }
+        $.ajax({
+            url:"/ConsultaPerdidas",
+            type: "POST",
+            headers:GlobalToken,
+            data: datos,
+            success:  function(data){
+                if (data.success) {
+                    CalculoGrafica(data.Perdidas)
+                }
+                loadingHide("btn_graficar");
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                loadingHide("btn_graficar");
+                alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
+            }
+        });
+    }else{
+        swal("Sin información","Primero realiza una consulta al historial de cortes generales para poder graficar",{
+            icon: "info",
+        });
+    } 
+});
+function crearGrafica(){
+    if (document.getElementById("switch-1").checked) {
+        let inicio = document.getElementById('Fecha_inicio_CG').value;
+        let fin = document.getElementById('Fecha_fin_CG').value;
+
+        document.getElementById('info_grafica').innerHTML=`<p>La información considerada (Inversión, Utilidad, Pérdida) en la grafica es del periodo:</p>
+        <p><b>Del ${inicio} al ${fin}</b></p>`
+    }else{
+        document.getElementById('info_grafica').innerHTML='Se ha considerado <b>toda la información</b> (Inversión, Utilidad, Pérdida) registrada en la base de datos'
+    }
+
+    let tbl = document.getElementById('tbl_grafica')
+    //Corte total
+    tbl.rows[0].cells[1].innerText="$"+_CorteTotal;
+
+    //Inversion total
+    tbl.rows[1].cells[1].innerText="$"+_InversionTotal;
+    tbl.rows[1].cells[2].innerText=_Porcentaje_inversion+"%";
+
+    //Perdida total
+    tbl.rows[2].cells[1].innerText="$"+_PerdidaTotal;
+    tbl.rows[2].cells[2].innerText=_Porcentaje_perdida+"%";
+
+    tbl.rows[3].cells[1].innerText="$"+_UtilidadTotal;
+    tbl.rows[3].cells[2].innerText=_Procentaje_utilidad+"%";
+    // [ pie-chart ] start
+        let bar = document.getElementById("chart-pie-1").getContext('2d');
+        let color_inversion = bar.createLinearGradient(100, 0, 300, 0);
+        color_inversion.addColorStop(0, 'rgba(0, 123, 255, 1)');
+        color_inversion.addColorStop(1, 'rgba(0, 123, 255, 1)');
+
+        let color_utilidad = bar.createLinearGradient(100, 0, 300, 0);
+        color_utilidad.addColorStop(0, 'rgba(40, 167, 69, 1)');
+        color_utilidad.addColorStop(1, 'rgba(40, 167, 69, 1)');
+
+        let color_perdida = bar.createLinearGradient(100, 0, 300, 0);
+        color_perdida.addColorStop(0, 'rgba(220, 53, 69, 1)');
+        color_perdida.addColorStop(1, 'rgba(220, 53, 69, 1)');
+    
+        let data4 = {
+        labels: [
+            "Inversión",
+            "Utilidad",
+            "Pérdida"
+        ],
+        datasets: [{
+            data: [
+                _Porcentaje_inversion,
+                _Procentaje_utilidad,
+                _Porcentaje_perdida
+            ],
+            backgroundColor: [
+                color_inversion,
+                color_utilidad,
+                color_perdida
+            ],
+            hoverBackgroundColor: [
+                color_inversion,
+                color_utilidad,
+                color_perdida
+            ]
+        }]
+        };
+        myPieChart = new Chart(bar, {
+        type: 'pie',
+        data: data4,
+        responsive: true,
+        options: {
+            maintainAspectRatio: false,
+        }
+        });
+}
+
+$('#modal_grafica').on('shown.bs.modal', function () {
+    crearGrafica();
+});
+
+$("#modal_grafica").on("hidden.bs.modal", function () {
+    myPieChart.destroy();
+    let tbl = document.getElementById('tbl_grafica')
+    //Corte total
+    tbl.rows[0].cells[1].innerText=null;
+
+    //Inversion total
+    tbl.rows[1].cells[1].innerText=null;
+    tbl.rows[1].cells[2].innerText=null;
+
+    //Perdida total
+    tbl.rows[2].cells[1].innerText=null;
+    tbl.rows[2].cells[2].innerText=null;
+
+    tbl.rows[3].cells[1].innerText=null;
+    tbl.rows[3].cells[2].innerText=null;
+     _CorteTotal = 0;
+     _UtilidadTotal = 0;
+     _PerdidaTotal = 0;
+     _InversionTotal = 0;
+
+     _Porcentaje_inversion = 0;
+     _Procentaje_utilidad = 0;
+     _Porcentaje_perdida = 0;
 });
