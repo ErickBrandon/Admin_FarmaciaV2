@@ -28,7 +28,7 @@ function ReinicioFormUsuarios() {
     document.getElementById('Nombre').value = null;
     document.getElementById('Rol').value = "";
     document.getElementById('password_admin').innerHTML=null
-    console.log(document.getElementById('password_admin').innerHTML);
+  
 }
 
 $('#btn_guardarUsuario').on('click', function() {

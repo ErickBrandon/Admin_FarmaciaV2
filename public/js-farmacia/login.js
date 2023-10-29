@@ -52,7 +52,7 @@ $(document).on("click","#btn_login", function () {
 });
 
 function login(data,url){
-    console.log({'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')});
+    
     $.ajax({
         url:url,
         type: "POST",
@@ -85,7 +85,7 @@ function login(data,url){
 $(document).on("click","#btn_loginVendedor", function () {
     loadingShow("btn_loginVendedor");
     let hora = new Date();
-    console.log(hora.getHours());
+    
     if (hora.getHours() >= 8 && hora.getHours() <= 24) {
         let data = $("#from_login").serialize();
         data=data+"&_typeUser="+_typeUser;

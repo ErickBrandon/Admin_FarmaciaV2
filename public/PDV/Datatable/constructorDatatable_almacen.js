@@ -91,6 +91,14 @@ $(document).ready(function() {
                     
                 }
 
+            },
+            {data:'ID',
+                render:function(data){
+                    return `<button id='btn_modalAjustes' class='btn btn-dark btn-icon' producto = '${data}'>
+                                    <i class='fas fa-cogs'></i>
+                                </button>`;
+                }
+
             }
 
         ],

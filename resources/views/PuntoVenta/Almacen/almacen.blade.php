@@ -55,25 +55,29 @@
 <div class="cont_almacen">
     <div class="card">
         <div class="card-body">
-            <table id="tbl_almacen" class="display responsive nowrap" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Producto</th>
-                        <th>Precio</th>
-                        <th>Existencias</th>
-                        <th>Tipo de venta</th>
-                        <th>Caducidad</th>
-                        <th>Costo</th>
-                        <th>Piezas x Caja</th>
-                        <th>Última asignación</th>
-                        <th>Cambio venta X piezas</th>
-                        <th>Traspaso</th>
-                        <th>Pérdidas</th>
-                    </tr>
-                </thead>
-            
-            </table>
+            <div class="table-responsive">
+                <table id="tbl_almacen" class="display responsive nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Existencias</th>
+                            <th>Tipo de venta</th>
+                            <th>Caducidad</th>
+                            <th>Costo</th>
+                            <th>Piezas x Caja</th>
+                            <th>Última asignación</th>
+                            <th>Cambio venta X piezas</th>
+                            <th>Traspaso</th>
+                            <th>Pérdidas</th>
+                            <th>Ajustes</th>
+                        </tr>
+                    </thead>
+                
+                </table>
+            </div>
+           
         </div>
     </div>
 </div>
@@ -82,6 +86,7 @@
 @include('PuntoVenta.Almacen.modals.traslado')
 @include('PuntoVenta.Almacen.modals.historialTraslado')
 @include('PuntoVenta.Almacen.modals.perdidasProductos')
+@include('PuntoVenta.Almacen.modals.ajustesProducto')
 
 @include('PuntoVenta.partials.modal_scanner')
 @endsection

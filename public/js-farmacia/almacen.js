@@ -278,7 +278,6 @@ $('#form_perdidas').on('submit',function(e){
     if (validate) {
         let perdida = e.target[0].value;
         if (perdida<= _ProductoEnJuego.Existencias) {
-            console.log(_ProductoEnJuego);
             $.ajax({
                 url:"/Perdida/"+_ProductoEnJuego.ID,
                 type: "POST",
@@ -287,7 +286,6 @@ $('#form_perdidas').on('submit',function(e){
                 success:  function(data){
                     loadingHide('guardarPerdidas');
                     if (data.success) {
-                        console.log(1);
                         $('#tbl_almacen').DataTable().ajax.reload();
                         $('#modal_perdidasProductos').modal('hide');
                         swal('Pérdida',data.message, {
@@ -319,4 +317,117 @@ $("#modal_perdidasProductos").on("hidden.bs.modal", function () {
     document.getElementById('txt_existenciasPerdidas').setAttribute('max', 0);
     tbl.rows[2].cells[1].innerText = ""
     tbl.rows[3].cells[1].innerText = ""
+});
+
+$(document).on('click','#btn_modalAjustes',function(){
+    
+   let producto_id = parseInt(this.getAttribute('producto'));
+    swal({
+        title: "¡PRECAUCIÓN! \n Estas a punto de acceder a los ajustes del producto",
+        text: `Donde podrás modificar directamente la información del producto,lo cual podría causar ciertas diferencias en: 
+        Existencias, Costo, Precio venta, Caducidad y Piezas x Caja.
+        Con respecto al producto Vendido, Traspaso o marcado como Pérdida`,
+        icon: "warning",
+        buttons: {
+            confirm: "Continuar a los ajustes"
+        }
+    }).then((continuar)=>{
+        if (continuar) {
+            _ProductoEnJuego = _productosAlmacen.find(p=> p.ID == producto_id);
+            let tbl = document.getElementById('tbl_ajusteProducto');
+            tbl.rows[0].cells[1].innerText = _ProductoEnJuego.Codigo;
+            tbl.rows[1].cells[1].innerText = _ProductoEnJuego.Producto;
+            tbl.rows[2].cells[1].innerText = _ProductoEnJuego.TipoVenta;
+
+            document.getElementById('Ajuste_Costo').value = _ProductoEnJuego.Costo;
+
+            document.getElementById('Ajuste_Precio').setAttribute('min',_ProductoEnJuego.Costo);
+            document.getElementById('Ajuste_Precio').value = _ProductoEnJuego.Precio;
+
+            document.getElementById('Ajuste_Existencias').value = _ProductoEnJuego.Existencias;
+            document.getElementById('Ajuste_caducidad').value = _ProductoEnJuego.Caducidad;
+            if (_ProductoEnJuego.TipoVenta == 'CAJA') {
+                document.getElementById('Ajuste_PzCaja').disabled = false;
+                document.getElementById('Ajuste_PzCaja').value = _ProductoEnJuego.Piezas_unidad;
+            }
+            $('#modal_AjusteProducto').modal('show');
+        }
+    })
+})
+$('#Ajuste_Costo').on('change',function(e){
+    document.getElementById('Ajuste_Precio').setAttribute('min',e.target.value);
+})
+
+$('#form_ajustes').on('submit',function(e){
+    loadingShow("guardarAjusteProducto");
+    e.preventDefault();
+    console.log(e.target[4].value);
+    let validate=$("#form_ajustes").valid();
+    console.log(validate);
+    if (validate) {
+        swal({
+            title: "¿Deseas continuar?",
+            icon: "warning",
+            buttons: {
+                confirm: "Ok"
+            }
+        }).then((continuar)=>{
+            if (continuar) {
+                let ventaCaja = false
+                if (_ProductoEnJuego.TipoVenta == 'CAJA') {
+                    ventaCaja = true
+                }
+                data={
+                    'Costo': e.target[0].value,
+                    'Precio':e.target[1].value,
+                    'Existencias': e.target[2].value,
+                    'Caducidad': e.target[3].value,
+                    'Piezas_unidad': e.target[4].value,
+                    'VentaCaja': ventaCaja
+                };
+                $.ajax({
+                    url:"/Ajuste/"+_ProductoEnJuego.ID,
+                    type: "POST",
+                    headers:GlobalToken,
+                    data: data,
+                    success:  function(response){
+                      if (response.success) {
+                        swal({
+                            title: response.message,
+                            icon: "success",
+                            buttons: {
+                                confirm: "Ok"
+                            }
+                        })
+                        $('#tbl_almacen').DataTable().ajax.reload();
+                        $('#modal_AjusteProducto').modal('hide');
+                      }
+                      loadingHide('guardarAjusteProducto')
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
+                        loadingHide('guardarAjusteProducto')
+                    }
+                 });
+            }
+            loadingHide('guardarAjusteProducto')
+            return
+        })
+    }else{
+        loadingHide('guardarAjusteProducto')
+    }
+})
+$("#modal_AjusteProducto").on("hidden.bs.modal", function () {
+   _ProductoEnJuego = [];
+
+
+   document.getElementById('Ajuste_Costo').value = null;
+
+   document.getElementById('Ajuste_Precio').setAttribute('min',null);
+   document.getElementById('Ajuste_Precio').value = null;
+
+   document.getElementById('Ajuste_Existencias').value = null;
+   document.getElementById('Ajuste_caducidad').value = null;
+   document.getElementById('Ajuste_PzCaja').disabled = true;
+   document.getElementById('Ajuste_PzCaja').value =false;
 });

@@ -159,7 +159,7 @@ class ProductoController extends Controller
         }
     }
 
-    function AsignacionVentaPiezas(Request $request){
+    public function AsignacionVentaPiezas(Request $request){
         $Hoy=date('Y/m/d');
         $message = '';
         DB::beginTransaction();
@@ -220,7 +220,7 @@ class ProductoController extends Controller
         
     }
 
-    function Tbl_historialTraspaso(Request $request, $Farmacia){
+    public function Tbl_historialTraspaso(Request $request, $Farmacia){
         $request->Busqueda = (int)$request->Busqueda;
        
       
@@ -243,7 +243,7 @@ class ProductoController extends Controller
 
     }
 
-    function Perdida(Producto $Producto, Request $request){
+    public function Perdida(Producto $Producto, Request $request){
         DB::beginTransaction();
         try {
             $Producto->Existencias = $Producto->Existencias - $request->Perdida;
@@ -271,6 +271,33 @@ class ProductoController extends Controller
                 'success'=>false,
                 'message'=>$e
             ];
+        }
+    }
+
+    public function Ajuste(Producto $Producto, Request $request ){
+        
+        DB::beginTransaction();
+        try {
+           $Producto->Costo = $request->Costo; 
+           $Producto->Precio = $request->Precio; 
+           $Producto->Existencias = $request->Existencias; 
+           $Producto->Caducidad = $request->Caducidad;
+            if ($request->VentaCaja == 'true') {
+                $Producto->Piezas_unidad = $request->Piezas_unidad;
+            }
+           $Producto->save();
+           DB::commit();
+
+           return $data=[
+            "success"=>true,
+            "message"=>'Producto ajustado'
+        ];
+        } catch (Exception $e) {
+            DB::rollback();
+            return $data=[
+             "message"=>$e,
+             "success"=>false,
+         ];
         }
     }
 }
