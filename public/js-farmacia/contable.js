@@ -233,9 +233,12 @@ function Eliminar_cortes_Generales(op) {
 
 function DelimitacionFechaHistorial(id) {
     let hoy = new Date();
-    hoy.setDate(hoy.getDate() - 1)
-    hoy = hoy.toISOString().split("T")[0];
-    document.getElementById(id).setAttribute("max", hoy);
+            hoy.setHours(0, 0, 0, 0); // Establece las horas, minutos, segundos y milisegundos a 0 para obtener el inicio del día en la zona horaria local
+            hoy.setDate(hoy.getDate() - 1)
+            let hoyEnUTC = new Date(Date.UTC(hoy.getUTCFullYear(), hoy.getUTCMonth(), hoy.getUTCDate())); // Obtiene la fecha actual en formato UTC
+            hoyEnUTC = hoyEnUTC.toISOString().split("T")[0];
+   
+    document.getElementById(id).setAttribute("max", hoyEnUTC);
 }
 
 function consulta_fechasCF(op) {

@@ -345,6 +345,14 @@ $(document).on('click','#btn_modalAjustes',function(){
             document.getElementById('Ajuste_Precio').value = _ProductoEnJuego.Precio;
 
             document.getElementById('Ajuste_Existencias').value = _ProductoEnJuego.Existencias;
+            
+            let hoy = new Date();
+            hoy.setHours(0, 0, 0, 0); // Establece las horas, minutos, segundos y milisegundos a 0 para obtener el inicio del día en la zona horaria local
+
+            let hoyEnUTC = new Date(Date.UTC(hoy.getUTCFullYear(), hoy.getUTCMonth(), hoy.getUTCDate())); // Obtiene la fecha actual en formato UTC
+            hoyEnUTC = hoyEnUTC.toISOString().split("T")[0];
+
+            document.getElementById('Ajuste_caducidad').setAttribute("min", hoyEnUTC);
             document.getElementById('Ajuste_caducidad').value = _ProductoEnJuego.Caducidad;
             if (_ProductoEnJuego.TipoVenta == 'CAJA') {
                 document.getElementById('Ajuste_PzCaja').disabled = false;
