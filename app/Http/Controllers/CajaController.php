@@ -94,13 +94,22 @@ class CajaController extends Controller
             if (sizeof($agotados)>0) {
                 /* en caso de que se halla vendido algun producto agotado, se echa atrás todo para confirmar algunas cosas */
                 DB::rollback();
-                return $agotados;
+                return [
+                    'success'=>false,
+                    'message'=>'Producto agotado',
+                ];
+        
             }else {
                 /* en caso de que todo este bien, se guardan los registros */
                 $Venta->Inversion_Venta = $InversionVenta;
                 $Venta->save();
                 DB::commit();
-                return 1;
+
+                return [
+                    'success'=>true,
+                    'message'=>'La venta se ha registrado exitosamente',
+                    'venta_id'=>$Venta->id
+                ];
             }
         } catch (Exception $e) {
             DB::rollback();

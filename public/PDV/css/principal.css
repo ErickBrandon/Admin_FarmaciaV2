@@ -26,7 +26,10 @@ main{
     border-radius: 7px;
     padding: 20px 20px 20px 20px;
 }
-
+.modal-lg{
+    max-width: none !important;
+    width: 92%;
+}
 .contenido_productos{
     background: #fff;
     grid-area: cont-p;

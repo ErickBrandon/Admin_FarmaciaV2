@@ -256,22 +256,18 @@ $("#btnCobrar").on("click", function () {
         },
         success:  function(data){
            
-            if (data == 1) {
+            if (data.success) {
                 loadingHide("btnCobrar")
-                imprSelec(info);
-                VentaExitosa();
-                
+                imprSelec(info,data.venta_id);
+                VentaExitosa(data.message, data.venta_id);
+
             }else{
-                loadingHide("btnCobrar")
                 $('#tbl_Productos').DataTable().ajax.reload();
-                let mensaje =data.length+" de los productos que se encuentran en el carrito "+
-                "se encuentran agotados o no se cuenta con las unidades suficientes."+
-                "\nPuedes usar el botón de busqueda de cada producto que se encuentra en el carrito"+
-                "para ajustar la compra.\n \nLa lista de productos en venta fue actualizada";
+                loadingHide("btnCobrar")
                 swal(
-                    "Favor de ajustar la compra",
-                    mensaje,
-                    "warning"
+                    data.message,
+                    'Favor de ajustar la venta porque algunos productos en la venta se encunetran agotados',
+                    "error"
                 )
             }
         },
@@ -281,11 +277,11 @@ $("#btnCobrar").on("click", function () {
      });
 });
 
-function VentaExitosa(){
+function VentaExitosa(mensaje, venta_id){
     limpiarCarrito();
     $('#tbl_Productos').DataTable().ajax.reload();
     $("#ModalPago").modal('hide');
-    swal("Venta registrada", "La venta se ha registrado exitosamente", "success");
+    swal("Venta registrada",mensaje+" | ID venta: "+venta_id, "success");
     document.getElementById('txt_confirmacionTotal').innerText="";
     document.getElementById('txt_confimacionNP').innerText="";
     document.getElementById('PagoModal').value="";
@@ -403,18 +399,11 @@ function CloseScanner() {
     Quagga.offDetected();
     $('#modal_Scanner').modal('hide');
 }
-function imprSelec(data) {
-  
-   
-
+function imprSelec(data, venta_id) {
     let cont_ticket = data.carrito;
-   
     
     cont_ticket.forEach((p,i) =>{
         let tbl = document.getElementById('cont_ticket').insertRow(i);
-        let texto;
-        
-      
         tbl.insertCell(0).innerText = p.Producto+"\n"+p.UnidadesVenta+"Pz ............"+parseFloat(p.Precio).toFixed(2)+"..........."+ parseFloat(p.SubTotal).toFixed(2);
     })
 
@@ -443,7 +432,7 @@ function imprSelec(data) {
     let mesFormateado = meses[mes];
    
     document.getElementById('fecha_de_compra').innerText=dia + ' DE ' + mesFormateado + ' ' + año;;
-    
+    document.getElementById('venta_id').innerText ='ID VENTA : '+venta_id;
 
     let ficha = document.getElementById('modal_ticket');
     let ventimp = window.open(' ', 'popimpr');

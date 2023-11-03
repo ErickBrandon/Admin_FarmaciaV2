@@ -90,7 +90,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="ventanaImg"><img src="{{asset('logo/FarmaPlus.png')}}" alt=""></div>
+                <h5 class="modal-title"><span class="fas fa-dollar-sign mr-2"></span> Ventanilla de pago</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
@@ -121,7 +121,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="btnCobrar" type="button" class="btn btn-dark col-12" disabled>COBRAR</button>
+                <div class="col">
+                    <button id="btnCobrar" type="button" class="btn btn-primary col-12" disabled>COBRAR</button>
+                </div>
             </div>
         </div>
     </div>
@@ -131,7 +133,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="ventanaImg"><img src="{{asset('logo/FarmaPlus.png')}}" alt=""></div>
+                <h5 class="modal-title"><span class="fas fa-capsules mr-2"></span>Lista de productos</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
@@ -178,6 +180,7 @@
             <div style="text-align: center">AV. VALERIO TRUJANO NO.9</div><br>
             <div style="text-align: center">TEPANCO DE LOPEZ, PUEBLA</div><br>
             <div id='fecha_de_compra' style="text-align: center">14 DE SEPTIEMBRE 2023</div><br><hr><br><br>
+            <div id='venta_id' style="text-align: left"></div><br><br>
             <div style="text-align: left">PRODUCTOS VENDIDOS</div><hr><br><br>
             <table id='cont_ticket'>
                 
@@ -185,7 +188,7 @@
             <div id="total_ticket" style="text-align: right; font-size: 25px">
                 <div id="precio_total"></div>
             </div><br><br>
-            <div style="text-align: center; font-size: 25px">¡GRACIAS!</div><br><br>
+            <div style="text-align: center; font-size: 25px"><span class="fas fa-smile"></span>¡GRACIAS!</div><br><br>
         </div>
     </div>
 </div>
