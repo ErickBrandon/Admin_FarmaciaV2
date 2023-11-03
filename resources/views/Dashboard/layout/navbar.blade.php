@@ -20,19 +20,35 @@
                     </a>
                 </li>
                 <li  class="nav-item">
+                    <a href="{{Route('Contable')}}" class="nav-link">
+                        <span class="pcoded-micon">
+                            <i class="fas fa-balance-scale"></i>
+                        </span>
+                        <span class="pcoded-mtext">Contable</span>
+                    </a>
+                </li>
+                <li  class="nav-item">
+                    <a href="{{route('Compras')}}" class="nav-link">
+                        <span class="pcoded-micon">
+                            <i class="fas fa-dolly"></i>
+                        </span>
+                        <span class="pcoded-mtext">Compras</span>
+                    </a>
+                </li>
+                <li  class="nav-item">
                     <a href="{{route('Proveedores')}}" class="nav-link">
                         <span class="pcoded-micon">
                             <i class="fas fa-user-lock"></i>
                         </span>
-                        <span class="pcoded-mtext">Config. Proveedores</span>
+                        <span class="pcoded-mtext">Proveedores</span>
                     </a>
                 </li>
                 <li  class="nav-item">
-                    <a href="{{route('Farmacias')}}" class="nav-link">
+                    <a href="{{route('CtrlEntradas')}}" class="nav-link">
                         <span class="pcoded-micon">
-                            <i class="fas fa-hospital"></i>
+                            <i class="fas fa-clock"></i>
                         </span>
-                        <span class="pcoded-mtext">Config. Farmacias</span>
+                        <span class="pcoded-mtext">Gestión entrada</span>
                     </a>
                 </li>
                 <li  class="nav-item">
@@ -40,7 +56,15 @@
                         <span class="pcoded-micon">
                             <i class="fas fa-users-cog"></i>
                         </span>
-                        <span class="pcoded-mtext">Config. Usuarios</span>
+                        <span class="pcoded-mtext">Usuarios</span>
+                    </a>
+                </li>
+                <li  class="nav-item">
+                    <a href="{{route('Farmacias')}}" class="nav-link">
+                        <span class="pcoded-micon">
+                            <i class="fas fa-hospital"></i>
+                        </span>
+                        <span class="pcoded-mtext">Farmacias</span>
                     </a>
                 </li>
                 <li class="nav-item">
