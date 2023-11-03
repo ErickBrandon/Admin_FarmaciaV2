@@ -14,7 +14,7 @@
                 <li  class="nav-item">
                     <a href="{{route('HomeAdmin')}}" class="nav-link">
                         <span class="pcoded-micon">
-                            <i class="feather icon-home"></i>
+                            <i class="fas fa-home"></i>
                         </span>
                         <span class="pcoded-mtext">Inicio</span>
                     </a>
@@ -70,7 +70,7 @@
                 <li class="nav-item">
                     <a href="#" id='btn_Logout'>
                         <span class="pcoded-micon">
-                            <i class="feather icon-power"></i>
+                            <i class="fas fa-power-off"></i>
                         </span>
                         <span class="pcoded-mtext">Cerrar sesión</span>
                     </a>
