@@ -10,11 +10,11 @@
     <div class="col-md-6 col-xl-4">
         <div class="card table-card">
             <div class="row-table">
-                <div class="col-auto bg-primary text-white p-t-50 p-b-50">
-                    <i class="feather icon-monitor f-30"></i>
+                <div class="col-auto bg-primary text-white p-t-10 p-b-10">
+                    <i class="fas fa-clipboard-list f-30"></i>
                 </div>
                 <div class="col text-center">
-                    <span class="text-uppercase d-block m-b-10">Mi almacen:<br>{{$Farmacia->Farmacia}}</span>
+                    <span class="text-uppercase d-block m-b-10">Almacen:<br>{{$Farmacia->Farmacia}}</span>
                 </div>
             </div>
         </div>

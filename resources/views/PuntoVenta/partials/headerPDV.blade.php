@@ -14,7 +14,7 @@
               <a class="nav-link" href="{{route('PuntoVenta',$Farmacia->id)}}"><span class="fas fa-tv mr-2 text-c-blue"></span><b>Punto de venta</b></a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="{{route('Ventas',$Farmacia->id)}}"><span class="fas fa-donate mr-2 text-success"></span><b>Ventas</b></a>
+                <a class="nav-link" href="{{route('Ventas',$Farmacia->id)}}"><span class="fas fa-donate mr-2 text-c-green"></span><b>Ventas</b></a>
             </li>
             @if (auth()->user()->rol == 'Administrador')
               <li class="nav-item active">
