@@ -41,7 +41,6 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary col-12" form='from_body' id="asignacion_ventaPiezas">Asignar a tipo de venta</button>
             </div>
         </div>
     </div>

@@ -525,6 +525,7 @@ $('#form_NCG').on('submit',function(e) {
                     swal(data.message, {
                         icon: "success",
                     });
+                    loadingHide('btn_NCG');
                     return
                 }
                 swal(data.message,{
