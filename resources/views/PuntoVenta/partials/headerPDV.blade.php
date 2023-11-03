@@ -11,25 +11,28 @@
             </li>
             
             <li class="nav-item active">
-              <a class="nav-link" href="{{route('PuntoVenta',$Farmacia->id)}}"><b>Punto de venta</b><span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="{{route('PuntoVenta',$Farmacia->id)}}"><span class="fas fa-tv mr-2 text-c-blue"></span><b>Punto de venta</b></a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="{{route('Ventas',$Farmacia->id)}}"><b>Ventas</b></a>
+                <a class="nav-link" href="{{route('Ventas',$Farmacia->id)}}"><span class="fas fa-donate mr-2 text-success"></span><b>Ventas</b></a>
             </li>
             @if (auth()->user()->rol == 'Administrador')
               <li class="nav-item active">
-                <a class="nav-link" href="{{route('Almacen',$Farmacia->id)}}"><b>Almacen</b><span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{{route('Almacen',$Farmacia->id)}}"><span class="fas fa-clipboard-list mr-2 text-warning"></span><b>Almacen</b></a>
               </li>
               <li class="nav-item active">
-                <a class="nav-link" href="{{route('HomeAdmin')}}"><b>Módulo Administrador</b><span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{{route('HomeAdmin')}}"><span class="fas fa-user-tie mr-2 text-info"></span><b>Módulo Administrador</b></a>
               </li>
             @endif
             <li class="nav-item dropdown">
-              <button class="nav-link dropdown-toggle btn btn-light" role="button" data-toggle="dropdown" aria-expanded="false">  {{"Hola ". auth()->user()->name}}</button>
-             
+          
+              <button class="nav-link dropdown-toggle btn btn-light" role="button" data-toggle="dropdown" aria-expanded="false">
+                {{"Hola ". auth()->user()->name}}
+                <span class="fas fa-check-circle text-success"></span>
+              </button>
               <div class="dropdown-menu">
                 <a class="dropdown-item">{{auth()->user()->email}}</a>
-                <a id="btn_Logout" class="dropdown-item"> <span class="fas fa-power-off text-danger"></span> cerrar sesión</a>
+                <a id="btn_Logout" class="dropdown-item"> <span class="fas fa-power-off text-danger mr-2"></span> cerrar sesión</a>
 
               </div>
             </li>
