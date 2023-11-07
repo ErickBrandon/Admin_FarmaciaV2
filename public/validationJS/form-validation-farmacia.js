@@ -20,9 +20,17 @@ $(document).ready(function() {
                     minlength: 3,
 
                 },
-                /* 'Vendedor': {
+                'Calle_Numero': {
                     required: true,
-                }, */
+                    minlength: 3,
+
+                },
+                'Colonia': {
+                    required: true,
+                    minlength: 3,
+
+                },
+                
                 'Llave':{
                     required:true,
                     llave_format:true,

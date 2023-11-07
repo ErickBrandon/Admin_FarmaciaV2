@@ -47,7 +47,7 @@ $(document).ready(function() {
             {data:'Producto'},
             {data:'Precio',
                 'createdCell':function(cells,data){
-                    cells.innerText ="$"+parseFloat(data).toFixed(2);
+                    cells.innerText ="$ "+parseFloat(data).toFixed(2);
                 }
             },
             {data:'Existencias'},
@@ -60,7 +60,7 @@ $(document).ready(function() {
             },
             {data:'Costo',
                 'createdCell':function(cells,data){
-                    cells.innerText ="$"+parseFloat(data).toFixed(2);
+                    cells.innerText ="$ "+parseFloat(data).toFixed(2);
                 }
             },
             {data:'Piezas_unidad'},

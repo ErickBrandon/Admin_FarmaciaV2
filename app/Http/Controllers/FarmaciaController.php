@@ -19,7 +19,6 @@ class FarmaciaController extends Controller
     public function index()
     {
         $vendedores = User::where('rol','Vendedor')
-        ->where('password',null)
         ->get();
         return view('Dashboard.Farmacias.farmacias')->with([
             "vendedores"=>$vendedores
@@ -46,6 +45,8 @@ class FarmaciaController extends Controller
 
             $farmacia->Farmacia = $request->Farmacia;
             $farmacia->Llave = $request->Llave;
+            $farmacia->direccion = $request->Calle_Numero;
+            $farmacia->colonia = $request->Colonia;
             $farmacia->user()->associate($request->Vendedor);
             if ($request->Vendedor != null) {
                 $user = User::where('id',$request->Vendedor)->first();
@@ -62,12 +63,18 @@ class FarmaciaController extends Controller
     }
 
     public function ActualizarFarmacia(Farmacia $Farmacia, Request $request){
+     
         DB::beginTransaction();
         try {
             $anterior = $Farmacia->user_id;
 
 
             $Farmacia->Farmacia = $request->Farmacia;
+          
+            $Farmacia->direccion = $request->Calle_Numero;
+            $Farmacia->colonia = $request->Colonia;
+
+
             $Farmacia->Llave = $request->Llave;
             $Farmacia->user()->associate($request->Vendedor);
             $Farmacia->save();
@@ -100,8 +107,16 @@ class FarmaciaController extends Controller
 
     public function DataTableFarmacia()
     {   
-        $farmacias = Farmacia::leftJoin('users','users.id','=','farmacias.user_id')
-                    ->select('farmacias.id AS ID','Farmacia','Llave','users.name AS Vendedor','users.id AS user_id');
+        $farmacias = Farmacia::leftJoin('users', 'users.id', '=', 'farmacias.user_id')
+                    ->select(
+                        'farmacias.id AS ID',
+                        'Farmacia',
+                        'colonia',
+                        'direccion',
+                        'Llave',
+                        'users.name AS Vendedor',
+                        'users.id AS user_id'
+                    )->get();
         return datatables()->of($farmacias)->toJson();
     }
 }

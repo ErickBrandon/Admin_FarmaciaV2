@@ -46,6 +46,8 @@ $(document).ready(function() {
         'columns':[
             {data:'ID'},
             {data:'Farmacia'},
+            {data:'direccion'},
+            {data:'colonia'},
             {data:'Vendedor',
                 defaultContent:"Sin asignar"
             },

@@ -15,7 +15,11 @@ $("#modal_farmacias").on("hidden.bs.modal", function () {
 
     document.getElementById('Farmacia').value='';
     document.getElementById('Llave').value=null;
+    document.getElementById('Calle_Numero').value=null;
+    document.getElementById('Colonia').value=null;
+    document.getElementById('Llave').value=null;
     document.getElementById('Vendedor').value='';
+
     let validate = $("#form_farmacias").validate();
     validate.resetForm();
 });
@@ -42,8 +46,11 @@ function form_editar(id) {
     document.getElementById('btn_form_farmacias').innerText='Actualizar';
 
     document.getElementById('Farmacia').value=_FarmaciaEnJuego.Farmacia;
+    document.getElementById('Calle_Numero').value=_FarmaciaEnJuego.direccion;
+    document.getElementById('Colonia').value=_FarmaciaEnJuego.colonia;
     document.getElementById('Llave').value=_FarmaciaEnJuego.Llave;
     document.getElementById('Vendedor').value=_FarmaciaEnJuego.user_id;
+    console.log(_FarmaciaEnJuego);
     $("#modal_farmacias").modal('show');
 }
 $('#btn_form_farmacias').on('click', function() {
@@ -87,6 +94,7 @@ $('#btn_form_farmacias').on('click', function() {
 });
 function create_update(url,text,llaveActualizada) {
     let formData = $("#form_farmacias").serialize();
+   
         $.ajax({
             url:url,
             type: "POST",

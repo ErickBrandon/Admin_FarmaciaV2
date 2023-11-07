@@ -19,6 +19,8 @@
                         <tr>
                             <th>id</th>
                             <th>Farmacia</th>
+                            <th>Dirección</th>
+                            <th>Colonia</th>
                             <th>Vendedor</th>
                             <th>Llave</th>
                             <th>Editar</th>
@@ -42,6 +44,18 @@
                                 <span class='input-group-text'><span class="fas fa-hospital-alt text-primary"></span>&nbsp;Farmacia</span>
                             </div>
                             <input id='Farmacia' type='text' class='form-control' placeholder='Nombre de la farmacia' name='Farmacia' requried>
+                        </div>
+                        <div class='input-group input-group-md mb-3'>
+                            <div class='input-group-prepend'>
+                                <span class='input-group-text'><span class="fas fa-street-view text-primary"></span>&nbsp;Calle y Número</span>
+                            </div>
+                            <input id='Calle_Numero' type='text' class='form-control' placeholder='Dirección' name='Calle_Numero' requried>
+                        </div>
+                        <div class='input-group input-group-md mb-3'>
+                            <div class='input-group-prepend'>
+                                <span class='input-group-text'><span class="fas fa-map-marker-alt text-primary"></span>&nbsp;Colonia</span>
+                            </div>
+                            <input id='Colonia' type='text' class='form-control' placeholder='Colonia' name='Colonia' requried>
                         </div>
                         <div class="alert alert-warning col-12" role="alert">
                            <span class="fas fa-key"></span>&nbsp; La llave o contraseña sirve para que los vendedores puedan acceder <span class="fas fa-unlock-alt"></span> a la farmacia que están asignados.
