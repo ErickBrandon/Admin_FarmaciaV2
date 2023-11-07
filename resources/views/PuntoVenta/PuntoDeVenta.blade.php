@@ -177,10 +177,10 @@
         <div class="modal-content">
             <br>
             <div style="text-align: center; font-size: 25px">FARMAPLUS</div><br><br><br>
-            <div style="text-align: center">AV. VALERIO TRUJANO NO.9</div><br>
-            <div style="text-align: center">TEPANCO DE LOPEZ, PUEBLA</div><br>
+            <div id='F_direccion' style="text-align: center"></div><br>
+            <div id='F_colonia' style="text-align: center"></div><br>
             <div id='fecha_de_compra' style="text-align: center">14 DE SEPTIEMBRE 2023</div><br><hr><br><br>
-            <div id='venta_id' style="text-align: left"></div><br><br>
+            <div id='venta_id' style="text-align: center"></div><br><br>
             <div style="text-align: left">PRODUCTOS VENDIDOS</div><hr><br><br>
             <table id='cont_ticket'>
                 
@@ -195,6 +195,10 @@
 @include('PuntoVenta.partials.modal_scanner')
 @endsection
 @section('foot_extras')
+<script> 
+    const _Direccion = @Json($Farmacia->direccion) 
+    const _Colonia = @Json($Farmacia->colonia) 
+</script>
 <script src="{{asset('PDV/Datatable/constructorDatatable.js')}}?v={{now()->day}}"></script>
 <script src="{{asset('assets/plugins/notification/js/bootstrap-growl.min.js')}}"></script>
 <script src="{{asset('Impresoras/plugin_impresora_termica.js')}}"></script>

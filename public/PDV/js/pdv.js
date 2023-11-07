@@ -430,7 +430,10 @@ function imprSelec(data, venta_id) {
     let mes = fecha.getMonth();
     let año = fecha.getFullYear();
     let mesFormateado = meses[mes];
-   
+
+
+   document.getElementById('F_direccion').innerText = _Direccion;
+   document.getElementById('F_colonia').innerText = _Colonia;
     document.getElementById('fecha_de_compra').innerText=dia + ' DE ' + mesFormateado + ' ' + año;;
     document.getElementById('venta_id').innerText ='ID VENTA : '+venta_id;
 
