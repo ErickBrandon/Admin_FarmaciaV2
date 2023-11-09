@@ -1,8 +1,8 @@
 <div id="modal_detalles_venta" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLiveLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="tituloModal">Detalle de venta</h5>
+                <h5 class="modal-title" id="tituloModal">ID DE VENTA</h5>
                 <button class="btn btn-light" type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="CerrarDetalle()">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table  class="table table-striped">
+                    <table  class="table table-striped text-center text-dark">
                         <thead>
                             <tr class="">
                                 <th>Código</th>
@@ -34,6 +34,8 @@
                                 <th>Pz</th>
                                 <th>SubTotal</th>
                                 <th>Tipo de venta</th>
+                                <th>Cancelar venta</th>
+                                <th>Piezas canceladas</th>
                             </tr>
                         </thead>
                         <tbody id='tbl_detalle'>
@@ -42,6 +44,9 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <div class="col">
+                    <button id="btn_cancelar" class="btn btn-danger btn-sm col-12" disabled>Cancelar :<span id="No_cancelados">0 productos vendidos</span></button>
+                </div>
             </div>
         </div>
     </div>

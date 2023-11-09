@@ -85,6 +85,7 @@
    @include('PuntoVenta.Ventas.Modals.Historico')
 @endsection
 @section('foot_extras')
+
 <script src="{{asset('PDV/Datatable/constructorDatatable_ventas.js')}}?v={{now()->day}}"></script>
 <script src="{{asset('js-farmacia/ventas.js')}}?v={{now()->day}}"></script>
 @endsection

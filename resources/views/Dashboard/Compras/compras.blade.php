@@ -4,8 +4,7 @@
 <link rel="stylesheet" href="{{asset('assets/plugins/data-tables/css/datatables.min.css')}}">
 
 <script>
-    const _Farmacias=@json($Farmacias
-    );
+    const _Farmacias=@json($Farmacias);
 </script>
 @endsection
 @section('page')Configuración de administradores @endsection

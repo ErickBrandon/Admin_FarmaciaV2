@@ -104,6 +104,10 @@ Route::POST('Ajuste/{Producto}',[ProductoController::class,'Ajuste'])->name('Aju
     Route::GET('CtrlEntradas',[EntradaController::class,'index'])->name('CtrlEntradas');
     Route::POST('tbl_entradas',[EntradaController::class,'tbl_entradas'])->name('tbl_entradas');
     Route::POST('EliminarHistorialEntradas',[EntradaController::class,'EliminarHistorialEntradas'])->name('EliminarHistorialEntradas');
+
+    /* Punto de venta -> ventas */
+    Route::POST('CancelarVenta/{Venta}',[VentaController::class,'CancelarVenta'])->name('CancelarVenta');
+
 });
 
 Route::middleware(["General"])->group(function () { 

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Corte;
 use App\Models\Venta;
+use App\Models\Detalle;
 use App\Models\Farmacia;
+use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,14 +18,13 @@ class VentaController extends Controller
         $Hoy=date('Y/m/d');
 
         
-        
         $Corte = Corte::where('farmacia_id',$Farmacia->id)
         ->where('Fecha',$Hoy)->first();
 
 
         return view('PuntoVenta.Ventas.ventas')->with([
             'Farmacia'=>$Farmacia,
-            'Corte'=>$Corte
+            'Corte'=>$Corte,
         ]);
     }
     public function TblVentas($farmacia_id){
@@ -86,76 +87,74 @@ class VentaController extends Controller
     
     public function detalles($Venta)
     {
+        $admin = false;
+        if (auth()->user()->rol == 'Administrador') {
+            $admin = true;
+        }
+
        $Detalles = DB::table('detalles_ventas')
        ->where('venta_id',$Venta)
-       ->where('Fecha',date('Y/m/d'))->select('Codigo','Producto','Unidades','SubTotal','TipoVenta')->get();
+       ->where('Fecha',date('Y/m/d'))
+       ->select(
+        'id',
+        'Codigo',
+        'Producto',
+        'Unidades',
+        'SubTotal',
+        'TipoVenta',
+        'producto_id'
+        )->get();
 
-       return $Detalles;
+       return [
+        'Detalles' => $Detalles,
+        'Admin' => $admin
+       ];
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Venta  $venta
-     * @return \Illuminate\Http\Response
-     */
+    
     public function show($id)
     {
         $Vendidos = DB::table('detalles')->Where('venta_id',$id)->get();
         return $Vendidos;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Venta  $venta
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Venta $venta)
-    {
-        //
-    }
+    public function CancelarVenta(Venta $Venta, Request $request){
+        DB::beginTransaction();
+        try {
+            $Cancelados = $request->Cancelados;
+        
+            foreach ($Cancelados as $key => $value) {
+                $detalle = Detalle::where('id',$value['detalle_id'])->first();
+                $producto = Producto::where('id',$value['producto_id'])->first();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Venta  $venta
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Venta $venta)
-    {
-        //
-    }
+                $Venta->Total =$Venta->Total - ($producto->Precio * $value['pz_canceladas']);
+                $Venta->Inversion_Venta = $Venta->Inversion_Venta - ($producto->Costo * $value['pz_canceladas']);
+                $Venta->save();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Venta  $venta
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Venta $venta)
-    {
-        //
+                if ($detalle->Unidades == (int)$value['pz_canceladas']) {
+                    $detalle->delete();
+                }else{
+                    $detalle->Unidades = $detalle->Unidades - (int) $value['pz_canceladas'];
+                    $detalle->SubTotal = $detalle->SubTotal - ((int)$value['pz_canceladas'] * $producto->Precio);
+                    $detalle->Inversion = $detalle->Inversion -((int)$value['pz_canceladas'] * $producto->Costo);
+                    $detalle->save();
+                }
+                
+
+                if ($Venta->Total == 0 &&  $Venta->Inversion_Venta == 0) {
+                    $Venta->delete();
+                }
+
+                $producto->Existencias =  $producto->Existencias +(int)$value['pz_canceladas'];
+                $producto->save();
+
+            }
+            DB::commit();
+                return[
+                    'success'=>true,
+                    'message'=>'Se ha cancelado las ventas exitosamente'
+            ];
+        } catch (\Throwable $th) {
+           dd($th);
+        }
     }
 }
