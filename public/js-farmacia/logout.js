@@ -24,7 +24,7 @@ $("#btn_Logout").on("click", function () {
 function loadingShow(id){
     document.getElementById(id).disabled =true;
     let loading =document.createElement('span')
-    $(loading).attr('class', "spinner-border spinner-border-sm");
+    $(loading).attr('class', "spinner-border spinner-border-sm ml-2");
     $(loading).attr('id', "load_btn");
     document.getElementById(id).appendChild(loading)
 }

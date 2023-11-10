@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="tituloModal">ID DE VENTA</h5>
+                <h5 class="modal-title" id="tituloModal"><span class="fas fa-list-ol mr-2"></span> Detalle de venta</h5>
                 <button class="btn btn-light" type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="CerrarDetalle()">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -17,8 +17,8 @@
                                         <i class="fas fa-shopping-cart text-c-blue f-36"></i>
                                     </div>
                                     <div class="col text-right">
-                                        <h3>Código de venta</h3>
-                                        <h5 class="text-c-blue mb-0" id='CodigoVenta'>87878787</h5>
+                                        <h3>ID VENTA</h3>
+                                        <h5 class="text-c-blue mb-0" id='CodigoVenta'></h5>
                                     </div>
                                 </div>
                             </div>

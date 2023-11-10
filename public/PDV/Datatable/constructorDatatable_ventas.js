@@ -49,7 +49,9 @@ $(document).ready(function() {
             {data:'Fecha'},
             {data:"id",
                 render:function(data){
-                    return "<button class='btn btn-info btn-icon' onclick='VerDetalle("+data+")'><i class='fas fa-list'></i></button>"
+                    return `<button id='detalle_${data}' class='btn btn-info btn-icon' onclick='VerDetalle(${data},this)'>
+                                <i class='fas fa-list'></i>
+                            </button>`
                 }
             }
         ],

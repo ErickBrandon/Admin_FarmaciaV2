@@ -9,7 +9,7 @@ let _ProductoCancelado = [];
 let _ventaEnJuego=0;
 let _DetallesVenta=[];
 let _Admin = false;
-function VerDetalle(id){
+function VerDetalle(id,btn){
     $.ajax({
         url:"/Detalle/"+id,
         type: "POST",
@@ -96,6 +96,7 @@ function DesglosarVenta(Detalles,Codigo_venta,admin) {
     $("#modal_detalles_venta").modal('show');
 }
 function GenerarCorte() {
+    loadingShow('btn_GenerarCorte');
         farmacia = document.getElementById('PntVenta').getAttribute('farmID');
         fecha = document.getElementById('FechaHoy').innerText;
      $.ajax({
@@ -107,13 +108,16 @@ function GenerarCorte() {
             if (data != 0) {
                 document.getElementById('FechaCorte').innerText = data.Fecha;
                 document.getElementById('Corte').innerText = parseFloat(data.Corte).toFixed(2);
+                loadingHide('btn_GenerarCorte');
                 swal("¡Ok!", "Se ha generado un corte de caja con fecha "+data.Fecha, "success");
                 document.getElementById('btn_GenerarCorte').innerText ="Actualizar corte";
+                return
             }
-            
+            loadingHide('btn_GenerarCorte');
         },
         error: function(jqXHR, textStatus, errorThrown){
             console.log(errorThrown);
+            loadingHide('btn_GenerarCorte');
         }
      });
 }
@@ -171,10 +175,12 @@ $(document).on('change','.piezas_canceladas',function(e){
 
 })
 
-$("#btn_cancelar").on('click',function(){
+$(document).on('click',"#btn_cancelar",function(){
+  
     if (_ProductoCancelado.length == 0) {
         return
     }
+    loadingShow("btn_cancelar");
     swal({
         title: "¡Cancelacion de ventas!",
         text: "¿Seguro que desea cancelar la venta de los productos seleccionados?",
@@ -193,14 +199,19 @@ $("#btn_cancelar").on('click',function(){
                     if (data.success) {
                         $('#tbl_ventas').DataTable().ajax.reload();
                         $("#modal_detalles_venta").modal('hide');
+                        loadingHide("btn_cancelar");
                         swal("¡Ok!", data.message, "success");
+                        return;
                     }
-                   
+                    loadingHide("btn_cancelar");
                 },
                 error: function(jqXHR, textStatus, errorThrown){
                     alert (textStatus)
+                    loadingHide("btn_cancelar");
                 }
              });
+        }else{
+            loadingHide("btn_cancelar");
         }
     });  
 })
