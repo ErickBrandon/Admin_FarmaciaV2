@@ -25,7 +25,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="table-responsive">
+                <div id="cont_tbl_detalles" class="table-responsive">
                     <table  class="table table-striped text-center text-dark">
                         <thead>
                             <tr class="">
@@ -44,8 +44,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="col">
-                    <button id="btn_cancelar" class="btn btn-danger btn-sm col-12" disabled>Cancelar :<span id="No_cancelados">0 productos vendidos</span></button>
+                <div id='cont_btn_cancelar' class="col">
                 </div>
             </div>
         </div>

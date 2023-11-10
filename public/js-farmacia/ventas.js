@@ -8,6 +8,7 @@ let GFlag=0;
 let _ProductoCancelado = [];
 let _ventaEnJuego=0;
 let _DetallesVenta=[];
+let _Admin = false;
 function VerDetalle(id){
     $.ajax({
         url:"/Detalle/"+id,
@@ -17,6 +18,7 @@ function VerDetalle(id){
         success:  function(data){
             _DetallesVenta = data.Detalles;
             _ventaEnJuego = id;
+            _Admin = data.Admin;
             DesglosarVenta(data.Detalles,id,data.Admin)
         },
         error: function(jqXHR, textStatus, errorThrown){
@@ -25,7 +27,43 @@ function VerDetalle(id){
 }
 function DesglosarVenta(Detalles,Codigo_venta,admin) {
     document.getElementById('CodigoVenta').innerText=Codigo_venta;
-    document.getElementById('tbl_detalle').innerHTML=null;
+    
+    let tabla;
+    if (admin) {
+        tabla = `<table  class="table table-striped text-center text-dark">
+                    <thead>
+                        <tr class="">
+                            <th>Código</th>
+                            <th>Producto</th>
+                            <th>Pz</th>
+                            <th>SubTotal</th>
+                            <th>Tipo de venta</th>
+                            <th>Cancelar venta</th>
+                            <th>Piezas canceladas</th>
+                        </tr>
+                    </thead>
+                    <tbody id='tbl_detalle'>
+                    </tbody>
+                </table>`;
+
+        document.getElementById('cont_btn_cancelar').innerHTML =`<button id="btn_cancelar" class="btn btn-danger btn-sm col-12" disabled>Cancelar</button>`
+    } else {
+        tabla = `<table  class="table table-striped text-center text-dark">
+                    <thead>
+                        <tr class="">
+                            <th>Código</th>
+                            <th>Producto</th>
+                            <th>Pz</th>
+                            <th>SubTotal</th>
+                            <th>Tipo de venta</th>
+                        </tr>
+                    </thead>
+                    <tbody id='tbl_detalle'>
+                    </tbody>
+                </table>`;
+    }
+    document.getElementById('cont_tbl_detalles').innerHTML=tabla;
+
 
     Detalles.forEach((producto,i) => {
         let tbl = document.getElementById('tbl_detalle').insertRow(i);
@@ -109,23 +147,16 @@ $(document).on('click','.cancelado',function(){
         }
     }
   
-    let txtCancelado;
-
-    if (_ProductoCancelado.length == 1) {
-        txtCancelado = '1 producto vendido'
-    }else{
-        txtCancelado =_ProductoCancelado.length+" productos vendidos"
-    }
+    
 
     if (_ProductoCancelado.length >0) {
         document.getElementById('btn_cancelar').disabled=false;
     }else{
         document.getElementById('btn_cancelar').disabled=true;
-
     }
-    document.getElementById('No_cancelados').innerText = txtCancelado;
     
 })
+
 $(document).on('change','.piezas_canceladas',function(e){
    
     let producto_id = parseInt(e.target.getAttribute('producto'))
@@ -139,6 +170,7 @@ $(document).on('change','.piezas_canceladas',function(e){
 
 
 })
+
 $("#btn_cancelar").on('click',function(){
     if (_ProductoCancelado.length == 0) {
         return
@@ -172,9 +204,11 @@ $("#btn_cancelar").on('click',function(){
         }
     });  
 })
+
 $("#modal_detalles_venta").on("hidden.bs.modal", function () {
      _ProductoCancelado = [];
      _ventaEnJuego=0;
      _DetallesVenta=[];
-
+     document.getElementById('cont_tbl_detalles').innerHTML=null;
+     document.getElementById('cont_btn_cancelar').innerHTML=null
 });
