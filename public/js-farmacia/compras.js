@@ -1,12 +1,13 @@
 $( "form" ).on( "submit", function( event ) {
     event.preventDefault();
-  });
+});
 
-const GlobalErrorCRUD ="Soluciones:\n"
-    +"1) Intente de nuevo Guardar el registro\n"
-    +"2) Recargue la página e intente de nuevo guardar el registro\n"
-    +"3) Compruebe su conexión a Internet e intente de nuevo - si no hay conexión, comuniquese con el Administrador y con el Proveedor del servicio\n"
-    +"4) ¡Si hay conexión a internet! y los problemas persisten comuniquese con el Administrador y con el Desarrollador del sistema";
+const GlobalErrorCRUD =`Soluciones:
+    1) Intente de nuevo Guardar el registro
+    2) Recargue la página e intente de nuevo guardar el registro
+    3) Compruebe su conexión a Internet e intente de nuevo - si no hay conexión, comuniquese con el Administrador y con el Proveedor del servicio
+    4) ¡Si hay conexión a internet! y los problemas persisten comuniquese con el Administrador y con el Desarrollador del sistema`
+
 
 /* Constantes Componentes */
 const Tbl_showAsignaciones = document.getElementById("tbl_showAsignaciones");
@@ -79,7 +80,7 @@ var _ProductoEnJuego = [];
 $("#Nueva_factura").on("click", function () {
     document.getElementById('Title_From_Factura').innerText ="Nueva factura";
     document.getElementById('btn_RFactura').innerText ="Registrar factura";
- });
+});
 
 function Reinicio_Factura(){
     $("#form_factura_1").validate().resetForm()
@@ -243,11 +244,6 @@ $('#btn_agregarProducto').on('click', async function () {
                     _totalProdutos = _totalProdutos+1;
                     _factura.push({Codigo:codigo,Producto:'',Costo_Unidad:0.00, Unidades:1,SubTotal:0,Caducidad:'',Piezas_unidad:1,Precio_Unidad:0.00});
                     document.getElementById('Codigo_nuevo').value =null
-                    /* 
-                    if (tipo_query == 1) {
-                        $('#From_Factura').modal('hide');
-                    }
-                    $('#tbl_Facturas').DataTable().ajax.reload(); */
                 },
                 error: function(){
                     swal("Hubo un error en la busqueda de coincidencias, intente de nuevo",{icon:"error",});
@@ -544,225 +540,6 @@ function EliminarFactura(id) {
         }
     });
 }
-/* ////////////////////////////////////////   Asignaciones /////////////////////////////////////////////////////// */
-/* function asignaciones(id) {
-    
-    if (_ClikAsignaciones == 0) {
-        _ClikAsignaciones = id;
-        document.getElementById('Title_ModalAsigaciones').innerText = "Asignaciones - Factura - Id: "+id;
-        $.ajax({
-            url:'DetalleFactura',
-            type: "POST",
-            headers:GlobalToken,
-            data: {factura_id:id},
-            success:  function(payload){
-                _productosAsignacion = payload;
-                
-                let op = document.createElement('option');
-                op.value =0;
-                op.text = "Seleccione un producto"
-                Slt_ProductoAsignacion.appendChild(op);
-    
-                _productosAsignacion.map(producto =>{
-                    op = document.createElement('option');
-                    op.value = producto.id;
-                    op.text = producto.Producto
-                    Slt_ProductoAsignacion.appendChild(op);
-               })
-             
-               $('#Modal_Asignaciones').modal('show');
-            },
-            error: function(jqXHR, textStatus, errorThrown){
-                alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
-            }
-        });
-    }
-   
-}
-
-$(Slt_ProductoAsignacion).on('change', function(e){
-    let op =e.target.value;
-
-    if (op !=0) {
-        //Reinicio_Asignaciones();
-        for (let i = 0; i < _productosAsignacion.length; i++) {
-            if (_productosAsignacion[i].id == op ) {
-                _ProductoEnJuego = _productosAsignacion[i];
-                break;
-            }  
-        }
-   
-      
-        
-
-        Tbl_showAsignaciones.rows[0].cells[1].innerText =_ProductoEnJuego.Codigo;
-        Tbl_showAsignaciones.rows[1].cells[1].innerText =_ProductoEnJuego.Caducidad;
-        Tbl_showAsignaciones.rows[2].cells[1].innerText =_ProductoEnJuego.Unidades;
-        document.getElementById('Cajas').setAttribute('min',1);
-        document.getElementById('Cajas').setAttribute('max',_ProductoEnJuego.Unidades);
-        document.getElementById('Piezas').setAttribute('min',1);
-        document.getElementById('Piezas').setAttribute('max',_ProductoEnJuego.Unidades);
-
-        let piezasUnidad = "";
-        //document.getElementById('PrecioPz').setAttribute('min',1);
-
-        if (_ProductoEnJuego.Piezas_unidad != null) {
-            piezasUnidad =_ProductoEnJuego.Piezas_unidad
-
-           
-            //document.getElementById('PiezasUnidad').value = piezasUnidad;
-            let min = parseFloat(_ProductoEnJuego.Costo_Unidad / piezasUnidad).toFixed(2);
-           // document.getElementById('PrecioPz').setAttribute('min',min);
-        }
-
-        Tbl_showAsignaciones.rows[3].cells[1].innerText =piezasUnidad;
+/* EVENTOS para width de los campos de factura */
 
         
-
-        let porAsignar = (parseInt(_ProductoEnJuego.Unidades) - parseInt(_ProductoEnJuego.Asignadas))
-        Tbl_showAsignaciones.rows[4].cells[1].innerText = porAsignar;
-        _AsignacionesDisponibles = porAsignar
-
-        if (_AsignacionesDisponibles != 0) {
-            document.getElementById('Cajas').disabled = false;
-            document.getElementById('Venta_caja').disabled = false;
-            document.getElementById('Venta_pz').disabled = false;
-            document.getElementById('Piezas').disabled = false;
-            document.getElementById('btn_formAsignaciones').disabled = false;
-        }
-
-        
-        Tbl_showAsignaciones.rows[5].cells[1].innerText ="$ "+parseFloat(_ProductoEnJuego.Costo_Unidad).toFixed(2);
-        document.getElementById('Venta_caja').setAttribute('min',parseFloat(_ProductoEnJuego.Costo_Unidad).toFixed(2));
-        
-        
-        let precioUnidad="";
-        if (_ProductoEnJuego.Precio_Unidad != null) {   
-            precioUnidad = "$ "+_ProductoEnJuego.Precio_Unidad;
-            opTipoVenta = document.createElement('option');
-            opTipoVenta.value="Caja";
-            opTipoVenta.text="Caja";
-        }
-
-        Tbl_showAsignaciones.rows[6].cells[1].innerText=precioUnidad
-
-        let precioPieza="";
-        if (_ProductoEnJuego.Precio_Piezas!= null) {
-            precioPieza = "$ "+_ProductoEnJuego.Precio_Piezas;
-            opTipoVenta = document.createElement('option');
-            opTipoVenta.value="Piezas";
-            opTipoVenta.text="Piezas";
-           // document.getElementById('select_TV').appendChild(opTipoVenta);
-        }
-        Tbl_showAsignaciones.rows[7].cells[1].innerText=precioPieza
-
-    }else{
-     
-       Reinicio_Asignaciones();
-    }
-    
-})
-$("#btn_formAsignaciones").on('click', function(){
-   let valid = $("#form_Asignaciones").validate();
-   if (valid) {
-        let unidades_caja= parseInt(document.getElementById('Cajas').value);
-        let unidades_pz= parseInt(document.getElementById('Piezas').value);
-        let totalCajas = unidades_caja + unidades_pz;
-        
-        if (totalCajas == _ProductoEnJuego.Unidades) {
-            let data = $("#form_Asignaciones").serialize();
-            $.ajax({
-                url:"Asignacion/"+_ProductoEnJuego.id+"/"+_ProductoEnJuego.factura_id,
-                type: "POST",
-                headers:GlobalToken,
-                data: data,
-                success:  function(payload){
-                   if (payload) {
-                    _productosAsignacion.forEach((p)=>{
-                        if (p.id == _ProductoEnJuego.id) {
-                            p.Precio_Unidad = parseFloat(document.getElementById('Venta_caja').value);
-                            p.Precio_Piezas = parseFloat(document.getElementById('Venta_pz').value);
-                           
-                            _ProductoEnJuego.Precio_Unidad = p.Precio_Unidad;
-                            _ProductoEnJuego.Precio_Piezas = p.Precio_Piezas;
-
-                            Tbl_showAsignaciones.rows[6].cells[1].innerText="$"+ parseFloat(p.Precio_Unidad).toFixed(2)
-                            Tbl_showAsignaciones.rows[7].cells[1].innerText="$"+ parseFloat(p.Precio_Piezas).toFixed(2)
-                            $('#tbl_Facturas').DataTable().ajax.reload();
-                        }
-                    })
-                    swal("La asignaciones del producto fue exitoso",{icon:"success",});
-                    Reinicio_FromAsignaciones();
-                    
-                   }
-                },
-                error: function(){
-                    alert("¡Error al ejecutar!\n"+GlobalErrorCRUD);
-                }
-             });
-        }else{
-            let error;
-            if (totalCajas>_ProductoEnJuego.Unidades) {
-                error = "Error: En la asignación de las cajas ya sea para tipo de venta CAJA o PIEZAS de los productos supera el total de cajas compradas en la factura"
-            }
-            if (totalCajas<_ProductoEnJuego.Unidades) {
-                error = "¡Ojo! Aun te faltan cajas por asignar a un tipo de venta, recuerda que tienes que asignar todas las cajas del porducto seleccionado";
-            }
-            swal(error,{icon:"error",});
-        }
-   }
-})
-function Reinicio_Asignaciones(){
-    Reinicio_FromAsignaciones();
-    Tbl_showAsignaciones.rows[0].cells[1].innerText =""   
-    Tbl_showAsignaciones.rows[1].cells[1].innerText =""
-    Tbl_showAsignaciones.rows[2].cells[1].innerText =""
-    Tbl_showAsignaciones.rows[3].cells[1].innerText =""
-    Tbl_showAsignaciones.rows[4].cells[1].innerText =""
-    Tbl_showAsignaciones.rows[5].cells[1].innerText =""
-    Tbl_showAsignaciones.rows[6].cells[1].innerText =""
-    Tbl_showAsignaciones.rows[7].cells[1].innerText =""
- 
-   
-}
-
-function Reinicio_FromAsignaciones() {
-    
-    document.getElementById('Cajas').disabled = true;
-    document.getElementById('Venta_caja').disabled = true;
-    document.getElementById('Venta_pz').disabled = true;
-    document.getElementById('Piezas').disabled = true;
-    document.getElementById('btn_formAsignaciones').disabled = true;
-    document.getElementById('Cajas').value = "";
-    document.getElementById('Venta_caja').value = "";
-    document.getElementById('Venta_pz').value = "";
-    document.getElementById('Piezas').value = "";
-}
-$("#Cajas").on("input",function(e) {
-    
-    if (e.target.value == 0 || e.target.value =='' ) {
-        document.getElementById('Venta_caja').value = "";
-        document.getElementById('Venta_caja').disabled = true;
-        document.getElementById('Piezas').setAttribute('max',_ProductoEnJuego.Unidades); 
-        document.getElementById('Piezas').setAttribute('min',1); 
-        return;
-    }
-    document.getElementById('Venta_caja').disabled = false;
-
-    document.getElementById('Piezas').setAttribute('max',(_ProductoEnJuego.Unidades -e.target.value));
-    if ((_ProductoEnJuego.Unidades -e.target.value) == 0) {
-        document.getElementById('Piezas').setAttribute('min',(_ProductoEnJuego.Unidades -e.target.value));
-    }else{
-        document.getElementById('Piezas').setAttribute('min',1);
-    }
-     
-})
-$("#Piezas").on("input",function(e) {
-    if (e.target.value == 0) {
-        document.getElementById('Venta_pz').value = "";
-        document.getElementById('Venta_pz').disabled = true;
-        return;
-    }
-    document.getElementById('Venta_pz').disabled = false;
-
-}) */

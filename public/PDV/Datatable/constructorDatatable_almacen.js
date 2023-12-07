@@ -69,7 +69,7 @@ $(document).ready(function() {
                
                 render:function (data,a,b,) {
                 
-                    if (b.TipoVenta == "CAJA" && b.Existencias > 0) {
+                    if (b.TipoVenta.includes("CAJA")) {
                         return `<button id='btn_modalCambioTV' class='btn btn-info btn-icon' onclick=CambioTipoVenta(${data})>
                             <i class='fas fa-capsules'></i>
                         </button>`
@@ -77,6 +77,19 @@ $(document).ready(function() {
                     return "";
                 
                 }
+            },
+            {data:'ID',
+            render:function (data,a,b,) {
+                
+               /*  if (b.TipoVenta.includes("PIEZA")) {
+                
+                    return `<button id='btn_PzCaja' class='btn btn-light btn-icon text-primary' producto =${data}>
+                        <i class='fas fa-box'></i>
+                    </button>`;
+                } */
+                return "";
+            
+            },
             },
             {data:"btn"},
             {data:"ID",

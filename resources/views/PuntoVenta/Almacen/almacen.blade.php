@@ -68,7 +68,8 @@
                             <th>Costo</th>
                             <th>Piezas x Caja</th>
                             <th>Última asignación</th>
-                            <th>Cambio venta X piezas</th>
+                            <th>CAJA => PIEZA</th>
+                            <th>PIEZA => CAJA</th>
                             <th>Traspaso</th>
                             <th>Pérdidas</th>
                             <th>Ajustes</th>
@@ -83,6 +84,7 @@
 </div>
 
 @include('PuntoVenta.Almacen.modals.cambioTipoVenta')
+@include('PuntoVenta.Almacen.modals.cambioTipoVenta_Caja')
 @include('PuntoVenta.Almacen.modals.traslado')
 @include('PuntoVenta.Almacen.modals.historialTraslado')
 @include('PuntoVenta.Almacen.modals.perdidasProductos')

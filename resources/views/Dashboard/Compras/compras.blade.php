@@ -30,7 +30,7 @@
    
     <div class="card">
         <div class="card-header">
-            <h5><span class="fas fa-clipboard-list"></span> Facturas</h5>
+            <h5><span class="fas fa-clipboard-list mr-2"></span>Facturas</h5>
         </div>
         <div class="card-block">
             <div class="row">

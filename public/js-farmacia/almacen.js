@@ -4,11 +4,13 @@ $("#modal_traslado").on("hidden.bs.modal", function () {
    
 });
 
-var _productosAlmacen = [];
-var _TraspasoEnJuego = [];
-var _AsignacionEnJuego={};
-var _ProductoEnJuego=[];
-var _ExistentePZ={};
+let _productosAlmacen = [];
+let _TraspasoEnJuego = [];
+let _AsignacionEnJuego={};
+let _ProductoEnJuego=[];
+let _ExistentePZ={};
+let _PiezasCaja = {}
+
 // ---------- Notificación -------------//
 function notify(color,mnsj,icono) {
     $.growl({
@@ -46,11 +48,11 @@ function notify(color,mnsj,icono) {
 // ---------------------------- Lógica ------------------------------------
     // --------- Variables Globales
 
-GlobalErrorCRUD ="Soluciones:\n"
-+"1) Intente de nuevo Guardar el registro\n"
-+"2) Recargue la página e intente de nuevo guardar el registro\n"
-+"3) Compruebe su conexión a Internet e intente de nuevo - si no hay conexión, comuniquese con el Administrador y con el Proveedor del servicio\n"
-+"4) ¡Si hay conexión a internet! y los problemas persisten comuniquese con el Administrador y con el Desarrollador del sistema";
+GlobalErrorCRUD =`"Soluciones:
+1) Intente de nuevo Guardar el registro\n
+2) Recargue la página e intente de nuevo guardar el registro\n
+3) Compruebe su conexión a Internet e intente de nuevo - si no hay conexión, comuniquese con el Administrador y con el Proveedor del servicio\n
+4) ¡Si hay conexión a internet! y los problemas persisten comuniquese con el Administrador y con el Desarrollador del sistema`;
     // --------- -----------------
 $("#modal_CambioTipoVenta").on("hidden.bs.modal", function () {
     /* El evento detecta cuando se cierra el modal del formulario Asignacion PZ*/
@@ -439,3 +441,71 @@ $("#modal_AjusteProducto").on("hidden.bs.modal", function () {
    document.getElementById('Ajuste_PzCaja').disabled = true;
    document.getElementById('Ajuste_PzCaja').value =false;
 });
+
+$(document).on('click','#btn_PzCaja',function(){
+    let producto_id = parseInt(this.getAttribute('producto'));
+    let producto = _productosAlmacen.find(p=> p.ID == producto_id);
+    if (producto.Existencias <= 0) {
+        swal(
+            "¡Existencias en 0!",
+            "Ya no hay exitencias para cambiar del tipo de venta PIEZA a CAJA del producto "+producto.Producto,
+            {icon:"error",
+        });
+        return;
+    }
+    _AsignacionEnJuego = producto;
+    document.getElementById('productoCambi_Caja').innerText = _AsignacionEnJuego.Producto;
+    let tbl = document.getElementById('tbl_infoProductoCambio_Caja');
+    tbl.rows[0].cells[1].innerText = _AsignacionEnJuego.Codigo;
+    tbl.rows[1].cells[1].innerText = "$"+ parseFloat(_AsignacionEnJuego.Precio).toFixed(2)
+    tbl.rows[2].cells[1].innerText = _AsignacionEnJuego.Existencias;
+    tbl.rows[3].cells[1].innerText = _AsignacionEnJuego.TipoVenta;
+    tbl.rows[4].cells[1].innerText = "$"+parseFloat(producto.Costo).toFixed(2);
+    
+    let similar = _productosAlmacen.find(p=> p.Codigo ==_AsignacionEnJuego.Codigo && p.TipoVenta.includes("CAJA"));
+
+    
+    if (similar != undefined) {
+        document.getElementById('alert_similarCaja').innerHTML=`<div class="alert alert-success" role="alert">
+            Se encontró un producto similar según el <b>CÓDIGO DE BARRAS</b> con tipo de venta CAJA <span class='fas fa-check-circle ml-2'></span>
+        </div>`
+        document.getElementById('pzXcaja_TVC').value = similar.Piezas_unidad;
+        document.getElementById('precio_ventaPiezas_TVC').value = parseFloat(similar.Precio).toFixed(2);
+
+        document.getElementById('pzXcaja_TVC').disabled = true;
+        document.getElementById('precio_ventaPiezas_TVC').disabled = true;
+
+        _PiezasCaja.Similar = 1;
+        _PiezasCaja.Similar_id = similar.ID;
+        
+    }else{
+        document.getElementById('alert_similarCaja').innerHTML=`<div class="alert alert-warning" role="alert">
+           No se encontró alguna coincidencia seguún el <b>CÓDIGO DE BARRAS</b> con el tipo de venta CAJA <span class='fas fa-times-circle ml-2'></span>
+        </div>`;
+        document.getElementById('pzXcaja_TVC').disabled = false;
+        document.getElementById('precio_ventaPiezas_TVC').disabled = false;
+        _PiezasCaja.Similar = 0;
+    }
+
+    $('#modal_CambioTipoVenta_Caja').modal('show');
+});
+
+$('#asignacion_TVC').on('click',function(){
+    let validate=$("#form_asignacionVentaCajas").valid();
+
+    if (!validate) {
+        return;
+    }
+    
+    if (_PiezasCaja.Similar == 0) {
+        _PiezasCaja.Piezas_unidad = document.getElementById('pzXcaja_TVC').value;
+        _PiezasCaja.Cajas = document.getElementById('cajas_piezas_TVC').value;
+        _PiezasCaja.Precio_venta = document.getElementById('precio_ventaPiezas_TVC').value;
+    }
+    if (_PiezasCaja.Similar == 1) {
+        _PiezasCaja.Cajas = document.getElementById('cajas_piezas_TVC').value;
+    }
+
+    console.log(_PiezasCaja);
+
+})
