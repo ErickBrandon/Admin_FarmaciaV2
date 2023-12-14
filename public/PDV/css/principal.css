@@ -129,6 +129,16 @@ video{
 #tbl_carrito th:nth-child(6),#tbl_carrito th:nth-child(7){
     color: #000 !important;
 }
+#logo_ticket{
+    text-align: center;
+    margin-bottom: 15px;
+}
+#logo_ticket > img{
+    width:40%;
+}
+#modal_header_ticket{
+    background: #004aad;
+}
 @media screen and (max-width:690px) {
     main{
         width: 97%;

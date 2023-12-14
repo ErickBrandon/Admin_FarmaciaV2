@@ -89,11 +89,14 @@
 <div id="ModalPago" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title"><span class="fas fa-dollar-sign mr-2"></span> Ventanilla de pago</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <div id="modal_header_ticket" class="modal-header">
+                <h5 class="modal-title text-white"><span class="fas fa-dollar-sign mr-2"></span>Ticket</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
+                <div class="row">
+                    <div id='logo_ticket' class="col-12"><img src="{{asset('logo/FarmaPlus2.png')}}" alt=""></div>
+                </div><hr>
                 <div class="card theme-bg2 bitcoin-wallet">
                     <div class="card-block">
                         <h5 class="text-white mb-2">TOTAL DE COMPRA</h5>

@@ -2,7 +2,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="tituloModal">PIEZAS => CAJA</h5>
+                <h5 class="modal-title" id="tituloModal"><span class="fas fa-box mr-3"></span>PIEZAS => CAJA</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" ><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
@@ -47,7 +47,7 @@
                     <div id="alert_similarCaja" class="col-12">
 
                     </div>
-                    <form id='form_asignacionVentaCajas' class="col-12">
+                    <form id='form_asignacionVentaCajas' name='form_asignacionVentaCajas'class="col-12">
                         <div class="col-12">
                             <div class="input-group input-group-md mb-3 col-12">
                                 <div class="input-group-prepend">
@@ -64,7 +64,7 @@
                             
                             <div class="input-group input-group-md mb-3 col-12">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text"><span class="fas fa-dollar-sign text-success"></span>&nbsp;Precio venta</span>
+                                    <span class="input-group-text"><span class="fas fa-dollar-sign text-success"></span>&nbsp;Precio venta X Caja</span>
                                 </div>
                                 <input id="precio_ventaPiezas_TVC" type="number" class="form-control" name="precio_ventaPiezas_TVC" requried=""  min step='0.01'>
                             </div>
@@ -74,7 +74,7 @@
             </div>
             <div class="modal-footer">
                 <div class="col">
-                    <button type="button" class="btn btn-primary col-12" form='from_body' id="asignacion_TVC">Asignar a tipo de venta</button>
+                    <button type="button" class="btn btn-primary col-12" form='form_asignacionVentaCajas' id="asignacion_TVC">Asignar a tipo de venta</button>
                 </div>
             </div>
         </div>

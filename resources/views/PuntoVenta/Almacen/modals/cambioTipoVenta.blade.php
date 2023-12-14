@@ -2,7 +2,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="tituloModal">CAJA => PIEZAS</h5>
+                <h5 class="modal-title" id="tituloModal"><span class="fas fa-capsules mr-3"></span>CAJA => PIEZAS</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" ><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">

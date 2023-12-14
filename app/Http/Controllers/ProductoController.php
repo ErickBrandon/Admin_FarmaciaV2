@@ -300,4 +300,56 @@ class ProductoController extends Controller
          ];
         }
     }
+
+    public function AsignacionVentaCaja(Request $request){
+        $Hoy=date('Y/m/d');
+        DB::beginTransaction();
+        try {
+            $EnJuego = Producto::where('id',$request->EnJuego_id)->first();
+
+            if ($request->Similar == 1) {
+
+                $Caja_similar = Producto::where('id',$request->Similar_id)->first();
+                $Caja_similar->Existencias =  $Caja_similar->Existencias + $request->Cajas;
+                $Caja_similar->Ultima_asignacion = $Hoy;
+                $Caja_similar->save();
+
+                
+                $EnJuego->Existencias = $EnJuego->Existencias - ($request->Cajas * $Caja_similar->Piezas_unidad);
+                $EnJuego->save();
+            }else{
+                $nuevo = new Producto();
+
+                $nuevo->Codigo = $EnJuego->Codigo;
+                $nuevo->Producto =$EnJuego->Producto;
+                $nuevo->Existencias = $request->Cajas;
+                $nuevo->Precio = sprintf("%.2f",$request->Precio_venta);
+                $nuevo->Costo = sprintf("%.2f", ($request->pz_caja * $EnJuego->Costo));
+                $nuevo->TipoVenta = 'CAJA';
+
+                ($EnJuego->Caducidad == null) ? $nuevo->Caducidad = $Hoy : $nuevo->Caducidad = $EnJuego->Caducidad;
+                
+                
+                $nuevo->farmacia()->associate( $EnJuego->farmacia_id);
+                $nuevo->Ultima_asignacion = $Hoy;
+                $nuevo->Piezas_unidad = $request->pz_caja;
+                $nuevo->save();
+
+                $EnJuego->Existencias = $EnJuego->Existencias - ($nuevo->Piezas_unidad * $nuevo->Existencias);
+                
+                $EnJuego->save();
+            }
+            DB::commit();
+            return [
+                'success'=>true,
+                'message'=>'La asignación a CAJAS se ha logrado con éxito'
+            ];
+        } catch (Exception $e) {
+            DB::rollback();
+            return[
+                "message"=>$e,
+                "success"=>false,
+            ];
+        }
+    }
 }

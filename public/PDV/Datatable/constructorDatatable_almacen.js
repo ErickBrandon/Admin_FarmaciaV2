@@ -81,12 +81,12 @@ $(document).ready(function() {
             {data:'ID',
             render:function (data,a,b,) {
                 
-               /*  if (b.TipoVenta.includes("PIEZA")) {
+                if (b.TipoVenta.includes("PIEZA")) {
                 
                     return `<button id='btn_PzCaja' class='btn btn-light btn-icon text-primary' producto =${data}>
                         <i class='fas fa-box'></i>
                     </button>`;
-                } */
+                }
                 return "";
             
             },
