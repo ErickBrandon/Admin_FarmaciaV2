@@ -1,9 +1,9 @@
 <div id="modal_AjusteProducto" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title"><span class="fas fa-cogs mr-2"></span>Ajustes</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" ><span aria-hidden="true">×</span></button>
+            <div class="modal-header bg-dark">
+                <h5 class="modal-title  text-white"><span class="fas fa-cogs mr-2"></span>Ajustes</h5>
+                <button type="button" class="close  text-white" data-dismiss="modal" aria-label="Close" ><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
                 <div class="col-12">
@@ -64,7 +64,7 @@
             </div>
             <div class="modal-footer">
                 <div class="col-12">
-                    <button id='guardarAjusteProducto' type="submit" class="btn btn-primary col-12" form ='form_ajustes'>Actualizar producto</button>
+                    <button id='guardarAjusteProducto' type="submit" class="btn btn-dark col-12" form ='form_ajustes'>Actualizar producto</button>
                 </div>
             </div>
         </div>

@@ -1,9 +1,9 @@
 <div id="modal_traslado" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalPopoversLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="tituloModal">Traslado de productos</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" ><span aria-hidden="true">×</span></button>
+            <div id='modal_header_traspaso' class="modal-header">
+                <h5 class="modal-title text-white" id="tituloModal"><span class="fas fa-ambulance mr-3"></span>Traslado de productos</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" ><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -41,7 +41,9 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary col-12" form='from_body' id="btn_formTraslado">Traspasar producto</button>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary col-12" form='from_body' id="btn_formTraslado">Traspasar producto</button>
+                </div>
             </div>
         </div>
     </div>

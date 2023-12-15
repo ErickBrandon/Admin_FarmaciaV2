@@ -64,3 +64,13 @@ video{
 #modal_almacen {/*Corrige el error de abrir dos modales simultaneos*/
     overflow-y: scroll !important;
 }
+
+#modal_header_traspaso{
+    background:#004aad  ;
+}
+#modal_header_perdidas{
+    background:#9d0202 ;
+}
+#modal_header_caja_pieza{
+    background:#65a6d7;
+}

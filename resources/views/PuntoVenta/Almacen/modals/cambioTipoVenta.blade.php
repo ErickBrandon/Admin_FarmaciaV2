@@ -1,9 +1,9 @@
 <div id="modal_CambioTipoVenta" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="tituloModal"><span class="fas fa-capsules mr-3"></span>CAJA => PIEZAS</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" ><span aria-hidden="true">×</span></button>
+            <div id='modal_header_caja_pieza' class="modal-header">
+                <h5 class="modal-title text-white" id="tituloModal"><span class="fas fa-capsules mr-3"></span>CAJA => PIEZAS</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" ><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -74,7 +74,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary col-12" form='from_body' id="asignacion_ventaPiezas">Asignar a tipo de venta</button>
+                <div class="col">
+                    <button type="button" class="btn btn-info col-12" form='from_body' id="asignacion_ventaPiezas">Asignar a tipo de venta</button>
+                </div>
             </div>
         </div>
     </div>

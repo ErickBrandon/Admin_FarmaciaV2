@@ -1,9 +1,9 @@
 <div id="modal_perdidasProductos" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Pérdidas</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" ><span aria-hidden="true">×</span></button>
+            <div id="modal_header_perdidas" class="modal-header">
+                <h5 class="modal-title text-white"><span class="fas fa-cogs mr-3"></span>Pérdidas</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" ><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
                 <div class="alert alert-primary" role="alert">
