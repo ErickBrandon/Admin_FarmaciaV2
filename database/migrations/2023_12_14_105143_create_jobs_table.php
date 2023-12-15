@@ -18,7 +18,7 @@ return new class extends Migration
             $table->String('Job');
             $table->String('Status');
             $table->String('Message');
-            $table->dateTime('fecha_registro')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->dateTime('fecha_registro');
         });
     }
 

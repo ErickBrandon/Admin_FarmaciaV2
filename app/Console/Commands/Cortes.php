@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Carbon\Carbon;
 use App\Models\Job;
 use App\Models\Corte;
 use App\Models\CorteGeneral;
@@ -87,6 +88,7 @@ class Cortes extends Command
             $job->Job = 'Cortes de caja';
             $job->Status = 'success';
             $job->Message = '¡Ok!';
+            $job->fecha_registro = Carbon::now(); ;
             $job->save();
             DB::commit();
         } catch (\Throwable $th) {
