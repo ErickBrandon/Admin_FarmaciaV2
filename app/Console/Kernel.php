@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('cortes:create')->dailyAt('23:30');
-        //$schedule->command('cortes:create')->everyMinute();
+        $schedule->command('descontinuados:delete')->everyMinute();
 
     }
 
