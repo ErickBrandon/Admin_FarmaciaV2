@@ -33,7 +33,7 @@ class EliminarDescontinuados extends Command
     {
         DB::beginTransaction();
         try {
-          /*   $haceMeses= Carbon::now()->subMonths(2);
+            $haceMeses= Carbon::now()->subMonths(2);
 
             $descontinuados = Producto::whereDate('Ultima_asignacion','<',$fecha_anterior)
             ->where('Existencias',0)
@@ -41,13 +41,18 @@ class EliminarDescontinuados extends Command
 
             Producto::whereDate('Ultima_asignacion','<',$fecha_anterior)
             ->where('Existencias',0)
-            ->delete(); */
+            ->delete();
 
             $job = new Job();
             $job->Job = 'Productos descontinuados';
             $job->Status = 'success';
-            $descontinuados = 1;
-            $job->Message = 'Se eliminaron '.$descontinuados.' productos sin asignacion';
+
+            $palabraProductos = 'producto';
+            if ($descontinuados > 1) {
+                $palabraProductos = 'productos';
+            }
+
+            $job->Message = 'Se eliminaron '.$descontinuados.' '.$palabraProductos.' sin asignacion';
             $job->fecha_registro = Carbon::now(); ;
             $job->save();
             DB::commit();
