@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Carbon\Carbon;
 use App\Models\Job;
 use App\Models\Producto;
 use Illuminate\Console\Command;
