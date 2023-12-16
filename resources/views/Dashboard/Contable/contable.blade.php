@@ -6,6 +6,13 @@
 @endsection
 @section('body-content')
 <div class="row">
+    <div class="alert alert-primary col-12 text-dark" role="alert">
+       <span class="fas fa-robot mr-2 f-20 text-primary "></span><b>Sistema Farmaplus</b>:<br>
+       El sistema <b>automáticamente creará o actualizará cortes</b> por farmacia y un corte general <b>diario a las 11:30 pm.</b>  
+        Si llegara haber una moificación en las ventas despues de las <b>11:31 pm</b> Se tendrá que actualizar los <b>cortes manualmente.</b>
+    </div>
+</div><br>
+<div class="row">
     <div class="col-xl-5 col-md-6 col-sm-12">
         <div class="card theme-bg assets-value">
             <div class="bg-img"></div>
