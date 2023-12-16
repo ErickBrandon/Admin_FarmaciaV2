@@ -19,16 +19,6 @@ class DashboardController extends Controller
     {
         $Farmacias = Farmacia::all();
         
-        $fecha_anterior = Carbon::now()->subMonths(2);
-
-        $productos = Producto::whereDate('Ultima_asignacion','<',$fecha_anterior)
-        ->where('Existencias',0)
-        ->count();
-
-        Producto::whereDate('Ultima_asignacion','<',$fecha_anterior)
-        ->where('Existencias',0)
-        ->delete();
-        dd($productos);
      
         return view('Dashboard.Inicio')->with('Farmacias',$Farmacias);
     }
