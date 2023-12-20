@@ -18,8 +18,25 @@ class DashboardController extends Controller
     public function index()
     {
         $Farmacias = Farmacia::all();
-        
-     
-        return view('Dashboard.Inicio')->with('Farmacias',$Farmacias);
+
+        $Hoy =Carbon::createFromDate(Carbon::now()->year, Carbon::now()->month, Carbon::now()->day);
+
+        $finHosting = Carbon::createFromDate(2027, 9, 24)->toDateString();
+
+        $diasFinHosting = $Hoy->diffInDays($finHosting);
+
+        $finDominio =Carbon::createFromDate('2024', '08', '01')->toDateString();
+
+        $diasFinDominio = $Hoy->diffInDays($finDominio);
+
+
+        return view('Dashboard.Inicio')
+                ->with([
+                        'Farmacias'=>$Farmacias,
+                        'FinHosting'=>$finHosting,
+                        'DiasFinHosting'=>$diasFinHosting,
+                        'FinDominio'=>$finDominio,
+                        'DiasFinDominio'=>$diasFinDominio
+                    ]);
     }
 }

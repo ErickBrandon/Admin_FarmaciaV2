@@ -88,7 +88,7 @@ class Cortes extends Command
             $job->Job = 'Cortes de caja';
             $job->Status = 'success';
             $job->Message = '¡Ok!';
-            $job->fecha_registro = Carbon::now(); ;
+            $job->fecha_registro = Carbon::now(); 
             $job->save();
             DB::commit();
         } catch (\Throwable $th) {

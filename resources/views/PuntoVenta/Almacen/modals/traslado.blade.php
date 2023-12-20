@@ -1,5 +1,5 @@
 <div id="modal_traslado" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalPopoversLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div id='modal_header_traspaso' class="modal-header">
                 <h5 class="modal-title text-white" id="tituloModal"><span class="fas fa-ambulance mr-3"></span>Traslado de productos</h5>

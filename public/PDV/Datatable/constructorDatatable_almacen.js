@@ -184,6 +184,7 @@ function Tbl_historialTraspaso(data){
             {data:'Codigo'},
             {data:'Producto'},
             {data:'Cajas'},
+            {data:'Caducidad'},
             {data:'Fecha_traspaso'}
         ],
         'columnDefs':[

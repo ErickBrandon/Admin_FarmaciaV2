@@ -111,15 +111,37 @@
         <h5><span class="fas fa-hospital"></span> Puntos de venta</h5>
     
     </div><br>
-    
+    <div class="card-block">
+      <div class="row align-items-center justify-content-center">
+          <div class="col-auto">
+            <img src="{{asset('logo/FarmaPlus2.png')}}" alt="" style="border-radius: 0px; width: 100px">
+          </div>
+          <div class="col">
+              <h5>Sistema FarmaPlus.</h5>
+              <span> El sistema <b class="text-dark">automáticamente creará o actualizará cortes</b> por farmacia y un corte general <b class="text-dark">diario a las 11:30 pm.</b>
+                Si llegara haber una moificación en las ventas despues de las <b class="text-dark">11:31 pm</b> Se tendrá que actualizar los <b class="text-dark">cortes manualmente.</b>
+              </span>
+          </div>
+      </div>
+      <ul class="task-list">
+          <li class="">
+              <i class="task-icon bg-c-green"></i>
+              <h6>Hosting (Alojamiento del sistema)<span class="float-right text-muted"></h6>
+              <p class="text-muted">Hostinger | <a href="https://www.hostinger.mx/" target="_blank">Sitio oficial</a></span></p>
+          </li>
+          <li>
+              <i class="task-icon @if($DiasFinHosting >28)bg-c-green @endif bg-c-red"></i>
+              <h6>Paquete de hosting contratado </h6>
+              <p class="text-muted">Cloud Startup | Expira el {{$FinHosting}} | Quedan: {{$DiasFinHosting}} días @if($DiasFinHosting <=28) <span class="spinner-grow text-danger ml-2"></span> @endif</p>
+          </li>
+          <li>
+              <i class="task-icon @if($DiasFinDominio >28)bg-c-green @endif bg-c-red"></i>
+              <h6>Daminio (URL del sistema)<span class="float-right "></span></h6>
+              <p class="text-muted">admin-farmaplus.com | Expira el {{$FinDominio}} | Quedan: {{$DiasFinDominio}} días @if($DiasFinDominio <=28) <span class="spinner-grow text-danger ml-2"></span> @endif</p>
+          </li>
+      </ul>
+  </div>
     <div class="card-block table-border-style">
-      <div class="row">
-        <div class="alert alert-primary col-12 text-dark" role="alert">
-           <span class="fas fa-robot mr-2 f-20 text-primary "></span><b>Sistema Farmaplus</b>:<br>
-           El sistema <b>automáticamente creará o actualizará cortes</b> por farmacia y un corte general <b>diario a las 11:30 pm.</b>  
-            Si llegara haber una moificación en las ventas despues de las <b>11:31 pm</b> Se tendrá que actualizar los <b>cortes manualmente.</b>
-        </div>
-    </div><br>
         <div class="table-responsive">
             <table class="table table-striped text-center">
                 <thead class="table-primary ">

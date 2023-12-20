@@ -1,5 +1,5 @@
 <div id="modal_historialTraslado" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="tituloModal">Historial de traspaso</h5>
@@ -21,6 +21,7 @@
                                         <th>Código</th>
                                         <th>Producto</th>
                                         <th>Cajas</th>
+                                        <th>Caducidad</th>
                                         <th>Fecha traspaso</th>
                                     </tr>
                                 </thead>

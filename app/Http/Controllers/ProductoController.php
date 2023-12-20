@@ -149,6 +149,8 @@ class ProductoController extends Controller
             $historial->farmacia_origen = $Producto->farmacia_id;
             $historial->farmacia_destino = $request->Traslado_Farmacias;
             $historial->Fecha_traspaso = $Hoy;
+            $historial->Caducidad = $Producto->Caducidad;
+            $historial->id_anterior = $Producto->id;
             $historial->save();
 
             DB::commit();
@@ -227,7 +229,7 @@ class ProductoController extends Controller
         if ($request->Busqueda == 1) {
             $data = DB::table('historial_traspaso')->leftJoin('farmacias','farmacias.id','=','historial_traspaso.farmacia_origen')
             ->where('historial_traspaso.farmacia_destino',$Farmacia)
-            ->select('Producto','Cajas','Codigo','Fecha_traspaso','Farmacia')
+            ->select('Producto','Cajas','Codigo','Fecha_traspaso','Farmacia','Caducidad')
             ->get();
 
             return dataTables()->of($data)->toJson();
@@ -235,7 +237,7 @@ class ProductoController extends Controller
         if ($request->Busqueda == 2) {
             $data = DB::table('historial_traspaso')->leftJoin('farmacias','farmacias.id','=','historial_traspaso.farmacia_destino')
             ->where('historial_traspaso.farmacia_origen',$Farmacia)
-            ->select('Producto','Cajas','Codigo','Fecha_traspaso','Farmacia')
+            ->select('Producto','Cajas','Codigo','Fecha_traspaso','Farmacia','Caducidad')
             ->get();
 
             return dataTables()->of($data)->toJson();
