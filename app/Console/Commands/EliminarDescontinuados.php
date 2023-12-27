@@ -35,11 +35,11 @@ class EliminarDescontinuados extends Command
         try {
             $haceMeses= Carbon::now()->subMonths(2);
 
-            $descontinuados = Producto::whereDate('Ultima_asignacion','<',$fecha_anterior)
+            $descontinuados = Producto::whereDate('Ultima_asignacion','<',$haceMeses)
             ->where('Existencias',0)
             ->count();
 
-            Producto::whereDate('Ultima_asignacion','<',$fecha_anterior)
+            Producto::whereDate('Ultima_asignacion','<', $haceMeses)
             ->where('Existencias',0)
             ->delete();
 
