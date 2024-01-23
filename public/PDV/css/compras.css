@@ -23,9 +23,11 @@
 
 #tbl_compras th:first-child,#tbodyCompras td:first-child,
 #tbl_compras th:nth-child(3),#tbodyCompras td:nth-child(3),
-#tbl_compras th:nth-child(4),#tbodyCompras td:nth-child(4),
 #tbl_compras th:nth-child(6),#tbodyCompras td:nth-child(6){
     background: #f3f8ff !important;
+}
+#tbl_compras th:nth-child(4),#tbodyCompras td:nth-child(4){
+    background: #f9f89f !important;
 }
 
 #tbodyCompras >tr> td> div>input{

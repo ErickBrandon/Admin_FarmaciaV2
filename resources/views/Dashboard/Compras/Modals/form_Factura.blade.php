@@ -71,7 +71,7 @@
                                         <th>Código</th>
                                         <th>Producto</th>
                                         <th>Cajas</th>
-                                        <th>Costo</th>
+                                        <th>Costo compra</th>
                                         <th>Precio venta</th>
                                         <th>Subtotal de compra</th>
                                         <th>Piezas X Caja</th>
