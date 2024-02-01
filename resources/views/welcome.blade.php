@@ -3,9 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   
-    <link rel="stylesheet" href="{{asset('assets/fonts/fontawesome/css/fontawesome-all.min.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/css/style.css')}}?v={{now()->day}}">
+   {{-- Estilos --}}
+    <link rel="stylesheet" href="{{asset('assets_/css/style.css')}}?v={{now()->day}}">
+    {{-- Font icons --}}
+    <link rel="stylesheet" href="{{asset('assets_/fonts/fontawesome/css/fontawesome-all.min.css')}}">
+    {{-- Vendor js --}}
+    <script src="{{asset('assets_/main/vendor-all.min.js')}}"></script>
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script>let GlobalToken = {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')};</script>
+
     <title>Inicio de sesión</title>
     
 </head>
@@ -22,7 +29,7 @@
                 <div class="card-body text-center">
                   
                     <div class="col-12">
-                        <img src="{{asset('logo/FarmaPlus.png')}}" alt="" style="width: 100%">
+                        <img src="{{asset('assets_/img/FarmaPlus.png')}}" alt="" style="width: 100%">
                     </div>
                     <div class="btn-group btn-group-toggle btn-auth-gen mb-4" data-toggle="buttons">
                         <label id="btn_PDV" class="btn btn-outline-primary btn-icon">
@@ -46,14 +53,10 @@
         </div>
     </div>
 
-    <!-- Required Js -->
-    <script src="{{asset('assets/js/vendor-all.min.js')}}"></script>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script>let GlobalToken = {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')};</script>
-    <script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
-    <script src="{{asset('assets/js/pcoded.min.js')}}"></script>
-    <script src="{{asset('js-farmacia/login.js')}}?v={{now()->day}}"></script>
-    <script src="{{asset('assets/plugins/sweetalert/js/sweetalert.min.js')}}"></script>
+    <script src="{{asset('assets_/main/bootstrap.min.js')}}"></script>
+    <script src="{{asset('assets_/main/pcoded.min.js')}}"></script>
+    <script src="{{asset('assets_/js/Login/login.js')}}?v={{now()->day}}"></script>
+    <script src="{{asset('assets_/plugin/sweetalert/js/sweetalert.min.js')}}"></script>
 
 
 </body>

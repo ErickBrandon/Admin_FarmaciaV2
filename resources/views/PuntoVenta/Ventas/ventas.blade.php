@@ -86,6 +86,6 @@
 @endsection
 @section('foot_extras')
 
-<script src="{{asset('PDV/Datatable/constructorDatatable_ventas.js')}}?v={{now()->day}}"></script>
-<script src="{{asset('js-farmacia/ventas.js')}}?v={{now()->day}}"></script>
+<script src="{{asset('assets_/js/PuntoDeVenta/ventas/dataTables.js')}}?v={{now()->day}}"></script>
+<script src="{{asset('assets_/js/PuntoDeVenta/ventas/ventas.js')}}?v={{now()->day}}"></script>
 @endsection

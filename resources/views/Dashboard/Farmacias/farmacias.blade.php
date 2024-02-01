@@ -1,7 +1,5 @@
 @extends('Dashboard.layout.master')
 @section('extras_header')
-<link rel="stylesheet" href="{{asset('assets/plugins/data-tables/css/datatables.min.css')}}">
-
 @endsection
 @section('body-content')
     
@@ -96,9 +94,13 @@
 @endsection
 
 @section('extras_footer')
-<script src="{{asset('assets/plugins/data-tables/js/datatables.min.js')}}"></script>
-<script src="{{asset('PDV/Datatable/constructorDatatable_farmacias.js')}}?v={{now()->day}}"></script>
-<script src="{{asset('assets/plugins/jquery-validation/js/jquery.validate.min.js')}}"></script>
-<script src="{{asset('validationJS/form-validation-farmacia.js')}}?v={{now()->day}}"></script>
-<script src="{{asset('js-farmacia/modulo_farmacias.js')}}?v={{now()->day}}"></script>
+<script src="{{asset('assets_/plugin/DataTable/js/datatables.min.js')}}"></script>
+
+<script src="{{asset('assets_/js/Dashboard/farmacias/dataTables.js')}}?v={{now()->day}}"></script>
+
+<script src="{{asset('assets_/plugin/jquery-validation/jquery.validate.min.js')}}"></script>
+<script src="{{asset('assets_/js/Dashboard/farmacias/forms_validations.js')}}?v={{now()->day}}"></script>
+
+
+<script src="{{asset('assets_/js/Dashboard/farmacias/farmacias.js')}}?v={{now()->day}}"></script>
 @endsection

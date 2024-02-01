@@ -1,7 +1,5 @@
 @extends('Dashboard.layout.master')
 @section('extras_header')
-<link rel="stylesheet" href="{{asset('assets/plugins/data-tables/css/datatables.min.css')}}">
-
 @endsection
 @section('page')Configuración de administradores @endsection
 @section('body-content')
@@ -68,12 +66,22 @@
         </div>
     </div>
 </div>
+@php
+    $hash_value = hash_file('sha256', 'assets_/js/Dashboard/usuarios/usuarios.js');
+@endphp 
+<p>{{$hash_value}}</p>
 @endsection
 
 @section('extras_footer')
-<script src="{{asset('assets/plugins/data-tables/js/datatables.min.js')}}"></script>
-<script src="{{asset('PDV/Datatable/constructorDatatable_usuarios_real.js')}}?v={{now()->day}}"></script>
-<script src="{{asset('assets/plugins/jquery-validation/js/jquery.validate.min.js')}}"></script>
-<script src="{{asset('validationJS/form-validation-usuarios.js')}}?v={{now()->day}}"></script>
-<script src="{{asset('js-farmacia/modulo_administradores.js')}}?v={{now()->day}}"></script>
+<script src="{{asset('assets_/plugin/DataTable/js/datatables.min.js')}}"></script>
+
+<script src="{{asset('assets_/js/Dashboard/usuarios/dataTables.js')}}?v={{now()->day}}"></script>
+
+<script src="{{asset('assets_/plugin/jquery-validation/jquery.validate.min.js')}}"></script>
+<script src="{{asset('assets_/js/Dashboard/usuarios/forms_validations.js')}}?v={{now()->day}}"></script>
+
+
+<script 
+    src="{{asset('assets_/js/Dashboard/usuarios/usuarios.js')}}?v={{hash_file('sha256', 'assets_/js/Dashboard/usuarios/usuarios.js')}}">
+</script>
 @endsection

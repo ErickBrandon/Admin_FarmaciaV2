@@ -95,7 +95,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div id='logo_ticket' class="col-12"><img src="{{asset('logo/FarmaPlus2.png')}}" alt=""></div>
+                    <div id='logo_ticket' class="col-12"><img src="{{asset('assets_/img/FarmaPlus2.png')}}" alt=""></div>
                 </div><hr>
                 <div class="card theme-bg2 bitcoin-wallet">
                     <div class="card-block">
@@ -202,12 +202,13 @@
     const _Direccion = @Json($Farmacia->direccion) 
     const _Colonia = @Json($Farmacia->colonia) 
 </script>
-<script src="{{asset('PDV/Datatable/constructorDatatable.js')}}?v={{now()->day}}"></script>
-<script src="{{asset('assets/plugins/notification/js/bootstrap-growl.min.js')}}"></script>
-<script src="{{asset('Impresoras/plugin_impresora_termica.js')}}"></script>
-<script src="{{asset('Scanner/quagga.min.js')}}?v={{now()->day}}"></script>
-<script src="{{asset('PDV/js/pdv.js')}}?v={{now()->day}}"></script>
+<script src="{{asset('assets_/js/PuntoDeVenta/pdv/dataTables.js')}}?v={{now()->day}}"></script>
+<script src="{{asset('assets_/plugin/glow/js/bootstrap-growl.min.js')}}"></script>
+
+{{-- <script src="{{asset('Impresoras/plugin_impresora_termica.js')}}"></script> --}}
+<script src="{{asset('assets_/plugin/Scanner/quagga.min.js')}}?v={{now()->day}}"></script>
+<script src="{{asset('assets_/js/PuntoDeVenta/pdv/pdv.js')}}?v={{now()->day}}"></script>
 <script>
-    const Sound_scan = new Audio('{{asset('Scanner/sound/scan.mp3')}}');
+    const Sound_scan = new Audio('{{asset('assets_/plugin/Scanner/sound/scan.mp3')}}');
 </script>
 @endsection

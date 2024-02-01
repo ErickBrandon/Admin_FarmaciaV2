@@ -1,6 +1,6 @@
 <header class="header">
     <nav class="navbar navbar-expand-lg navbar-light bg-white">
-        <div class="logoPDV"><img src="{{asset('logo/FarmaPlus.png')}}" alt=""></div>
+        <div class="logoPDV"><img src="{{asset('assets_/img/FarmaPlus.png')}}" alt=""></div>
         <button class="btn btn-light navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>

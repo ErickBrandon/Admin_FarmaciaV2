@@ -76,6 +76,7 @@ function carrito(idProducto){
         }
         agregarACarrito(idProducto);
     }
+    $('#Modal_Productos').modal('hide');
 }
 function agregarACarrito(id){
     let producto = _ProductosVenta.find(p => p.id == id)

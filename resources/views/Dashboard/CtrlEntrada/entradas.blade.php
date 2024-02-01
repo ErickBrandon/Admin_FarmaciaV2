@@ -1,7 +1,5 @@
 @extends('Dashboard.layout.master')
 @section('extras_header')
-<link rel="stylesheet" href="{{asset('assets/plugins/data-tables/css/datatables.min.css')}}">
-
 @endsection
 @section('body-content')
     <div class="row">
@@ -40,12 +38,9 @@
 @endsection
 
 @section('extras_footer')
-<script src="{{asset('assets/plugins/data-tables/js/datatables.min.js')}}"></script>
-<script src="{{asset('PDV/Datatable/constructorDatatable_entradas.js')}}"></script>
-<script src="{{asset('js-farmacia/entradas.js')}}?v={{now()->day}}"></script>
-{{-- 
-<script src="assets/plugins/jquery-validation/js/jquery.validate.min.js"></script>
-<script src="validationJS/form-validation-farmacia.js"></script>
-<script src="js-farmacia/modulo_farmacias.js"></script>
-<script src="{{asset('assets/plugins/sweetalert/js/sweetalert.min.js')}}"></script> --}}
+<script src="{{asset('assets_/plugin/DataTable/js/datatables.min.js')}}"></script>
+
+<script src="{{asset('assets_/js/Dashboard/ctrlEntradas/dataTables.js')}}?v={{now()->day}}"></script>
+<script src="{{asset('assets_/js/Dashboard/ctrlEntradas/entradas.js')}}?v={{now()->day}}"></script>
+
 @endsection

@@ -114,7 +114,7 @@
     <div class="card-block">
       <div class="row align-items-center justify-content-center">
           <div class="col-auto">
-            <img src="{{asset('logo/FarmaPlus2.png')}}" alt="" style="border-radius: 0px; width: 100px">
+            <img src="{{asset('assets_/img/FarmaPlus2.png')}}" alt="" style="border-radius: 0px; width: 100px">
           </div>
           <div class="col">
               <h5>Sistema FarmaPlus.</h5>
@@ -176,6 +176,7 @@
 @endsection
  
 @section('foot_external')
+
 <script src="{{asset('assets/plugins/data-tables/js/datatables.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tbl-datatable-custom.js')}}"></script>
 <!-- form-picker-custom Js -->

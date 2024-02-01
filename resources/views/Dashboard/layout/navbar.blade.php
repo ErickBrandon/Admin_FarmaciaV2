@@ -2,7 +2,7 @@
     <div class="navbar-wrapper">
         <div class="navbar-brand header-logo">
             <a href="{{route('HomeAdmin')}}" class="b-brand">
-                <div class="logoPDV"><img src="{{asset('logo/FarmaPlus.png')}}" alt="" style="border-radius: 14px"></div>
+                <div class="logoPDV"><img src="{{asset('assets_/img/FarmaPlus.png')}}" alt="" style="border-radius: 14px"></div>
                 <span class="b-title"></span>
             </a>
             <a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>

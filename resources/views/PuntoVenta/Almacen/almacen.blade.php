@@ -93,14 +93,15 @@
 @include('PuntoVenta.partials.modal_scanner')
 @endsection
 @section('foot_extras')
-<script src="{{asset('PDV/Datatable/constructorDatatable_almacen.js')}}?v={{now()->day}}"></script>
-<script src="{{asset('assets/plugins/jquery-validation/js/jquery.validate.min.js')}}"></script>
-<script src="{{asset('validationJS/form-validation-almacen.js')}}?v={{now()->day}}"></script>
-<script src="{{asset('assets/plugins/notification/js/bootstrap-growl.min.js')}}"></script>
-<script src="{{asset('js-farmacia/almacen.js')}}?v={{now()->day}}"></script>
-<script src="{{asset('assets/plugins/sweetalert/js/sweetalert.min.js')}}"></script>
+
+<script src="{{asset('assets_/js/PuntoDeVenta/almacen/dataTables.js')}}?v={{now()->day}}"></script>
+<script src="{{asset('assets_/plugin/jquery-validation/jquery.validate.min.js')}}"></script>
+<script src="{{asset('assets_/js/PuntoDeVenta/almacen/forms_validations.js')}}?v={{now()->day}}"></script>
+<script src="{{asset('assets_/plugin/glow/js/bootstrap-growl.min.js')}}"></script>
+<script src="{{asset('assets_/js/PuntoDeVenta/almacen/almacen.js')}}?v={{now()->day}}"></script>
+
 <script>
-    const G_scan = new Audio('{{asset('Scanner/sound/scan.mp3')}}');
+    const G_scan = new Audio('{{asset('assets_/plugin/Scanner/sound/scan.mp3')}}');
 </script>
 
 @endsection
