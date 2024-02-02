@@ -66,10 +66,10 @@
         </div>
     </div>
 </div>
-@php
+{{-- @php
     $hash_value = hash_file('sha256', 'assets_/js/Dashboard/usuarios/usuarios.js');
 @endphp 
-<p>{{$hash_value}}</p>
+<p>{{$hash_value}}</p> --}}
 @endsection
 
 @section('extras_footer')
