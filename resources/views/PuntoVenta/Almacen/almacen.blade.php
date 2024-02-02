@@ -1,7 +1,8 @@
 @extends('PuntoVenta.layout.master')
 @section('head_extra')
 <link rel="stylesheet" href="{{asset('PDV/css/almacen.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/notification/css/notification.min.css')}}">
+<link rel="stylesheet" href="{{asset('assets_/plugin/glow/css/notification.min.css')}}">
+
 
 @endsection
 @section('cont_PDV')

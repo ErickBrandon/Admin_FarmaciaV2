@@ -18,6 +18,8 @@ var _ProductosVenta = [];
 var ContCarrito = [];
 var TotalCarrito = parseInt(0);
 var _TotalProductos = parseInt(0);
+let _cambio =parseInt(0);
+let _efectivo =parseInt(0);
 // -----------------------
 function notify(color,mnsj,icono) {
     $.growl({
@@ -217,12 +219,14 @@ $("#btnVentanilla").on("click", function () {
     }
 });
 $("#PagoModal").on("input", function (e) {
+    console.log(1);
     if (e.target.value != "") {
-        pago = parseFloat(e.target.value);
-        let cambio = pago - TotalCarrito;
+        pago = parseFloat(e.target.value).toFixed(2);;
+        _cambio = parseFloat(pago - TotalCarrito).toFixed(2);
+        _efectivo = pago;
          
-        if (cambio >=0) {
-            document.getElementById('txt_cambio').innerText ="$"+parseFloat(cambio).toFixed(2);
+        if (_cambio >=0) {
+            document.getElementById('txt_cambio').innerText ="$"+_cambio;
             document.getElementById('btnCobrar').disabled = false;
         }else{
             document.getElementById('btnCobrar').disabled = true;
@@ -239,8 +243,7 @@ function PagoVentanilla(){
 }
 $("#btnCobrar").on("click", function () {
     loadingShow("btnCobrar");
-    let farmacia = +document.getElementById("PntVenta").getAttribute('farmID');
- 
+    let farmacia = +document.getElementById("PntVenta").getAttribute('farmID'); 
    let info = {
     'carrito':ContCarrito,
     'TotalVenta':TotalCarrito,
@@ -289,6 +292,8 @@ function VentaExitosa(mensaje, venta_id){
     document.getElementById('txt_cambio').innerText="";
     document.getElementById('btnCobrar').disabled=true;
     document.getElementById('cont_ticket').innerHTML=null
+    _cambio =parseInt(0);
+    _efectivo =parseInt(0);
 }
 function IngresarAlCarrito(codigo) {
  
@@ -410,7 +415,9 @@ function imprSelec(data, venta_id) {
 
  
     let total= parseFloat(data.TotalVenta).toFixed(2)
-    document.getElementById('precio_total').innerText="TOTAL:         $"+total;
+    document.getElementById('precio_total').innerText="TOTAL:            $"+total;
+    document.getElementById('efectivo_total').innerText="EFECTIVO:       $"+ _efectivo
+    document.getElementById('cambio_total').innerText="CAMBIO:           $"+_cambio;
     let fecha = new Date();
     const meses = [
         'ENERO',

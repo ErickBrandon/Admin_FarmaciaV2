@@ -1,9 +1,9 @@
 @extends('PuntoVenta.layout.master')
 @section('head_extra')
 <link rel="stylesheet" href="{{asset('PDV/css/principal.css')}}?v={{now()->day}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/notification/css/notification.min.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/animation/css/animate.min.css')}}">
-
+<link rel="stylesheet" href="{{asset('assets_/plugin/glow/css/notification.min.css')}}">
+{{-- <link rel="stylesheet" href="{{asset('assets/plugins/animation/css/animate.min.css')}}">
+ --}}
 @endsection
 @section('cont_PDV')
 <main>
@@ -190,7 +190,15 @@
             </table><br><hr><br>
             <div id="total_ticket" style="text-align: right; font-size: 25px">
                 <div id="precio_total"></div>
-            </div><br><br>
+            </div><br>
+            <div id="efectivo" style="text-align: right; font-size: 25px">
+                <div id="efectivo_total"></div>
+            </div>
+            </div><br>
+            <div id="cambio" style="text-align: right; font-size: 25px">
+                <div id="cambio_total"></div>
+            </div>
+            <br><br>
             <div style="text-align: center; font-size: 25px"><span class="fas fa-smile"></span>¡GRACIAS!</div><br><br>
         </div>
     </div>

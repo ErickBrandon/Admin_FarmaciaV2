@@ -2,7 +2,6 @@
 @section('head_extra')
 <link rel="stylesheet" href="{{asset('PDV/css/principal.css')}}?v={{now()->day}}">
 <link rel="stylesheet" href="{{asset('PDV/css/venta.css')}}?v={{now()->day}}">
-<link rel="stylesheet" href="{{asset('assets/fonts/fontawesome/css/fontawesome-all.min.css')}}">
 
 
 @endsection
