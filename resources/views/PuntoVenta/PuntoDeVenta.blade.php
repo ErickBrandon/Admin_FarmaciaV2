@@ -56,7 +56,7 @@
                     <div class='form-group'>
                         <div class='input-group input-group-md mb-3'>
                             <div class='input-group-prepend'>
-                                <button class="btn btn-dark fas fa-camera" title="Escannear código por cámara" data-toggle="tooltip"  onclick="OpenScanner()"></button>
+                                <button class="btn btn-primary fas fa-camera" title="Escannear código por cámara" data-toggle="tooltip"  onclick="OpenScanner()"></button>
                             </div>
                             <input id='Codigo' type='text' class='form-control' placeholder='Código de barras | Ingresalo o Escannealo' name='Codigo' onchange="IngresarAlCarrito(this.value)">
                         </div>
@@ -135,9 +135,9 @@
 <div id="Modal_Productos" class="modal fade modal_productos" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">  
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title"><span class="fas fa-capsules mr-2"></span>Lista de productos</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <div id="modal_herader_productos" class="modal-header">
+                <h5 class="modal-title text-white"><span class="fas fa-capsules mr-2"></span>Lista de productos</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
                 <div id="PntVenta" farmID={{$Farmacia->id}}></div>

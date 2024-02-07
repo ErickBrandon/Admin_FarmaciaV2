@@ -136,18 +136,21 @@ video{
 #logo_ticket > img{
     width:40%;
 }
-#modal_header_ticket{
+#modal_header_ticket, #modal_herader_productos{
     background: #004aad;
 }
-@media screen and (max-width:690px) {
+@media screen and (max-width:700px) {
     main{
         width: 97%;
         margin: auto;
         grid-template-columns: repeat(6,1fr);
-        grid-template-areas:"cont-p cont-p cont-p cont-p cont-p cont-p"
-                            "sidebar sidebar sidebar sidebar sidebar sidebar";
+        grid-template-areas:"sidebar sidebar sidebar sidebar sidebar sidebar"
+                            "cont-p cont-p cont-p cont-p cont-p cont-p";
     }
     .sidebar_carrito{
         width:100%;
+    }
+    .contenido_productos {
+        width: 100%;
     }
 }
